@@ -1,8 +1,8 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render 
-
-from .forms import AddCategoryForm
-from .models import Category, Thread
+from datetime import datetime
+from .forms import AddCategoryForm, AddThreadForm
+from .models import Category, Thread, Post 
 
 
 def ForumListView(request):
@@ -26,5 +26,22 @@ def ForumAddCategoryView(request):
     else:
         return render(request, 'forumAddCategory.html')
 
+def categorydetail(request, category_id):
+    category = Category.objects.filter(category_id=category_id)
+    return render(request, "categoryDetailView.html", {"category": category.values()[0], "category_id": category_id})
 
+def addThread(request, category_id):
+    category = Category.objects.filter(category_id=category_id).values()
+    if request.method == "POST":
+        form = AddThreadForm(request.POST)
+        if form.is_valid():
+            thread_subject = form.cleaned_data['subject']
+            thread_message = form.cleaned_data['message']
+            new_thread = Thread(subject=thread_subject, category_id=category_id, views=0, replies=0)
+            new_thread.save()
+            new_post = Post(message=thread_message, posted_by="ShehanTest")
+            new_post.save()
+        return render(request, "addThreadView.html", {})
+    else:
+        return render(request, "addThreadView.html", {"category_name": category[0]['name']})
 # Create your views here.

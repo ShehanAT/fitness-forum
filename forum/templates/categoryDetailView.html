@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+<bold>Fitness Forum > {{category.name}}</bold>
+<a href="/category/{{category_id}}/addThread"></a>
+<table>
+<thead>
+    <th>Thread Name</th>
+    <th>Started By</th>
+    <th>Views</th>
+    <th>Replies</th>
+</thead>
+<tbody>
+</tbody>
+</table>
+{% endblock %}
