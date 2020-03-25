@@ -8,14 +8,19 @@
 <thead>
     <th>Category Name</th>
     <th>Category Description</th>
+    <th>Topics</th>
+    <th>Posts</th>
 </thead>
 <tbody>
+
 {% for i in categories %}
 <tr>
     <td>{{i.name}}</td>
     <td>{{i.description}}</td>
+    <td>{{i.threadNum}}</td>
 </tr>
 {% endfor %}
+
 </tbody>
 
 </table>

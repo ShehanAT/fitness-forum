@@ -2,9 +2,14 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render 
 
 from .forms import AddCategoryForm
-from .models import Category
+from .models import Category, Thread
+
+
 def ForumListView(request):
-    categories = Category.objects.all()
+    categories = Category.objects.all().values()
+    for c in categories:
+        threads = Thread.objects.filter(category_id=c['category_id']).count()
+        c["threadNum"] = threads
     return render(request, 'forumListView.html', {'categories': categories})
 
 def ForumAddCategoryView(request):
