@@ -2,4 +2,21 @@
 
 {% block page_content %}
 <h1>This is the Forum List View</h1>
+<a href="/addCategory" class="btn btn-primary">Add Category</a>
+<h2>List Of Categories:</h2>
+<table class="table table-bordered table-dark">
+<thead>
+    <th>Category Name</th>
+    <th>Category Description</th>
+</thead>
+<tbody>
+{% for i in categories %}
+<tr>
+    <td>{{i.name}}</td>
+    <td>{{i.description}}</td>
+</tr>
+{% endfor %}
+</tbody>
+
+</table>
 {% endblock %}
