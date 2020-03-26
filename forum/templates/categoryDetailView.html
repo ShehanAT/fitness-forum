@@ -13,7 +13,7 @@
 <tbody>
     {% for thread in threads %}
        <tr>
-            <td>{{thread.subject}}</td>
+            <td><a href="/category/{{category_id}}/thread/{{thread.thread_id}}">{{thread.subject}}</a></td>
             <td>{{thread.started_by}}</td>
             <td>{{thread.views}}</td>
             <td>{{thread.replies}}</td>

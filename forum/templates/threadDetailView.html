@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+
+{% block page_content %}
+<a href="/category/{{category_id}}/thread/{{thread_id}}/addPost" class="btn btn-primary">Add Post</a>
+<table>
+<thead>
+    <th>Posted by </th>
+    <th>Message</th>
+    <th>Posted On</th>
+</thead>
+<tbody>
+    {% for post in posts %}
+    <tr>
+        <td>{{post.posted_by}}</td>
+        <td>{{post.message}}</td>
+        <td>{{post.created_on}}</td>
+    </tr>
+    {% endfor %}
+</tbody>
+ 
+</table>
+
+
+
+
+{% endblock %}

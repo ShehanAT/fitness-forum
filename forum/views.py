@@ -52,4 +52,16 @@ def addThread(request, category_id):
         return render(request, "addThreadView.html", {})
     else:
         return render(request, "addThreadView.html", {"category_name": category[0]['name']})
+
+def threadDetail(request, category_id, thread_id):
+    posts = Post.objects.filter(thread_id=thread_id).values()
+    return render(request, "threadDetailView.html", {"posts":  posts, "category_id": category_id, "thread_id": thread_id})
+
+def addpost(request, category_id, thread_id):
+    category_name = Category.objects.filter(category_id=category_id).values()[0]["name"]
+    thread_subject = Thread.objects.filter(thread_id=thread_id).values()[0]["subject"]
+    if request.method == "POST":
+        return render(request, "addPostView.html", {})
+    else:
+        return render(request, "addPostView.html", {"category_name": category_name, "thread_subject": thread_subject })
 # Create your views here.
