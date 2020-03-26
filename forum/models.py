@@ -19,6 +19,7 @@ class Thread(models.Model):
     created_on = models.DateTimeField(default=datetime.now())
     def __str__(self):
         return "Topic: " + self.subject + "Started By: " + self.started_by
+        
 class Post(models.Model):
     post_id = models.AutoField(primary_key=True)
     posted_by = models.CharField(max_length=30)

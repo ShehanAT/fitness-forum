@@ -3,7 +3,7 @@
 {% block page_content %}
 <bold>Fitness Forum > {{category.name}}</bold>
 <a href="/category/{{category_id}}/addThread"></a>
-<table>
+<table class="table-bordered table-dark">
 <thead>
     <th>Thread Name</th>
     <th>Started By</th>
@@ -11,6 +11,14 @@
     <th>Replies</th>
 </thead>
 <tbody>
+    {% for thread in threads %}
+       <tr>
+            <td>{{thread.subject}}</td>
+            <td>{{thread.started_by}}</td>
+            <td>{{thread.views}}</td>
+            <td>{{thread.replies}}</td>
+       </tr> 
+    {% endfor %}
 </tbody>
 </table>
 {% endblock %}

@@ -1,9 +1,16 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render 
 from datetime import datetime
-from .forms import AddCategoryForm, AddThreadForm
+from .forms import AddCategoryForm, AddThreadForm, SignUpForm
 from .models import Category, Thread, Post 
 
+
+def SignUp(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+    else:
+        form = SignUpForm()
+    return render(request, "signup.html", {'signupForm': form})
 
 def ForumListView(request):
     categories = Category.objects.all().values()
@@ -28,7 +35,8 @@ def ForumAddCategoryView(request):
 
 def categorydetail(request, category_id):
     category = Category.objects.filter(category_id=category_id)
-    return render(request, "categoryDetailView.html", {"category": category.values()[0], "category_id": category_id})
+    threads = Thread.objects.filter(category_id=category_id).values()
+    return render(request, "categoryDetailView.html", {"category": category.values()[0], "category_id": category_id, "threads": threads})
 
 def addThread(request, category_id):
     category = Category.objects.filter(category_id=category_id).values()
