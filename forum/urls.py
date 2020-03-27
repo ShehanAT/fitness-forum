@@ -4,6 +4,8 @@ from forum import views
 urlpatterns = [
     path('', views.ForumListView, name='forum'),
     path('signup', views.SignUp),
+    path('login', views.Login),
+    path('logout', views.Logout),
     path('addCategory/', views.ForumAddCategoryView),
     path('category/<int:category_id>/', views.categorydetail),
     path('category/<int:category_id>/addThread', views.addThread),

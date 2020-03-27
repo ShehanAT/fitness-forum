@@ -2,6 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render 
 from datetime import datetime
 from django.contrib.auth.models import User 
+from django.contrib.auth import authenticate, login, logout 
 from .forms import AddCategoryForm, AddThreadForm, SignUpForm, AddPostForm 
 from .models import Category, Thread, Post 
 
@@ -16,11 +17,29 @@ def SignUp(request):
             password2 = form.cleaned_data["password2"]
             user = User.objects.create_user(username, email, password1)
             user.save()
-            return render(request, "signup.html", {"signupForm": form, "status": "New user added"})
-            # username = form.cleaned_data['username']
+            return render(request, "signup.html", {"signupForm": form})
     else:
         form = SignUpForm()
     return render(request, "signup.html", {'signupForm': form})
+def Login(request):
+    if request.method == "POST":
+        username = request.POST["username"]
+        password = request.POST["password"]
+        user = authenticate(request, username=username, password=password)
+        print(user)
+        if user is not None:
+            login(request, user)
+            categories = Category.objects.all().values()
+            return render(request, "ForumListView.html", {"categories": categories})
+        else:
+            return render(request, "login.html", {"errors": "Incorrect username/password combo"})
+    else:
+        return render(request, "login.html", {})
+
+def Logout(request):
+    logout(request)
+    categories = Category.objects.all().values()
+    return render(request, "ForumListView.html", {"categories": categories})
 
 def ForumListView(request):
     categories = Category.objects.all().values()
