@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render 
 from datetime import datetime
-from .forms import AddCategoryForm, AddThreadForm, SignUpForm
+from .forms import AddCategoryForm, AddThreadForm, SignUpForm, AddPostForm 
 from .models import Category, Thread, Post 
 
 
@@ -54,14 +54,20 @@ def addThread(request, category_id):
         return render(request, "addThreadView.html", {"category_name": category[0]['name']})
 
 def threadDetail(request, category_id, thread_id):
-    posts = Post.objects.filter(thread_id=thread_id).values()
+    posts = Post.objects.filter(thread_id=thread_id).order_by("created_on")
     return render(request, "threadDetailView.html", {"posts":  posts, "category_id": category_id, "thread_id": thread_id})
 
 def addpost(request, category_id, thread_id):
     category_name = Category.objects.filter(category_id=category_id).values()[0]["name"]
     thread_subject = Thread.objects.filter(thread_id=thread_id).values()[0]["subject"]
     if request.method == "POST":
-        return render(request, "addPostView.html", {})
+        form = AddPostForm(request.POST)
+        if form.is_valid():
+            post_message = form.cleaned_data["message"]
+            new_post = Post(message=post_message, posted_by="ShehanTest", thread_id=thread_id, created_on=datetime.now())
+            new_post.save()
+        posts = Post.objects.filter(thread_id=thread_id).order_by("created_on")
+        return render(request, "threadDetailView.html", {"posts":  posts, "category_id": category_id, "thread_id": thread_id})
     else:
         return render(request, "addPostView.html", {"category_name": category_name, "thread_subject": thread_subject })
 # Create your views here.

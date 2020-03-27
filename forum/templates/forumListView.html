@@ -15,7 +15,7 @@
 
 {% for i in categories %}
 <tr>
-    <td>{{i.name}}</td>
+    <td><a href="/category/{{i.category_id}}">{{i.name}}</a></td>
     <td>{{i.description}}</td>
     <td>{{i.threadNum}}</td>
 </tr>

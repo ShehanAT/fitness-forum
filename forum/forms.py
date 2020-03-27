@@ -15,3 +15,7 @@ class AddCategoryForm(forms.Form):
 class AddThreadForm(forms.Form):
     subject = forms.CharField(label='Subject', max_length=100)
     message = forms.CharField(label='Message', max_length=500)
+    
+class AddPostForm(forms.Form):
+    message = forms.CharField(label='Message', max_length=500)
+    

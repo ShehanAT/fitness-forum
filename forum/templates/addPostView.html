@@ -4,9 +4,9 @@
 {% block page_content %}
 <bold>Fitness Forum > {{category_name}} > {{thread_subject}}</bold>
 <form action="" method="post" name="form">
+    {% csrf_token %}
     <label for="message">Your Message: </label>
     <textarea id="message" name="message" class="textarea"></textarea>
-
     <input type="submit" class="btn btn-primary" value="Post">
 </form>
 
