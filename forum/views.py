@@ -3,6 +3,7 @@ from django.shortcuts import render
 from datetime import datetime
 from django.contrib.auth.models import User 
 from django.contrib.auth import authenticate, login, logout 
+from django.contrib.sessions.backends.db import SessionStore 
 from .forms import AddCategoryForm, AddThreadForm, SignUpForm, AddPostForm 
 from .models import Category, Thread, Post 
 
@@ -22,11 +23,12 @@ def SignUp(request):
         form = SignUpForm()
     return render(request, "signup.html", {'signupForm': form})
 def Login(request):
+    s = SessionStore()
+    
     if request.method == "POST":
         username = request.POST["username"]
         password = request.POST["password"]
         user = authenticate(request, username=username, password=password)
-        print(user)
         if user is not None:
             login(request, user)
             categories = Category.objects.all().values()
@@ -43,10 +45,11 @@ def Logout(request):
 
 def ForumListView(request):
     categories = Category.objects.all().values()
+    username = "s['username']"
     for c in categories:
         threads = Thread.objects.filter(category_id=c['category_id']).count()
         c["threadNum"] = threads
-    return render(request, 'forumListView.html', {'categories': categories})
+    return render(request, 'forumListView.html', {'categories': categories, "username": username})
 
 def ForumAddCategoryView(request):
     if request.method == "POST":
