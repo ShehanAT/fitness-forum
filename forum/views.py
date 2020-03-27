@@ -1,6 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render 
 from datetime import datetime
+from django.contrib.auth.models import User 
 from .forms import AddCategoryForm, AddThreadForm, SignUpForm, AddPostForm 
 from .models import Category, Thread, Post 
 
@@ -8,6 +9,15 @@ from .models import Category, Thread, Post
 def SignUp(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data["username"]
+            email = form.cleaned_data["email"]
+            password1 = form.cleaned_data["password1"]
+            password2 = form.cleaned_data["password2"]
+            user = User.objects.create_user(username, email, password1)
+            user.save()
+            return render(request, "signup.html", {"signupForm": form, "status": "New user added"})
+            # username = form.cleaned_data['username']
     else:
         form = SignUpForm()
     return render(request, "signup.html", {'signupForm': form})
