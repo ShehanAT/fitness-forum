@@ -76,7 +76,7 @@ def addThread(request, category_id):
             thread_message = form.cleaned_data['message']
             new_thread = Thread(subject=thread_subject, category_id=category_id, views=0, replies=0)
             new_thread.save()
-            new_post = Post(message=thread_message, posted_by="ShehanTest")
+            new_post = Post(message=thread_message, posted_by="ShehanTest", thread_id=new_thread.thread_id)
             new_post.save()
         return render(request, "addThreadView.html", {})
     else:
@@ -84,7 +84,9 @@ def addThread(request, category_id):
 
 def threadDetail(request, category_id, thread_id):
     posts = Post.objects.filter(thread_id=thread_id).order_by("created_on")
-    return render(request, "threadDetailView.html", {"posts":  posts, "category_id": category_id, "thread_id": thread_id})
+    category_name = Category.objects.filter(category_id=category_id).values()[0]["name"]
+    thread_name = Thread.objects.filter(thread_id=thread_id).values()[0]["subject"]
+    return render(request, "threadDetailView.html", {"posts":  posts, "category_id": category_id, "thread_id": thread_id, "thread_name": thread_name, "category_name": category_name})
 
 def addpost(request, category_id, thread_id):
     category_name = Category.objects.filter(category_id=category_id).values()[0]["name"]

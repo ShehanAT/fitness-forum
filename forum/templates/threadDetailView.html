@@ -2,8 +2,11 @@
 
 
 {% block page_content %}
+<bold><a href="/">Fitness Forum</a> > <a href="/category/{{category_id}}">{{category_name}}</a> > <a href="/category/{{category_id}}/thread/{{thread_id}}">{{thread_name}}</a></bold>
+<br>
 <a href="/category/{{category_id}}/thread/{{thread_id}}/addPost" class="btn btn-primary">Add Post</a>
-<table>
+<br>
+<table class="table-bordered table-dark">
 <thead>
     <th>Posted by </th>
     <th>Message</th>

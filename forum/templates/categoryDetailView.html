@@ -1,8 +1,10 @@
 {% extends "base.html" %}
 
 {% block page_content %}
-<bold>Fitness Forum > {{category.name}}</bold>
-<a href="/category/{{category_id}}/addThread"></a>
+<bold><a href="/">Fitness Forum</a> > <a href="/category/{{category_id}}">{{category.name}}</a></bold>
+<br>
+<a href="/category/{{category_id}}/addThread" class="btn btn-primary">Add Thread</a>
+<br>
 <table class="table-bordered table-dark">
 <thead>
     <th>Thread Name</th>
