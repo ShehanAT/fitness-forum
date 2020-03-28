@@ -4,7 +4,11 @@
 {% block page_content %}
 <bold><a href="/">Fitness Forum</a> > <a href="/category/{{category_id}}">{{category_name}}</a> > <a href="/category/{{category_id}}/thread/{{thread_id}}">{{thread_name}}</a></bold>
 <br>
-<a href="/category/{{category_id}}/thread/{{thread_id}}/addPost" class="btn btn-primary">Add Post</a>
+{% if user.is_authenticated %}
+    <a href="/category/{{category_id}}/thread/{{thread_id}}/addPost" class="btn btn-primary">Add Post</a>
+{% else %}
+    <p>You must be logged in to post in this thread</p>
+{% endif %}
 <br>
 <table class="table-bordered table-dark">
 <thead>

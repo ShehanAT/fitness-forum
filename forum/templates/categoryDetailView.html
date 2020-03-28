@@ -3,7 +3,11 @@
 {% block page_content %}
 <bold><a href="/">Fitness Forum</a> > <a href="/category/{{category_id}}">{{category.name}}</a></bold>
 <br>
-<a href="/category/{{category_id}}/addThread" class="btn btn-primary">Add Thread</a>
+{% if user.is_authenticated %}
+    <a href="/category/{{category_id}}/addThread" class="btn btn-primary">Add Thread</a>
+{% else %}
+    <p>You must be logged in to create a new thread</p>
+{% endif %}
 <br>
 <table class="table-bordered table-dark">
 <thead>
