@@ -4,9 +4,9 @@ from datetime import datetime
 from django.contrib.auth.models import User 
 from django.contrib.auth import authenticate, login, logout 
 from django.contrib.sessions.backends.db import SessionStore 
+from django.shortcuts import redirect
 from .forms import AddCategoryForm, AddThreadForm, SignUpForm, AddPostForm 
 from .models import Category, Thread, Post 
-
 
 def SignUp(request):
     if request.method == 'POST':
@@ -32,7 +32,7 @@ def Login(request):
         if user is not None:
             login(request, user)
             categories = Category.objects.all().values()
-            return render(request, "ForumListView.html", {"categories": categories})
+            return redirect("/")
         else:
             return render(request, "login.html", {"errors": "Incorrect username/password combo"})
     else:
@@ -41,15 +41,14 @@ def Login(request):
 def Logout(request):
     logout(request)
     categories = Category.objects.all().values()
-    return render(request, "ForumListView.html", {"categories": categories})
+    return redirect("/")
 
 def ForumListView(request):
     categories = Category.objects.all().values()
-    username = "s['username']"
     for c in categories:
         threads = Thread.objects.filter(category_id=c['category_id']).count()
         c["threadNum"] = threads
-    return render(request, 'forumListView.html', {'categories': categories, "username": username})
+    return render(request, 'forumListView.html', {'categories': categories})
 
 def ForumAddCategoryView(request):
     if request.method == "POST":
@@ -94,14 +93,15 @@ def threadDetail(request, category_id, thread_id):
 def addpost(request, category_id, thread_id):
     category_name = Category.objects.filter(category_id=category_id).values()[0]["name"]
     thread_subject = Thread.objects.filter(thread_id=thread_id).values()[0]["subject"]
+    print(request.user)
     if request.method == "POST":
         form = AddPostForm(request.POST)
         if form.is_valid():
             post_message = form.cleaned_data["message"]
-            new_post = Post(message=post_message, posted_by="ShehanTest", thread_id=thread_id, created_on=datetime.now())
+            new_post = Post(message=post_message, posted_by=request.user, thread_id=thread_id, created_on=datetime.now())
             new_post.save()
-        posts = Post.objects.filter(thread_id=thread_id).order_by("created_on")
-        return render(request, "threadDetailView.html", {"posts":  posts, "category_id": category_id, "thread_id": thread_id})
+        redirect_url = "/category/" + str(category_id) + "/thread/" + str(thread_id)
+        return redirect(redirect_url)
     else:
         return render(request, "addPostView.html", {"category_name": category_name, "thread_subject": thread_subject })
 # Create your views here.
