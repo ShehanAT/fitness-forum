@@ -15,3 +15,26 @@ body{ background-color: grey;}
     background-color: grey;
     border: 5px solid black;
 }
+
+#addPostBtn{
+    /* margin-bottom: 5px; */
+    margin: 30px;
+}
+
+#addThreadBtn{
+    margin: 30px;
+}
+
+#category-table{
+    margin-left: 30px;
+    width: 100%;
+}
+
+#forum-table{
+    margin-left: 30px;
+    width: 100%;
+}
+
+.page-content{
+    margin-left: 30px;
+}

@@ -1,14 +1,17 @@
 {% extends "base.html" %}
 
 {% block page_content %}
-<h1>This is the Forum List View</h1>
-{% if user.is_authenticated %}
-    <a href="/addCategory" class="btn btn-primary">Add Category</a>
-{% else %}
-    <p>You must be logged in to create a new forum category</p>
-{% endif %}
-<h2>List Of Categories:</h2>
-<table class="table table-bordered table-dark">
+<div class="page-content">
+    <h1>This is the Forum List View</h1>
+    {% if user.is_authenticated %}
+        <a href="/addCategory" class="btn btn-primary" >Add Category</a>
+    {% else %}
+        <p>You must be logged in to create a new forum category</p>
+    {% endif %}
+    <h2 >List Of Categories:</h2>
+</div>
+
+<table class="table table-bordered table-dark" id="forum-table">
 <thead>
     <th>Category Name</th>
     <th>Category Description</th>
