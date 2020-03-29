@@ -2,6 +2,7 @@
 
 
 {% block page_content %}
+
 <bold><a href="/">Fitness Forum</a> > <a href="/category/{{category_id}}">{{category_name}}</a> > <a href="/category/{{category_id}}/thread/{{thread_id}}">{{thread_name}}</a></bold>
 <br>
 {% if user.is_authenticated %}
@@ -19,16 +20,15 @@
 </thead>
 <tbody>
     {% for post in posts %}
-    <tr>
-        <td>{{post.post_id}}</td>
-        <td>{{post.posted_by}}</td>
+    <div class="message">
+        <div>{{post.posted_by}}</div>
         {% if post.reply_to > 0 %}
-        <td>This message is a reply to: {{post.reply_message}}<br>{{post.message}}<a href="/category/{{category_id}}/thread/{{thread_id}}/replyPost/{{post.post_id}}">Reply</a></td>
+            <div>This message is a reply to: {{post.reply_message}}<br>{{post.message}}<a href="/category/{{category_id}}/thread/{{thread_id}}/replyPost/{{post.post_id}}">Reply</a></div>
         {% else %}
-        <td>{{post.message}}<a href="/category/{{category_id}}/thread/{{thread_id}}/replyPost/{{post.post_id}}">Reply</a></td>
+            <div>{{post.message}}<a href="/category/{{category_id}}/thread/{{thread_id}}/replyPost/{{post.post_id}}">Reply</a></div>
+            <div>{{post.created_on}}</div>
         {% endif %}
-        <td>{{post.created_on}}</td>
-    </tr>
+    </div>
     {% endfor %}
 </tbody>
  
