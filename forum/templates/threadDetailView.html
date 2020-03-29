@@ -2,7 +2,7 @@
 
 
 {% block page_content %}
-
+{% load staticfiles %}
 <bold><a href="/">Fitness Forum</a> > <a href="/category/{{category_id}}">{{category_name}}</a> > <a href="/category/{{category_id}}/thread/{{thread_id}}">{{thread_name}}</a></bold>
 <br>
 {% if user.is_authenticated %}
@@ -20,13 +20,14 @@
 </thead>
 <tbody>
     {% for post in posts %}
-    <div class="message">
-        <div>{{post.posted_by}}</div>
+    <div class="content">
+        <img class="profilePic" src="{% static 'img/profilePic.png' %}"
+        <b class="content">{{post.posted_by}}</b>
         {% if post.reply_to > 0 %}
-            <div>This message is a reply to: {{post.reply_message}}<br>{{post.message}}<a href="/category/{{category_id}}/thread/{{thread_id}}/replyPost/{{post.post_id}}">Reply</a></div>
+            <p class="reply-content">{{post.reply_message}}</p><p class="content">{{post.message}}<br><a href="/category/{{category_id}}/thread/{{thread_id}}/replyPost/{{post.post_id}}">Reply</a></p>
         {% else %}
-            <div>{{post.message}}<a href="/category/{{category_id}}/thread/{{thread_id}}/replyPost/{{post.post_id}}">Reply</a></div>
-            <div>{{post.created_on}}</div>
+            <p class="content">{{post.message}}<br><a href="/category/{{category_id}}/thread/{{thread_id}}/replyPost/{{post.post_id}}">Reply</a></p>
+            <p class="content">{{post.created_on}}</p>
         {% endif %}
     </div>
     {% endfor %}
