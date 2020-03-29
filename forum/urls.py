@@ -9,6 +9,7 @@ urlpatterns = [
     path('addCategory/', views.ForumAddCategoryView),
     path('category/<int:category_id>/', views.categorydetail),
     path('category/<int:category_id>/addThread', views.addThread),
-    path('category/<int:category_id>/thread/<int:thread_id>', views.threadDetail ),
-    path('category/<int:category_id>/thread/<int:thread_id>/addPost', views.addpost)
+    path('category/<int:category_id>/thread/<int:thread_id>', views.threadDetail),
+    path('category/<int:category_id>/thread/<int:thread_id>/addPost', views.addpost),
+    path('category/<int:category_id>/thread/<int:thread_id>/replyPost/<int:post_id>', views.addreplypost)
 ]

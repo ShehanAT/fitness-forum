@@ -12,6 +12,7 @@
 <br>
 <table class="table-bordered table-dark">
 <thead>
+    <th>Post ID</th>
     <th>Posted by </th>
     <th>Message</th>
     <th>Posted On</th>
@@ -19,8 +20,13 @@
 <tbody>
     {% for post in posts %}
     <tr>
+        <td>{{post.post_id}}</td>
         <td>{{post.posted_by}}</td>
-        <td>{{post.message}}</td>
+        {% if post.reply_to > 0 %}
+        <td>This message is a reply to: {{post.reply_message}}<br>{{post.message}}<a href="/category/{{category_id}}/thread/{{thread_id}}/replyPost/{{post.post_id}}">Reply</a></td>
+        {% else %}
+        <td>{{post.message}}<a href="/category/{{category_id}}/thread/{{thread_id}}/replyPost/{{post.post_id}}">Reply</a></td>
+        {% endif %}
         <td>{{post.created_on}}</td>
     </tr>
     {% endfor %}

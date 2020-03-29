@@ -88,12 +88,19 @@ def threadDetail(request, category_id, thread_id):
     posts = Post.objects.filter(thread_id=thread_id).order_by("created_on")
     category_name = Category.objects.filter(category_id=category_id).values()[0]["name"]
     thread_name = Thread.objects.filter(thread_id=thread_id).values()[0]["subject"]
+    for post in posts:
+        if post.reply_to > 0:
+            print("The post message is ", post.message)
+            post.replying_message()
+            # post.reply_message = post.replying_message()
+            # print("The replying message is ", post.reply_message)
+            # post["replying_to"] = orignal_post_message
+            # print(post.message, " is a reply to post id:", post.reply_to)
     return render(request, "threadDetailView.html", {"posts":  posts, "category_id": category_id, "thread_id": thread_id, "thread_name": thread_name, "category_name": category_name})
 
 def addpost(request, category_id, thread_id):
     category_name = Category.objects.filter(category_id=category_id).values()[0]["name"]
     thread_subject = Thread.objects.filter(thread_id=thread_id).values()[0]["subject"]
-    print(request.user)
     if request.method == "POST":
         form = AddPostForm(request.POST)
         if form.is_valid():
@@ -104,4 +111,21 @@ def addpost(request, category_id, thread_id):
         return redirect(redirect_url)
     else:
         return render(request, "addPostView.html", {"category_name": category_name, "thread_subject": thread_subject })
+
+def addreplypost(request, category_id, thread_id, post_id):
+    category_name = Category.objects.filter(category_id=category_id).values()[0]["name"]
+    thread_subject = Thread.objects.filter(thread_id=thread_id).values()[0]["subject"]
+    reply_post = Post.objects.filter(post_id=post_id).values()[0]
+    reply_post_id = reply_post["post_id"]
+    reply_post_message = reply_post["message"]
+    if request.method == "POST":
+        form = AddPostForm(request.POST)
+        if form.is_valid():
+            post_message = form.cleaned_data["message"]
+            new_post = Post(message=post_message, posted_by=request.user, thread_id=thread_id, created_on=datetime.now(), reply_to=reply_post_id)
+            new_post.save()
+        redirect_url = "/category/" + str(category_id) + "/thread/" + str(thread_id)
+        return redirect(redirect_url)
+    else:
+        return render(request, "addReplyPostView.html", {"category_name": category_name, "thread_subject": thread_subject, "reply_post_message": reply_post_message})
 # Create your views here.

@@ -28,9 +28,15 @@ class Post(models.Model):
     thread = models.ForeignKey(Thread, on_delete=models.CASCADE, default=get_foo)
     posted_by = models.CharField(max_length=30)
     message = models.CharField(max_length=2000)
+    reply_to = models.IntegerField(default=0)
+    reply_message = models.CharField(max_length=2000, blank=True, default="")
     created_on = models.DateTimeField(default=datetime.now())
 
     def __str__(self):
         return "Posted by: " + self.posted_by + ", On: " + self.date
+    
+    def replying_message(self):
+        orignal_post_message = Post.objects.filter(post_id=self.reply_to).values()[0]["message"]
+        self.reply_message = orignal_post_message
 
 # Create your models here.
