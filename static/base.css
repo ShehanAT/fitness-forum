@@ -1,7 +1,13 @@
 .message { margin-bottom: 15px; }
 .image { float: left; margin-right: 10px }
 .user { float: left; font-weight: bold; color: #009; margin-bottom: 5px; }
-.content { margin-left: 30px; font-style: italic; color: black; background-color: white; }
+.content { 
+    margin-left: 30px; 
+    font-style: italic; 
+    color: black; 
+    background-color: white; 
+    width: 80%; 
+}
 body{ background-color: grey;}
 
 .profilePic { 
@@ -27,14 +33,15 @@ body{ background-color: grey;}
 
 #category-table{
     margin-left: 30px;
-    width: 100%;
+    width: 80%;
 }
 
 #forum-table{
     margin-left: 30px;
-    width: 100%;
+    width: 80%;
 }
 
 .page-content{
     margin-left: 30px;
+    width: 80%;
 }
