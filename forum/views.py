@@ -43,6 +43,10 @@ def Logout(request):
     categories = Category.objects.all().values()
     return redirect("/")
 
+def Profile(request):
+    user = request.user
+    return render(request, "profileView.html", {"user": user})
+
 def ForumListView(request):
     categories = Category.objects.all().values()
     for c in categories:
