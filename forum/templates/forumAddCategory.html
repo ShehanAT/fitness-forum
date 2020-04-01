@@ -6,10 +6,10 @@
     {% csrf_token %}
     <label for="category_name">New Form Category:</label>
     <input id="category_name" type="text" name="category_name" maxlength="100" required>
-
+    <br/>
     <label for="category_description">New Forum Description:</label>
     <input id="category_description" type="text" name="category_description" maxlength="500" required>
-
+    <br/>
     <input type="submit" value="Submit" class="btn btn-primary">
 </form>
 {% endblock %}

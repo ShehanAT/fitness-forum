@@ -3,7 +3,7 @@
 
 {% block page_content %}
 {% load staticfiles %}
-<bold><a href="/">Fitness Forum</a> > <a href="/category/{{category_id}}">{{category_name}}</a> > <a href="/category/{{category_id}}/thread/{{thread_id}}">{{thread_name}}</a></bold>
+<bold class="content" ><a href="/">Fitness Forum</a> > <a href="/category/{{category_id}}">{{category_name}}</a> > <a href="/category/{{category_id}}/thread/{{thread_id}}">{{thread_name}}</a></bold>
 <br>
 {% if user.is_authenticated %}
     <a href="/category/{{category_id}}/thread/{{thread_id}}/addPost" class="btn btn-primary" id="addPostBtn">Add Post</a>
