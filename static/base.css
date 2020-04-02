@@ -26,6 +26,10 @@ a{
     text-decoration: none !important;
 }
 
+.btn-primary{
+    background-color: #574d68 !important;
+}
+
 /* navbar styles */
 #navbar{
     background-color: #574d68 !important;
@@ -45,6 +49,14 @@ a{
 }
 
 /* thread view styles */
+#reply-message{
+    width: 80%;
+    height: 150px;
+}
+
+.reply-text{
+    font-weight: 600;
+}
 
 
 .profilePic { 

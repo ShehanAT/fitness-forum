@@ -131,5 +131,5 @@ def addreplypost(request, category_id, thread_id, post_id):
         redirect_url = "/category/" + str(category_id) + "/thread/" + str(thread_id)
         return redirect(redirect_url)
     else:
-        return render(request, "addReplyPostView.html", {"category_name": category_name, "thread_subject": thread_subject, "reply_post_message": reply_post_message})
+        return render(request, "addReplyPostView.html", {"category_name": category_name, "category_id": category_id, "thread_subject": thread_subject, "reply_post_message": reply_post_message, "thread_id": thread_id})
 # Create your views here.
