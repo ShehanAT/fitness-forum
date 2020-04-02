@@ -5,10 +5,47 @@
     margin-left: 30px; 
     font-style: italic; 
     color: black; 
-    background-color: white; 
+    background-color: #f2e86d; 
     width: 80%; 
 }
-body{ background-color: grey;}
+
+.nav-body-content{
+    margin-left: 30px; 
+    font-style: italic; 
+    color: black; 
+    width: 80%; 
+}
+
+/* global styles */
+
+body{ 
+    background-color: #D3DFB8;
+}
+
+a{
+    text-decoration: none !important;
+}
+
+/* navbar styles */
+#navbar{
+    background-color: #574d68 !important;
+}
+
+
+/* forum view styles */
+#forum-table{
+    background-color: #c6a15b;
+}
+
+
+/* category view styles */
+
+#category-table{
+    background-color: #c6a15b;
+}
+
+/* thread view styles */
+
 
 .profilePic { 
     width: 50px;

@@ -1,17 +1,17 @@
 {% extends "base.html" %}
 
 {% block page_content %}
-<bold class="content"><a href="/">Fitness Forum</a> > <a href="/category/{{category_id}}">{{category.name}}</a></bold>
+<bold class="nav-body-content"><a href="/">Fitness Forum</a> > <a href="/category/{{category_id}}">{{category.name}}</a></bold>
 <br>
 
 {% if user.is_authenticated %}
     <p class="content">This category is about: {{category.description}}</p>
     <a href="/category/{{category_id}}/addThread" class="btn btn-primary" id="addThreadBtn">Add Thread</a>
 {% else %}
-    <p>You must be logged in to create a new thread</p>
+    <p class="nav-body-content">You must be logged in to create a new thread</p>
 {% endif %}
 <br>
-<table class="table-bordered table-dark" id="category-table">
+<table class="table-bordered" id="category-table">
 <thead>
     <th>Thread Name</th>
     <th>Started By</th>
