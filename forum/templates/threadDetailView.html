@@ -5,11 +5,6 @@
 {% load staticfiles %}
 <bold class="nav-body-content" ><a href="/">Fitness Forum</a> > <a href="/category/{{category_id}}">{{category_name}}</a> > <a href="/category/{{category_id}}/thread/{{thread_id}}">{{thread_name}}</a></bold>
 <br>
-{% if user.is_authenticated %}
-    <a href="/category/{{category_id}}/thread/{{thread_id}}/addPost" class="btn btn-primary" id="addPostBtn">Add Post</a>
-{% else %}
-    <p class="nav-body-content">You must be logged in to post in this thread</p>
-{% endif %}
 <br>
 
 {% for post in posts %}
@@ -24,5 +19,11 @@
     {% endif %}
 </div>
 {% endfor %}
+<br>
+{% if user.is_authenticated %}
+    <a href="/category/{{category_id}}/thread/{{thread_id}}/addPost" class="btn btn-primary" id="addPostBtn">Add Post</a>
+{% else %}
+    <p class="nav-body-content">You must be logged in to post in this thread</p>
+{% endif %}
 
 {% endblock %}

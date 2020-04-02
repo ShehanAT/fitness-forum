@@ -50,8 +50,17 @@ def Profile(request):
 def ForumListView(request):
     categories = Category.objects.all().values()
     for c in categories:
-        threads = Thread.objects.filter(category_id=c['category_id']).count()
-        c["threadNum"] = threads
+        threadCount = Thread.objects.filter(category_id=c['category_id']).count()
+        threads = Thread.objects.filter(category_id=c['category_id'])
+        postCounter = 0
+        for i in threads:
+            print("Thread ID is ", i.thread_id)
+            postCount = Post.objects.filter(thread_id=i.thread_id).count()
+            postCounter += postCount
+        print("Post counter for ", c["name"], " is ", postCounter)
+        c["threadNum"] = threadCount
+        c["postNum"] = postCounter 
+    
     return render(request, 'forumListView.html', {'categories': categories})
 
 def ForumAddCategoryView(request):
