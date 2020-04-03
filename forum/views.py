@@ -54,10 +54,8 @@ def ForumListView(request):
         threads = Thread.objects.filter(category_id=c['category_id'])
         postCounter = 0
         for i in threads:
-            print("Thread ID is ", i.thread_id)
             postCount = Post.objects.filter(thread_id=i.thread_id).count()
             postCounter += postCount
-        print("Post counter for ", c["name"], " is ", postCounter)
         c["threadNum"] = threadCount
         c["postNum"] = postCounter 
     
@@ -83,8 +81,8 @@ def categorydetail(request, category_id):
     for thread in threads:
         posts = Post.objects.filter(thread_id=thread["thread_id"]).order_by("created_on")
         firstPoster = posts.first().posted_by
-        print(firstPoster)
         thread["started_by"] = firstPoster 
+        print("Thread Subject", thread["subject"],"Views: ", thread["views"])
     return render(request, "categoryDetailView.html", {"category": category.values()[0], "category_id": category_id, "threads": threads})
 
 def addThread(request, category_id):
@@ -106,14 +104,12 @@ def threadDetail(request, category_id, thread_id):
     posts = Post.objects.filter(thread_id=thread_id).order_by("created_on")
     category_name = Category.objects.filter(category_id=category_id).values()[0]["name"]
     thread_name = Thread.objects.filter(thread_id=thread_id).values()[0]["subject"]
+    thread = Thread.objects.get(thread_id=thread_id)
+    thread.views = thread.views + 1
+    thread.save()
     for post in posts:
         if post.reply_to > 0:
-            print("The post message is ", post.message)
             post.replying_message()
-            # post.reply_message = post.replying_message()
-            # print("The replying message is ", post.reply_message)
-            # post["replying_to"] = orignal_post_message
-            # print(post.message, " is a reply to post id:", post.reply_to)
     return render(request, "threadDetailView.html", {"posts":  posts, "category_id": category_id, "thread_id": thread_id, "thread_name": thread_name, "category_name": category_name})
 
 def addpost(request, category_id, thread_id):
