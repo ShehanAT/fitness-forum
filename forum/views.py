@@ -96,7 +96,8 @@ def addThread(request, category_id):
             new_thread.save()
             new_post = Post(message=thread_message, posted_by="ShehanTest", thread_id=new_thread.thread_id)
             new_post.save()
-        return render(request, "addThreadView.html", {})
+        redirect_url = "/category/" + str(category_id)
+        return redirect(redirect_url)
     else:
         return render(request, "addThreadView.html", {"category_name": category[0]['name']})
 
