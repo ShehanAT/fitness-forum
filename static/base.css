@@ -5,7 +5,7 @@
     margin-left: 30px; 
     font-style: italic; 
     color: black; 
-    background-color: #f2e86d; 
+    background-color: #fffff0; 
     width: 80%; 
 }
 
@@ -19,7 +19,7 @@
 /* global styles */
 
 body{ 
-    background-color: #D3DFB8;
+    background-color: #fffff0;
 }
 
 a{
@@ -27,26 +27,22 @@ a{
 }
 
 .btn-primary{
-    background-color: #574d68 !important;
+    background-color: #375576 !important;
 }
 
 /* navbar styles */
 #navbar{
-    background-color: #574d68 !important;
+    background-color: #375576 !important;
 }
 
 
 /* forum view styles */
-#forum-table{
-    background-color: #c6a15b;
-}
+
 
 
 /* category view styles */
 
-#category-table{
-    background-color: #c6a15b;
-}
+
 
 /* thread view styles */
 #reply-message{
@@ -58,6 +54,23 @@ a{
     font-weight: 600;
 }
 
+.thread-content{
+    border-spacing: 2px;
+    margin-left: 30px;
+    width: 80%; 
+    background-color: white;
+    border: #4e95f4 1px solid;
+}
+
+.thread-content:nth-child(even){
+    background-color: #dae5f4; 
+}
+
+.thread-content:nth-child(even) > p{
+    background-color: #dae5f4;
+}
+
+
 
 .profilePic { 
     width: 50px;
@@ -67,12 +80,16 @@ a{
 .reply-content{
     width: 80%;
     margin-left: 30px;
-    background-color: grey;
-    border: 5px solid black;
+    border: 1px solid black;
+}
+.reply-content > img{
+    background: url("leftQuote.jpg") no-repeat;
+    width: 12px;
+    height: 12px;
+    float: left;
 }
 
 #addPostBtn{
-    /* margin-bottom: 5px; */
     margin: 30px;
 }
 
