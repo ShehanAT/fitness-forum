@@ -80,6 +80,11 @@ def ForumAddCategoryView(request):
 def categorydetail(request, category_id):
     category = Category.objects.filter(category_id=category_id)
     threads = Thread.objects.filter(category_id=category_id).values()
+    for thread in threads:
+        posts = Post.objects.filter(thread_id=thread["thread_id"]).order_by("created_on")
+        firstPoster = posts.first().posted_by
+        print(firstPoster)
+        thread["started_by"] = firstPoster 
     return render(request, "categoryDetailView.html", {"category": category.values()[0], "category_id": category_id, "threads": threads})
 
 def addThread(request, category_id):

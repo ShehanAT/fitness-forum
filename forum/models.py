@@ -33,7 +33,7 @@ class Post(models.Model):
     created_on = models.DateTimeField(default=datetime.now())
 
     def __str__(self):
-        return "Posted by: " + self.posted_by + ", On: " + self.date
+        return "Posted by: " + self.posted_by + ", On: " + str(self.created_on)
     
     def replying_message(self):
         orignal_post_message = Post.objects.filter(post_id=self.reply_to).values()[0]["message"]
