@@ -135,6 +135,9 @@ def addreplypost(request, category_id, thread_id, post_id):
     if request.method == "POST":
         form = AddPostForm(request.POST)
         if form.is_valid():
+            thread = Thread.objects.get(thread_id=thread_id)
+            thread.replies = thread.replies + 1
+            thread.save()
             post_message = form.cleaned_data["message"]
             new_post = Post(message=post_message, posted_by=request.user, thread_id=thread_id, created_on=datetime.now(), reply_to=reply_post_id)
             new_post.save()
