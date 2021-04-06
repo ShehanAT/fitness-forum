@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+<div class="content">
+    <h1>This is the Forum List View</h1>
+    {% if user.is_authenticated %}
+        <a href="/addCategory" class="btn btn-primary" >Add Category</a>
+    {% else %}
+        <p>You must be logged in to create a new forum category</p>
+    {% endif %}
+    <h2 >List Of Categories:</h2>
+</div>
+
+<table class="table table-bordered table-secondary" id="forum-table">
+<thead>
+    <th>Category Name</th>
+    <th>Category Description</th>
+    <th>Topics</th>
+    <th>Posts</th>
+</thead>
+<tbody>
+
+{% for i in categories %}
+<tr>
+    <td><a href="/category/{{i.category_id}}">{{i.name}}</a></td>
+    <td>{{i.description}}</td>
+    <td>{{i.threadNum}}</td>
+    <td>{{i.postNum}}</td>
+</tr>
+{% endfor %}
+
+</tbody>
+
+</table>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+<div class="content">
+{% if request.session.login_status %}
+<h3>{{ request.session.login_status }}</h3>
+{% endif %}
+<h2>Login</h2>
+<form method="post">
+    {% csrf_token %}
+    <p>
+        <label for="username">Username: </label>
+        <input type="text" name="username" id="username">
+        <br>
+        <label for="password">Password: </label>
+        <input type="password" name="password" id="password">
+    </p>
+    <p style="color: red;">{{errors}}</p>
+    <button type="submit" name="button" class="btn btn-primary">Login</button>
+</form>
+</div>
+{% endblock %}
+

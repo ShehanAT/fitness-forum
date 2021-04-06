@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+<h1>Profile Section</h1>
+<p>Username: {{request.user}}</p>
+<p>Email: {{request.user.email}}</p>
+{% endblock %}

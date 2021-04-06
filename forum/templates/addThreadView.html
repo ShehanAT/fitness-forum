@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+
+{% block page_content %}
+<div class="content">
+<h3>Create Thread</h3>
+<h5>Please use this section to ask relevant questions pertaining to {{category_name}}.</h5>
+<form action="" method="post" name="form">
+    {% csrf_token %}
+    <div class="field">
+        <label for="subject">Subject:  </label>
+        <input type="text" name="subject" id="subject" size="45" maxlength="300" aria-required="true" style="width: 75%;">
+    </div>
+    <div class="field">
+        <label for="message">Message: </label>
+        <textarea name="message" id="message" style="width: 75%;"></textarea>
+    </div>
+    <input class="btn btn-primary" value="Submit" type="submit">
+</form>
+</div>
+
+{% endblock %}
