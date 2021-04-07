@@ -1,5 +1,6 @@
 from django.db import models
 from datetime import datetime
+from enum import Enum 
 
 class Category(models.Model):
     category_id = models.AutoField(primary_key=True, default=None)
@@ -38,5 +39,6 @@ class Post(models.Model):
     def replying_message(self):
         orignal_post_message = Post.objects.filter(post_id=self.reply_to).values()[0]["message"]
         self.reply_message = orignal_post_message
+
 
 # Create your models here.
