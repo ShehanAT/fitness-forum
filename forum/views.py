@@ -115,36 +115,41 @@ def add_thread_view(request, category_id):
 
 def thread_detail_view(request, category_id, thread_id):
     posts = Post.objects.filter(thread_id=thread_id).order_by("created_on")
-    category_name = Category.objects.filter(category_id=category_id).values()[0]["name"]
-    thread_name = Thread.objects.filter(thread_id=thread_id).values()[0]["subject"]
+    category_name = Category.objects.get(category_id=category_id).name
+    thread_name = Thread.objects.get(thread_id=thread_id).subject
     thread = Thread.objects.get(thread_id=thread_id)
     thread.views = thread.views + 1
     thread.save()
     for post in posts:
-        if post.reply_to_id.post_id > 0:
-            post.replying_message()
+        if post.reply_to_id != None:
+            if post.reply_to_id.post_id > 0:
+                post.replying_message()
     return render(request, "thread_detail_view.html", {"posts":  posts, "category_id": category_id, "thread_id": thread_id, "thread_name": thread_name, "category_name": category_name})
 
 def add_post_view(request, category_id, thread_id):
     category_name = Category.objects.filter(category_id=category_id).values()[0]["name"]
-    thread_subject = Thread.objects.filter(thread_id=thread_id).values()[0]["subject"]
+    thread = Thread.objects.get(thread_id=thread_id)
+    thread_subject = thread.subject
+    user = User.objects.get(id=request.user.id)
     if request.method == "POST":
         form = AddPostForm(request.POST)
         if form.is_valid():
             post_message = form.cleaned_data["message"]
-            new_post = Post(message=post_message, posted_by=request.user, thread_id=thread_id, created_on=datetime.now())
+            new_post = Post(message=post_message, posted_by_id=user, thread_id=thread, created_on=datetime.now(), reply_to_id=None)
             new_post.save()
         redirect_url = "/category/" + str(category_id) + "/thread/" + str(thread_id)
         return redirect(redirect_url)
     else:
-        return render(request, "add_post_view.html", {"category_name": category_name, "thread_subject": thread_subject })
+        return render(request, "add_post_view.html", {"category_name": category_name, "thread_name": thread_subject })
 
 def add_reply_post_view(request, category_id, thread_id, post_id):
     category_name = Category.objects.filter(category_id=category_id).values()[0]["name"]
-    thread_subject = Thread.objects.filter(thread_id=thread_id).values()[0]["subject"]
-    reply_post = Post.objects.filter(post_id=post_id).values()[0]
-    reply_post_id = reply_post["post_id"]
-    reply_post_message = reply_post["message"]
+    thread = Thread.objects.get(thread_id=thread_id)
+    thread_subject = thread.subject
+    user = User.objects.get(id=request.user.id)
+    reply_post = Post.objects.get(post_id=post_id)
+    reply_post_id = reply_post.post_id
+    reply_post_message = reply_post.message
     if request.method == "POST":
         form = AddPostForm(request.POST)
         if form.is_valid():
@@ -152,7 +157,7 @@ def add_reply_post_view(request, category_id, thread_id, post_id):
             thread.replies = thread.replies + 1
             thread.save()
             post_message = form.cleaned_data["message"]
-            new_post = Post(message=post_message, posted_by=request.user, thread_id=thread_id, created_on=datetime.now(), reply_to=reply_post_id)
+            new_post = Post(message=post_message, posted_by_id=user, thread_id=thread, created_on=datetime.now(), reply_to_id=reply_post)
             new_post.save()
         redirect_url = "/category/" + str(category_id) + "/thread/" + str(thread_id)
         return redirect(redirect_url)

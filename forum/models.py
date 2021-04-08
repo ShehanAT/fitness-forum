@@ -44,13 +44,14 @@ class Post(models.Model):
     reply_to_id = models.ForeignKey('self', null=True, on_delete=models.CASCADE)
     rep_count = models.IntegerField(default=0)
     created_on = models.DateTimeField(default=datetime.now())
-
+    editted_on = models.DateTimeField(default=datetime.now())
+    
     def __str__(self):
         return "Posted by: " + self.posted_by_id + ", On: " + str(self.created_on)
     
     def replying_message(self):
-        orignal_post_message = Post.objects.filter(post_id=self.reply_to_id.post_id).values()[0]["message"]
-        self.reply_message = orignal_post_message
+        original_post_message = Post.objects.get(post_id=self.reply_to_id.post_id).message
+        self.reply_message = original_post_message
 
 class FitnessProfile(models.Model):
 

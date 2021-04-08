@@ -10,19 +10,23 @@
 {% for post in posts %}
 <div class="thread-content">
     <img class="profilePic" src="{% static 'img/profilePic.png' %}"/>
-    <b class="content">{{post.posted_by}}</b>
-    {% if post.reply_to > 0 %}
-        <p class="reply-content"><img src="{% static 'img/leftQuote.png' %}"/>{{post.reply_message}}</p><p class="content">{{post.message}}<br>
-            {% if request.session.loggedIn %}
-                <a href="/category/{{category_id}}/thread/{{thread_id}}/replyPost/{{post.post_id}}"><img src="{% static 'img/reload.png' %}" class="reply-icon"/>Reply</a>
+    <b class="content">{{post.posted_by_id.username}}</b><i>&nbsp; Posted {{ post.created_on }}</i>
+    {% if post.reply_to_id.post_id > 0 %}
+        <div class="reply-content">
+        <span><p>Posted by: {{ post.reply_to_id.posted_by_id.username }} on {{ post.reply_to_id.created_on }}</p></span>
+        <!-- <p class="reply-content"> -->
+            <p><img src="{% static 'img/leftQuote.png' %}" class="reply_left_quote" />{{post.reply_message}}</p></div>
+            <p class="content">{{post.message}}<br>
+            {% if request.session.logged_in %}
+                <a href="/category/{{category_id}}/thread/{{thread_id}}/reply_post/{{post.post_id}}"><img src="{% static 'img/reload.png' %}" class="reply-icon"/>Reply</a>
             {% endif %}
         </p>
         <p class="content">{{post.created_on}}</p>
     {% else %}
         <p class="content">{{post.message}}<br>
-        {% if request.session.loggedIn %}
+        {% if request.session.logged_in %}
             <!-- <p class="content">{{post.message}}<br> -->
-            <a href="/category/{{category_id}}/thread/{{thread_id}}/replyPost/{{post.post_id}}"><img src="{% static 'img/reload.png' %}" class="reply-icon"/>Reply</a>
+            <a href="/category/{{category_id}}/thread/{{thread_id}}/reply_post/{{post.post_id}}"><img src="{% static 'img/reload.png' %}" class="reply-icon"/>Reply</a>
         {% endif %}
         </p>
         <p class="content">{{post.created_on}}</p>
@@ -34,7 +38,7 @@
 
 <br>
 {% if user.is_authenticated %}
-    <a href="/category/{{category_id}}/thread/{{thread_id}}/addPost" class="btn btn-primary" id="addPostBtn">Add Post</a>
+    <a href="/category/{{category_id}}/thread/{{thread_id}}/add_post" class="btn btn-primary" id="addPostBtn">Add Post</a>
 {% else %}
     <p class="nav-body-content">You must be <a href="/login">logged in</a> to post in this thread</p>
 {% endif %}
