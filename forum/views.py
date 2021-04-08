@@ -7,8 +7,10 @@ from django.contrib.sessions.backends.db import SessionStore
 from django.shortcuts import redirect
 from .forms import AddCategoryForm, AddThreadForm, SignUpForm, AddPostForm 
 from .models import Category, Thread, Post 
+import logging 
 
-def SignUp(request):
+logger = logging.getLogger(__name__)
+def signup_view(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
@@ -23,8 +25,9 @@ def SignUp(request):
             # return render(request, "login.html", {"signup_success_msg": "Thanks for registering! Please login using your new credentials..."})
     else:
         form = SignUpForm()
-    return render(request, "signup.html", {'signupForm': form})
-def Login(request):
+    return render(request, "signup_view.html", {'signupForm': form})
+
+def login_view(request):
     s = SessionStore()
     if request.method == "POST":
         username = request.POST["username"]
@@ -34,25 +37,25 @@ def Login(request):
         if user is not None:
             login(request, user)
             request.session['username'] = username
-            request.session['loggedIn'] = True
+            request.session['logged_in'] = True
             categories = Category.objects.all().values()
             return redirect("/")
         else:
-            return render(request, "login.html", {"errors": "Incorrect username/password combo"})
+            return render(request, "login_view.html", {"errors": "Incorrect username/password combo"})
     else:
-        request.session['loggedIn'] = False 
-        return render(request, "login.html", {})
+        request.session['logged_in'] = False 
+        return render(request, "login_view.html", {})
 
-def Logout(request):
+def logout_view(request):
     logout(request)
     categories = Category.objects.all().values()
     return redirect("/")
 
-def Profile(request):
+def profile_view(request):
     user = request.user
-    return render(request, "profileView.html", {"user": user})
+    return render(request, "profile_view.html", {"user": user})
 
-def ForumListView(request):
+def forum_list_view(request):
     categories = Category.objects.all().values()
     for c in categories:
         threadCount = Thread.objects.filter(category_id=c['category_id']).count()
@@ -64,9 +67,9 @@ def ForumListView(request):
         c["threadNum"] = threadCount
         c["postNum"] = postCounter 
     
-    return render(request, 'forumListView.html', {'categories': categories})
+    return render(request, 'forum_list_view.html', {'categories': categories})
 
-def ForumAddCategoryView(request):
+def add_category_view(request):
     if request.method == "POST":
         form = AddCategoryForm(request.POST)
         if form.is_valid():
@@ -76,21 +79,25 @@ def ForumAddCategoryView(request):
             category.save()
             return HttpResponseRedirect('/')
         else:
-            return render(request, 'forumAddCategory.html', {})
+            return render(request, 'add_category_view.html', {})
     else:
-        return render(request, 'forumAddCategory.html')
+        return render(request, 'add_category_view.html')
 
-def categorydetail(request, category_id):
+def category_detail_view(request, category_id):
     category = Category.objects.filter(category_id=category_id)
     threads = Thread.objects.filter(category_id=category_id).values()
-    for thread in threads:
-        posts = Post.objects.filter(thread_id=thread["thread_id"]).order_by("created_on")
-        firstPoster = posts.first().posted_by
-        thread["started_by"] = firstPoster 
-        print("Thread Subject", thread["subject"],"Views: ", thread["views"])
-    return render(request, "categoryDetailView.html", {"category": category.values()[0], "category_id": category_id, "threads": threads})
+    try:
+        for thread in threads:
+            posts = Post.objects.filter(thread_id=thread["thread_id"]).order_by("created_on")
+            posted_user_id = posts.first().posted_by_id.id
+            username = User.objects.get(id=posted_user_id).get_username()
+            thread["started_by"] = username 
+            print("Thread Subject", thread["subject"],"Views: ", thread["views"])
+    except AttributeError as e:
+        logger.error("ERROR: " + str(e))
+    return render(request, "category_detail_view.html", {"category": category.values()[0], "category_id": category_id, "threads": threads})
 
-def addThread(request, category_id):
+def add_thread_view(request, category_id):
     category = Category.objects.filter(category_id=category_id).values()
     if request.method == "POST":
         form = AddThreadForm(request.POST)
@@ -104,9 +111,9 @@ def addThread(request, category_id):
         redirect_url = "/category/" + str(category_id)
         return redirect(redirect_url)
     else:
-        return render(request, "addThreadView.html", {"category_name": category[0]['name']})
+        return render(request, "add_thread_view.html", {"category_name": category[0]['name']})
 
-def threadDetail(request, category_id, thread_id):
+def thread_detail_view(request, category_id, thread_id):
     posts = Post.objects.filter(thread_id=thread_id).order_by("created_on")
     category_name = Category.objects.filter(category_id=category_id).values()[0]["name"]
     thread_name = Thread.objects.filter(thread_id=thread_id).values()[0]["subject"]
@@ -114,11 +121,11 @@ def threadDetail(request, category_id, thread_id):
     thread.views = thread.views + 1
     thread.save()
     for post in posts:
-        if post.reply_to > 0:
+        if post.reply_to_id.post_id > 0:
             post.replying_message()
-    return render(request, "threadDetailView.html", {"posts":  posts, "category_id": category_id, "thread_id": thread_id, "thread_name": thread_name, "category_name": category_name})
+    return render(request, "thread_detail_view.html", {"posts":  posts, "category_id": category_id, "thread_id": thread_id, "thread_name": thread_name, "category_name": category_name})
 
-def addpost(request, category_id, thread_id):
+def add_post_view(request, category_id, thread_id):
     category_name = Category.objects.filter(category_id=category_id).values()[0]["name"]
     thread_subject = Thread.objects.filter(thread_id=thread_id).values()[0]["subject"]
     if request.method == "POST":
@@ -130,9 +137,9 @@ def addpost(request, category_id, thread_id):
         redirect_url = "/category/" + str(category_id) + "/thread/" + str(thread_id)
         return redirect(redirect_url)
     else:
-        return render(request, "addPostView.html", {"category_name": category_name, "thread_subject": thread_subject })
+        return render(request, "add_post_view.html", {"category_name": category_name, "thread_subject": thread_subject })
 
-def addreplypost(request, category_id, thread_id, post_id):
+def add_reply_post_view(request, category_id, thread_id, post_id):
     category_name = Category.objects.filter(category_id=category_id).values()[0]["name"]
     thread_subject = Thread.objects.filter(thread_id=thread_id).values()[0]["subject"]
     reply_post = Post.objects.filter(post_id=post_id).values()[0]
@@ -150,9 +157,9 @@ def addreplypost(request, category_id, thread_id, post_id):
         redirect_url = "/category/" + str(category_id) + "/thread/" + str(thread_id)
         return redirect(redirect_url)
     else:
-        return render(request, "addReplyPostView.html", {"category_name": category_name, "category_id": category_id, "thread_subject": thread_subject, "reply_post_message": reply_post_message, "thread_id": thread_id})
+        return render(request, "add_reply_post_view.html", {"category_name": category_name, "category_id": category_id, "thread_subject": thread_subject, "reply_post_message": reply_post_message, "thread_id": thread_id})
 
-def testView(request):
+def test_view(request):
     request.session["login_status"] = "Thanks for registering! Please login using your new credentials..."
-    return render(request, "login.html", {})
+    return render(request, "login_view.html", {})
 # Create your views here.

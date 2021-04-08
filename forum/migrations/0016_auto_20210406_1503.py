@@ -2,16 +2,9 @@
 
 import datetime
 from django.db import migrations, models
+from forum.models import FitnessProfile
 
-
-FITNESSGOAL = [
-        ('build_muscle', 'build_muscle'),
-        ('lose_fat', 'lose_fat'),
-        ('improve_sport', 'improve_sport'),
-        ('endurance', 'endurance'),
-        ('flexibility', 'flexibility'),
-        ('other', 'other')
-]
+FitnessGoals = FitnessProfile.FitnessGoals
 
 class Migration(migrations.Migration):
 
@@ -56,7 +49,7 @@ class Migration(migrations.Migration):
                 ('height', models.IntegerField()),
                 ('weight', models.IntegerField()),
                 ('body_fat_percentage', models.DecimalField(max_digits=2, decimal_places=2)),
-                ('fitness_goal', models.CharField(max_length=100, choices=FITNESSGOAL))
+                ('fitness_goal', models.CharField(max_length=100, choices=FitnessGoals.choices))
             ]
         ),
 

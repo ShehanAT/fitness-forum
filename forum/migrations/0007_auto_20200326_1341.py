@@ -13,11 +13,12 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='post',
-            name='thread',
-            field=models.ForeignKey(default=forum.models.get_foo, on_delete=django.db.models.deletion.CASCADE, to='forum.Thread'),
-        ),
+        # migrations.AddField(
+        #     model_name='post',
+        #     name='thread',
+        #     field=models.ForeignKey(default=forum.models.get_foo, on_delete=django.db.models.deletion.CASCADE, to='forum.Thread'),
+        # ),
+
         migrations.AlterField(
             model_name='post',
             name='created_on',
