@@ -1,6 +1,8 @@
 from django import forms 
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User 
+from django.contrib.auth.models import User
+from .models import Image 
+ 
 class SignUpForm(UserCreationForm):
     email = forms.EmailField(max_length=200)
     class Meta:
@@ -18,4 +20,9 @@ class AddThreadForm(forms.Form):
     
 class AddPostForm(forms.Form):
     message = forms.CharField(label='Message', max_length=500)
-    
+
+class ImageForm(forms.ModelForm):
+    '''Form for the image model'''
+    class Meta:
+        model = Image 
+        fields = ('title', 'image')

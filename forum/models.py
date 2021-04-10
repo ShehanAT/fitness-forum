@@ -5,7 +5,10 @@ from enum import Enum
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.core.exceptions import ObjectDoesNotExist
+import logging 
 
+logger = logging.getLogger()
 class ForumUser(User):
 
     class Gender(models.TextChoices):
@@ -41,7 +44,9 @@ class Post(models.Model):
     message = models.TextField()
     # add default to posted_by_id
     posted_by_id = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)
-    reply_to_id = models.ForeignKey('self', null=True, on_delete=models.CASCADE)
+    # reply_to_id = models.ForeignKey('self', null=True, on_delete=models.CASCADE)
+    first_reply_to_id = models.ForeignKey('self', null=True, on_delete=nodels.CASCADE)
+    second_reply_to_id = models.ForeignKey('self', null=True, on_delete=nodels.CASCADE)
     rep_count = models.IntegerField(default=0)
     created_on = models.DateTimeField(default=datetime.now())
     editted_on = models.DateTimeField(default=datetime.now())
@@ -49,9 +54,17 @@ class Post(models.Model):
     def __str__(self):
         return "Posted by: " + self.posted_by_id + ", On: " + str(self.created_on)
     
-    def replying_message(self):
-        original_post_message = Post.objects.get(post_id=self.reply_to_id.post_id).message
-        self.reply_message = original_post_message
+    def set_reply_message(self):
+        first_reply_post = Post.objects.get(post_id=self.reply_to_id.post_id)
+        reply_to_msg = first_reply_post.message
+        self.reply_message = reply_to_msg
+        try:
+            second_reply_post = Post.objects.get(post_id=first_reply_post.reply_to_id.post_id)
+        except ObjectDoesNotExist as e:
+            logger.error(e)
+        except AttributeError as e:
+            logger.error(e)
+
 
 class FitnessProfile(models.Model):
 
@@ -75,3 +88,11 @@ class PostSignature(models.Model):
     signature_for_id = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)
     message = models.TextField()
     signature_picture = models.ImageField(blank=True, null=True, upload_to='signature_pics/%Y/%m/%d')
+
+
+class Image(models.Model):
+    title = models.CharField(max_length=200)
+    image = models.ImageField(upload_to='images')
+
+    def __str__(self):
+        return self.title

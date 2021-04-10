@@ -123,7 +123,8 @@ def thread_detail_view(request, category_id, thread_id):
     for post in posts:
         if post.reply_to_id != None:
             if post.reply_to_id.post_id > 0:
-                post.replying_message()
+                post.set_reply_message()
+                print('')
     return render(request, "thread_detail_view.html", {"posts":  posts, "category_id": category_id, "thread_id": thread_id, "thread_name": thread_name, "category_name": category_name})
 
 def add_post_view(request, category_id, thread_id):
@@ -167,4 +168,16 @@ def add_reply_post_view(request, category_id, thread_id, post_id):
 def test_view(request):
     request.session["login_status"] = "Thanks for registering! Please login using your new credentials..."
     return render(request, "login_view.html", {})
-# Create your views here.
+
+def image_upload_view(request):
+    '''Process images uploaded by users'''
+    if request.method == 'POST':
+        form = ImageForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+
+            img_obj = form.instance 
+            return render (request, "test_image_upload.html", {'form': form, 'img_obj': img_obj})
+    else:
+        form = ImageForm()
+    return render(request, "test_image_upload.html", {'form': form})

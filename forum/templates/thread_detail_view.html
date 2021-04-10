@@ -10,22 +10,25 @@
 {% for post in posts %}
 <div class="thread-content">
     <img class="profilePic" src="{% static 'img/profilePic.png' %}"/>
-    <b class="content">{{post.posted_by_id.username}}</b><i>&nbsp; Posted {{ post.created_on }}</i>
-    {% if post.reply_to_id.post_id > 0 %}
-        <div class="reply-content">
-        <span><p>Posted by: {{ post.reply_to_id.posted_by_id.username }} on {{ post.reply_to_id.created_on }}</p></span>
-        <!-- <p class="reply-content"> -->
-            <p><img src="{% static 'img/leftQuote.png' %}" class="reply_left_quote" />{{post.reply_message}}</p></div>
-            <p class="content">{{post.message}}<br>
-            {% if request.session.logged_in %}
-                <a href="/category/{{category_id}}/thread/{{thread_id}}/reply_post/{{post.post_id}}"><img src="{% static 'img/reload.png' %}" class="reply-icon"/>Reply</a>
-            {% endif %}
-        </p>
-        <p class="content">{{post.created_on}}</p>
+    <b class="content">{{post.posted_by_id.username}}</b><i>&nbsp; Posted {{post.created_on}}</i>
+    {% if post.first_reply_message %}
+        {% if post.second_reply_message %}
+
+
+        {% else %}
+            <div class="reply-content">
+                <span><p>Posted by: {{ post.reply_to_id.posted_by_id.username }} on {{ post.reply_to_id.created_on }}</p></span>
+                    <p><img src="{% static 'img/leftQuote.png' %}" class="reply_left_quote" />{{ post.reply_message }}</p></div>
+                    <p class="content">{{post.message}}<br>
+                {% if request.session.logged_in %}
+                    <a href="/category/{{category_id}}/thread/{{thread_id}}/reply_post/{{post.post_id}}"><img src="{% static 'img/reload.png' %}" class="reply-icon"/>Reply</a>
+                {% endif %}
+                </p>
+            <p class="content">{{post.created_on}}</p>
+        {% endif %}
     {% else %}
         <p class="content">{{post.message}}<br>
         {% if request.session.logged_in %}
-            <!-- <p class="content">{{post.message}}<br> -->
             <a href="/category/{{category_id}}/thread/{{thread_id}}/reply_post/{{post.post_id}}"><img src="{% static 'img/reload.png' %}" class="reply-icon"/>Reply</a>
         {% endif %}
         </p>
@@ -33,8 +36,6 @@
     {% endif %}
 </div>
 {% endfor %}
-</tbody>
-<table>
 
 <br>
 {% if user.is_authenticated %}
