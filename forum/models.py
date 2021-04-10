@@ -45,8 +45,8 @@ class Post(models.Model):
     # add default to posted_by_id
     posted_by_id = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)
     # reply_to_id = models.ForeignKey('self', null=True, on_delete=models.CASCADE)
-    first_reply_to_id = models.ForeignKey('self', null=True, on_delete=nodels.CASCADE)
-    second_reply_to_id = models.ForeignKey('self', null=True, on_delete=nodels.CASCADE)
+    first_reply_to_id = models.ForeignKey('self', null=True, on_delete=models.CASCADE, related_name='first_reply')
+    second_reply_to_id = models.ForeignKey('self', null=True, on_delete=models.CASCADE, related_name='second_reply')
     rep_count = models.IntegerField(default=0)
     created_on = models.DateTimeField(default=datetime.now())
     editted_on = models.DateTimeField(default=datetime.now())
@@ -54,12 +54,16 @@ class Post(models.Model):
     def __str__(self):
         return "Posted by: " + self.posted_by_id + ", On: " + str(self.created_on)
     
-    def set_reply_message(self):
-        first_reply_post = Post.objects.get(post_id=self.reply_to_id.post_id)
+    def set_first_reply_message(self):
+        first_reply_post = Post.objects.get(post_id=self.first_reply_to_id.post_id)
         reply_to_msg = first_reply_post.message
-        self.reply_message = reply_to_msg
+        self.first_reply_message = reply_to_msg
+        return first_reply_post
+
+    def set_second_reply_message(self, first_reply_post):
         try:
-            second_reply_post = Post.objects.get(post_id=first_reply_post.reply_to_id.post_id)
+            second_reply_post = Post.objects.get(post_id=first_reply_post.first_reply_to_id.post_id)
+            self.second_reply_message = second_reply_post.message 
         except ObjectDoesNotExist as e:
             logger.error(e)
         except AttributeError as e:

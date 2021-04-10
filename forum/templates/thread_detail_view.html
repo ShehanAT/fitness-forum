@@ -13,12 +13,26 @@
     <b class="content">{{post.posted_by_id.username}}</b><i>&nbsp; Posted {{post.created_on}}</i>
     {% if post.first_reply_message %}
         {% if post.second_reply_message %}
-
+            <div class="first-reply-content">
+            <div class="second-reply-content">
+                <span><p>Posted by: {{ post.second_reply_to_id.posted_by_id.username }} on {{ post.second_reply_to_id.created_on }}</p></span>
+                    <p><img src="{% static 'img/leftQuote.png' %}" class="reply_left_quote" />{{ post.second_reply_message }}</p>
+            </div>
+                <span><p>Posted by: {{post.first_reply_to_id.posted_by_id.username}} on {{post.first_reply_to_id.created_on}}</p></span>
+                    <p class="content">{{post.first_reply_message}}<br>
+            </div>
+                <span><p>Posted by: {{ post.posted_by_id.username }} on {{ post.created_on }}</p></span>
+                    <p class="content">{{post.message}}<br>
+                {% if request.session.logged_in %}
+                    <a href="/category/{{category_id}}/thread/{{thread_id}}/reply_post/{{post.post_id}}"><img src="{% static 'img/reload.png' %}" class="reply-icon"/>Reply</a>
+                {% endif %}
+                </p>
+            <p class="content">{{post.created_on}}</p>
 
         {% else %}
             <div class="reply-content">
-                <span><p>Posted by: {{ post.reply_to_id.posted_by_id.username }} on {{ post.reply_to_id.created_on }}</p></span>
-                    <p><img src="{% static 'img/leftQuote.png' %}" class="reply_left_quote" />{{ post.reply_message }}</p></div>
+                <span><p>Posted by: {{ post.first_reply_to.posted_by_id.username }} on {{ post.first_reply_to.created_on }}</p></span>
+                    <p><img src="{% static 'img/leftQuote.png' %}" class="reply_left_quote" />{{ post.first_reply_message }}</p></div>
                     <p class="content">{{post.message}}<br>
                 {% if request.session.logged_in %}
                     <a href="/category/{{category_id}}/thread/{{thread_id}}/reply_post/{{post.post_id}}"><img src="{% static 'img/reload.png' %}" class="reply-icon"/>Reply</a>

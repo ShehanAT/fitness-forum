@@ -111,11 +111,12 @@ a{
     width: 20px;
 }
 
-.reply-content{
+.first-reply-content, .second-reply-content{
     width: 80%;
     margin-left: 30px;
     border: 1px solid black;
 }
+
 .reply-content > img{
     background: url("leftQuote.jpg") no-repeat;
     width: 12px;
