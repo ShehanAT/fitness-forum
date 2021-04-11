@@ -20,7 +20,6 @@ def signup_view(request):
             password1 = form.cleaned_data["password1"]
             password2 = form.cleaned_data["password2"]
             user = ForumUser.objects.create_user(username, email, password1)
-            # user = User.objects.create_user(username, email, password1)
             user.save()
             # redirect to /login
             return redirect("/login")
@@ -57,10 +56,13 @@ def profile_view(request):
     forum_user = ForumUser.objects.get(id=request.user.id)
     profile_pic_form = ProfilePicForm(request.POST, request.FILES)
     if request.method == "POST":
-        if profile_pic_form.is_valid():
-            avatar = profile_pic_form.cleaned_data.get('profile_pic')
-            forum_user.profile_pic = avatar 
-            forum_user.save()
+        if "update_profile" in request.POST:
+            pass 
+        if "upload_profile_pic" in request.POST:
+            if profile_pic_form.is_valid():
+                avatar = profile_pic_form.cleaned_data.get('profile_pic')
+                forum_user.profile_pic = avatar 
+                forum_user.save()
     return render(request, "profile_view.html", {"user": forum_user, "profile_pic_form": profile_pic_form})
 
 def forum_list_view(request):

@@ -44,7 +44,6 @@ class Post(models.Model):
     message = models.TextField()
     # add default to posted_by_id
     posted_by_id = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)
-    # reply_to_id = models.ForeignKey('self', null=True, on_delete=models.CASCADE)
     first_reply_to_id = models.ForeignKey('self', null=True, on_delete=models.CASCADE, related_name='first_reply')
     second_reply_to_id = models.ForeignKey('self', null=True, on_delete=models.CASCADE, related_name='second_reply')
     rep_count = models.IntegerField(default=0)

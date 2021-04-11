@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'forum',
     'fitness_forum',
-    'django_seed'
+    'django_seed',
+    'jquery'
 ]
 
 MIDDLEWARE = [
@@ -127,6 +128,8 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
+
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/images/'
 
