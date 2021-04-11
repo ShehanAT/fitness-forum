@@ -9,7 +9,7 @@
 
 {% for post in posts %}
 <div class="thread-content">
-    <img class="profilePic" src="{% static 'img/profilePic.png' %}"/>
+    <img class="profilePic" src="{{post.posted_by_id.forumuser.profile_pic.url}}"/>
     <b class="content">{{post.posted_by_id.username}}</b><i>&nbsp; Posted {{post.created_on}}</i>
     {% if post.first_reply_message %}
         {% if post.second_reply_message %}
