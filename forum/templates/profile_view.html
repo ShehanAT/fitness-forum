@@ -2,8 +2,19 @@
 
 {% block page_content %}
 <h1>Profile Section</h1>
+<img src="{{request.user.forumuser.profile_pic.url}}" />
 <p>Username: {{request.user}}</p>
 <p>Email: {{request.user.email}}</p>
+
+
+<form action="profile" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    Select profile picture to upload:
+    <!-- <input type="file" name="fileToUpload" id="fileToUpload"> -->
+    {{ profile_pic_form }}
+    <input type="submit" value="Upload Image" name="submit">
+</form>
+
 {% endblock %}
 
 <!--  "{{ model_name.media_gallery.url }}" - to access post signature image -->

@@ -10,14 +10,14 @@ import logging
 
 logger = logging.getLogger()
 class ForumUser(User):
-
     class Gender(models.TextChoices):
         male = 'M', _('Male')
         female = 'F', _('Female')
-
+    forum_user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE, related_name='user')
+    profile_pic = models.ImageField(null=True, blank=True, upload_to='images')
     member_since = models.DateField(default=timezone.now())
     gender = models.CharField(max_length=1, choices=Gender.choices)
-    rep_points = models.IntegerField()
+    rep_points = models.IntegerField(default=0)
 
 class Category(models.Model):
     category_id = models.AutoField(primary_key=True, default=None)

@@ -1,7 +1,7 @@
 from django import forms 
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Image 
+from .models import Image, ForumUser
  
 class SignUpForm(UserCreationForm):
     email = forms.EmailField(max_length=200)
@@ -21,8 +21,12 @@ class AddThreadForm(forms.Form):
 class AddPostForm(forms.Form):
     message = forms.CharField(label='Message', max_length=500)
 
-class ImageForm(forms.ModelForm):
+class ForumUserForm(forms.Form):
     '''Form for the image model'''
-    class Meta:
-        model = Image 
-        fields = ('title', 'image')
+    profic_pic = forms.ImageField(label='Profilc Picture') 
+
+class ProfilePicForm(forms.Form):
+    # class Meta:
+    #     model = ForumUser 
+    #     fields = ['profile_pic']
+    profile_pic = forms.ImageField(label='Profile Picture Upload')

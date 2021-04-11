@@ -5,8 +5,9 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout 
 from django.contrib.sessions.backends.db import SessionStore 
 from django.shortcuts import redirect
-from .forms import AddCategoryForm, AddThreadForm, SignUpForm, AddPostForm 
-from .models import Category, Thread, Post 
+from .forms import AddCategoryForm, AddThreadForm, SignUpForm, AddPostForm, ForumUserForm, ProfilePicForm
+from .models import Category, Thread, Post, ForumUser
+from django.core.files.uploadedfile import SimpleUploadedFile
 import logging 
 
 logger = logging.getLogger(__name__)
@@ -18,7 +19,8 @@ def signup_view(request):
             email = form.cleaned_data["email"]
             password1 = form.cleaned_data["password1"]
             password2 = form.cleaned_data["password2"]
-            user = User.objects.create_user(username, email, password1)
+            user = ForumUser.objects.create_user(username, email, password1)
+            # user = User.objects.create_user(username, email, password1)
             user.save()
             # redirect to /login
             return redirect("/login")
@@ -52,8 +54,14 @@ def logout_view(request):
     return redirect("/")
 
 def profile_view(request):
-    user = request.user
-    return render(request, "profile_view.html", {"user": user})
+    forum_user = ForumUser.objects.get(id=request.user.id)
+    profile_pic_form = ProfilePicForm(request.POST, request.FILES)
+    if request.method == "POST":
+        if profile_pic_form.is_valid():
+            avatar = profile_pic_form.cleaned_data.get('profile_pic')
+            forum_user.profile_pic = avatar 
+            forum_user.save()
+    return render(request, "profile_view.html", {"user": forum_user, "profile_pic_form": profile_pic_form})
 
 def forum_list_view(request):
     categories = Category.objects.all().values()
