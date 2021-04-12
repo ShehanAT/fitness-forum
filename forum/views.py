@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout 
 from django.contrib.sessions.backends.db import SessionStore 
 from django.shortcuts import redirect
-from .forms import AddCategoryForm, AddThreadForm, SignUpForm, AddPostForm, ForumUserForm, ProfilePicForm
+from .forms import AddCategoryForm, AddThreadForm, SignUpForm, AddPostForm, ForumUserForm, ProfilePicForm, UpdateProfileForm
 from .models import Category, Thread, Post, ForumUser
 from django.core.files.uploadedfile import SimpleUploadedFile
 import logging 
@@ -55,15 +55,18 @@ def logout_view(request):
 def profile_view(request):
     forum_user = ForumUser.objects.get(id=request.user.id)
     profile_pic_form = ProfilePicForm(request.POST, request.FILES)
+    update_profile_form = UpdateProfileForm(data=request.POST, instance=forum_user)
     if request.method == "POST":
-        if "update_profile" in request.POST:
-            pass 
-        if "upload_profile_pic" in request.POST:
-            if profile_pic_form.is_valid():
-                avatar = profile_pic_form.cleaned_data.get('profile_pic')
-                forum_user.profile_pic = avatar 
-                forum_user.save()
-    return render(request, "profile_view.html", {"user": forum_user, "profile_pic_form": profile_pic_form})
+        if "update_profile" in request.POST and update_profile_form.is_valid():
+            update_profile_form.save()
+            return redirect("/profile")
+            # return render(request, "profile_view.html", {"user": forum_user, "profile_pic_form": profile_pic_form, "update_profile_form": update_profile_form})
+        if "upload_profile_pic" in request.POST and profile_pic_form.is_valid():
+            avatar = profile_pic_form.cleaned_data.get('profile_pic')
+            forum_user.profile_pic = avatar 
+            forum_user.save()
+    else:
+        return render(request, "profile_view.html", {"user": forum_user, "profile_pic_form": profile_pic_form, "update_profile_form": update_profile_form})
 
 def forum_list_view(request):
     categories = Category.objects.all().values()

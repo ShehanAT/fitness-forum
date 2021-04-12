@@ -148,9 +148,10 @@ a{
     transform: translate(-50%, -50%);
     align-items: center;
     justify-content: center;
-    text-align: center;
     margin: auto;
     z-index: 1;
+    width: 30vw;
+    text-align: left;
 }
 
 .modal-overlay {
@@ -198,4 +199,8 @@ a{
 .open-modal-btn {
     width: 15%;
     margin: 5px;
+}
+
+#update-profile-btn-container {
+    text-align: center;
 }

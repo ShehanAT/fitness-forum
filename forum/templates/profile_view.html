@@ -4,7 +4,7 @@
 <div class='profile-info-container'>
     <h1>Profile Section</h1>
     <img src="{{request.user.forumuser.profile_pic.url}}" class="profile-pic-img"/>
-    <p>Username: {{request.user}}</p>
+    <p>Username: {{request.user.username}}</p>
     <p>Email: {{request.user.email}}</p>
     <p>Name: {{request.user.first_name}} {{request.user.last_name}}</p>
     <p>Rep points: {{request.user.forumuser.rep_points}}</p>
@@ -18,13 +18,13 @@
 <form action="profile" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     Change/upload profile picture:
-    <!-- <input type="file" name="fileToUpload" id="fileToUpload"> -->
     {{ profile_pic_form }}
     <input type="submit" value="Upload Image" name="upload_profile_pic">
 </form>
 <div class="update-profile-modal">
-    <form action="profile" class="form-horizontal" role="form">
-        <div class="form-group">
+    <form action="profile" class="form-horizontal" role="form" method="post">
+        {% csrf_token %}
+        <!-- <div class="form-group">
           <label class="col-lg-3 control-label">Username:</label>
           <div class="col-lg-8">
             <input class="form-control" type="text" value="{{request.user.username}}" name="username">
@@ -51,6 +51,17 @@
         <div class="update-modal-btn-container">
             <button id="submit-btn" type="submit" name="update_profile" class="modal-btn">Submit</button>
             <button id="close-btn" class="modal-btn">Close</button>
+        </div> -->
+        {% for field in update_profile_form %}
+            <div class="form-group">
+                <label class="col-lg-3 control-label">{{ field.label }}:</label>
+                <div class="col-lg-8">
+                <input class="form-control" type="text" value="{{ field.initial }}" name="{{ field.name }}"/>
+                </div>
+            </div>
+        {% endfor %}
+        <div class="form-group" id="update-profile-btn-container">
+            <input type="submit" value="Update" name="update_profile" />
         </div>
     </form>
 </div>
