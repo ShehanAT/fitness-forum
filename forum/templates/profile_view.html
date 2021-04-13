@@ -1,9 +1,101 @@
 {% extends "base.html" %}
 
 {% block page_content %}
-<h1>Profile Section</h1>
-<p>Username: {{request.user}}</p>
-<p>Email: {{request.user.email}}</p>
+<div class='profile-info-container'>
+    <h1>Profile Section</h1>
+    <img src="{{request.user.forumuser.profile_pic.url}}" class="profile-pic-img"/>
+    <p>Username: {{request.user.username}}</p>
+    <p>Email: {{request.user.email}}</p>
+    <p>Name: {{request.user.first_name}} {{request.user.last_name}}</p>
+    <p>Rep points: {{request.user.forumuser.rep_points}}</p>
+    <p>Gender: {{request.user.forumuser.gender}}</p>
+    <p>Member Since: {{request.user.forumuser.member_since}}</p>
+</div>
+<div class='open-modal-btn-container'>
+    <button id='edit-profile-btn' class='open-modal-btn'>Edit profile</button>
+    <button id='change-password-btn' class='open-modal-btn'>Change password</button>
+</div>
+<div class='update-profile-error-container'>
+    {% if update_profile_form.errors %}
+        {% for field in update_profile_form %} 
+            {% for error in field.errors %}
+                <div class="alert alert-danger">
+                    <strong>{{ field.label }} : {{ error|escape }}</strong>
+                </div>
+            {% endfor %}
+        {% endfor %}
+    {% endif %}
+</div>
+<form action="profile" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    Change/upload profile picture:
+    {{ profile_pic_form }}
+    <input type="submit" value="Upload Image" name="upload_profile_pic">
+</form>
+<div class="update-profile-modal">
+    <form action="profile" class="form-horizontal" role="form" method="post">
+        {% csrf_token %}
+        {% for field in update_profile_form %}
+            <div class="form-group">
+                <label class="col-lg-3 control-label">{{ field.label }}:</label>
+                <div class="col-lg-8">
+                <input class="form-control" type="text" value="{{ field.initial }}" name="{{ field.name }}"/>
+                </div>
+            </div>
+        {% endfor %}
+        <div class="form-group" id="update-profile-btn-container">
+            <input type="submit" value="Update" name="update_profile" />
+        </div>
+    </form>
+</div>
+<div class="modal-overlay"></div>
+
+<script type='text/javascript'>
+$(document).ready(function() {
+    modalOpen = false 
+    const body = document.querySelector("body");
+    const modalOverlay = document.querySelector(".modal-overlay")
+    $('#edit-profile-btn').on('click', function(e){
+        if(modalOpen == false){
+            openModal(e)
+        }else{
+            closeModal(e)
+        }
+    })
+
+    $(document).on('click', function(e){
+        const target = event.target;
+        console.log(e)
+        if (target == modalOverlay && modalOpen) {
+            closeModal(e);
+        }
+    })
+
+    $("#close-btn").on('click', function(e){
+        closeModal(e);
+    })
+
+    function openModal(e){
+        e.preventDefault();
+        e.stopPropagation();
+        
+        isOpen = true;
+        $(".update-profile-modal").addClass("open");
+        $(".modal-overlay").addClass("open");
+        modalOpen = true 
+    }
+
+    function closeModal(e){
+        e.preventDefault();
+        e.stopPropagation();
+
+        isOpen = false;
+        $(".update-profile-modal").removeClass("open");
+        $(".modal-overlay").removeClass("open");
+        modalOpen = false 
+    }
+});
+</script>
 {% endblock %}
 
 <!--  "{{ model_name.media_gallery.url }}" - to access post signature image -->

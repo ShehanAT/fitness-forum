@@ -5,8 +5,9 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout 
 from django.contrib.sessions.backends.db import SessionStore 
 from django.shortcuts import redirect
-from .forms import AddCategoryForm, AddThreadForm, SignUpForm, AddPostForm 
-from .models import Category, Thread, Post 
+from .forms import AddCategoryForm, AddThreadForm, SignUpForm, AddPostForm, ForumUserForm, ProfilePicForm, UpdateProfileForm
+from .models import Category, Thread, Post, ForumUser
+from django.core.files.uploadedfile import SimpleUploadedFile
 import logging 
 
 logger = logging.getLogger(__name__)
@@ -18,7 +19,7 @@ def signup_view(request):
             email = form.cleaned_data["email"]
             password1 = form.cleaned_data["password1"]
             password2 = form.cleaned_data["password2"]
-            user = User.objects.create_user(username, email, password1)
+            user = ForumUser.objects.create_user(username, email, password1)
             user.save()
             # redirect to /login
             return redirect("/login")
@@ -52,8 +53,28 @@ def logout_view(request):
     return redirect("/")
 
 def profile_view(request):
-    user = request.user
-    return render(request, "profile_view.html", {"user": user})
+    forum_user = ForumUser.objects.get(id=request.user.id)
+    profile_pic_form = ProfilePicForm(request.POST, request.FILES)
+    update_profile_form = UpdateProfileForm(data=request.POST or None, instance=forum_user or None)
+    if request.method == "POST":
+        if "update_profile" in request.POST:
+            # update_profile_form.check_username()
+            if update_profile_form.is_valid():
+                username = update_profile_form.cleaned_data['username']
+                update_profile_form.save()
+                return redirect("/profile") 
+            return render(request, "profile_view.html", {"user": forum_user, "profile_pic_form": profile_pic_form, "update_profile_form": update_profile_form})
+            # for i in update_profile_form.changed_data:
+            #     if len(update_profile_form.fields[i].error_messages) > 0:
+            # errors = update_profile_form.check_username()
+            # return render(request, "profile_view.html", {"user": forum_user, "profile_pic_form": profile_pic_form, "update_profile_form": update_profile_form})
+        if "upload_profile_pic" in request.POST and profile_pic_form.is_valid():
+            avatar = profile_pic_form.cleaned_data.get('profile_pic')
+            forum_user.profile_pic = avatar 
+            forum_user.save()
+    else:
+
+        return render(request, "profile_view.html", {"user": forum_user, "profile_pic_form": profile_pic_form, "update_profile_form": update_profile_form})
 
 def forum_list_view(request):
     categories = Category.objects.all().values()
@@ -121,9 +142,9 @@ def thread_detail_view(request, category_id, thread_id):
     thread.views = thread.views + 1
     thread.save()
     for post in posts:
-        if post.reply_to_id != None:
-            if post.reply_to_id.post_id > 0:
-                post.replying_message()
+        if post.first_reply_to_id != None and post.first_reply_to_id.post_id > 0:
+            first_reply_post = post.set_first_reply_message()
+            post.set_second_reply_message(first_reply_post)
     return render(request, "thread_detail_view.html", {"posts":  posts, "category_id": category_id, "thread_id": thread_id, "thread_name": thread_name, "category_name": category_name})
 
 def add_post_view(request, category_id, thread_id):
@@ -157,7 +178,7 @@ def add_reply_post_view(request, category_id, thread_id, post_id):
             thread.replies = thread.replies + 1
             thread.save()
             post_message = form.cleaned_data["message"]
-            new_post = Post(message=post_message, posted_by_id=user, thread_id=thread, created_on=datetime.now(), reply_to_id=reply_post)
+            new_post = Post(message=post_message, posted_by_id=user, thread_id=thread, created_on=datetime.now(), first_reply_to_id=reply_post, second_reply_to_id=reply_post.first_reply_to_id)
             new_post.save()
         redirect_url = "/category/" + str(category_id) + "/thread/" + str(thread_id)
         return redirect(redirect_url)
@@ -167,4 +188,16 @@ def add_reply_post_view(request, category_id, thread_id, post_id):
 def test_view(request):
     request.session["login_status"] = "Thanks for registering! Please login using your new credentials..."
     return render(request, "login_view.html", {})
-# Create your views here.
+
+def image_upload_view(request):
+    '''Process images uploaded by users'''
+    if request.method == 'POST':
+        form = ImageForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+
+            img_obj = form.instance 
+            return render (request, "test_image_upload.html", {'form': form, 'img_obj': img_obj})
+    else:
+        form = ImageForm()
+    return render(request, "test_image_upload.html", {'form': form})
