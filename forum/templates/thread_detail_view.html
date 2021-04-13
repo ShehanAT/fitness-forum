@@ -31,7 +31,7 @@
 
         {% else %}
             <div class="reply-content">
-                <span><p>Posted by: {{ post.first_reply_to.posted_by_id.username }} on {{ post.first_reply_to.created_on }}</p></span>
+                <span><p>Posted by: {{ post.first_reply_to_id.posted_by_id.username }} on {{ post.first_reply_to_id.created_on }}</p></span>
                     <p><img src="{% static 'img/leftQuote.png' %}" class="reply_left_quote" />{{ post.first_reply_message }}</p></div>
                     <p class="content">{{post.message}}<br>
                 {% if request.session.logged_in %}
