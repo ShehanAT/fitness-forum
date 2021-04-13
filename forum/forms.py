@@ -1,5 +1,5 @@
 from django import forms 
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm, PasswordChangeForm
 from django.contrib.auth.models import User
 from .models import Image, ForumUser
 from django.core.validators import validate_email
@@ -55,9 +55,18 @@ class UpdateProfileForm(forms.ModelForm):
             'last_name'
         ]
 
-    # def check_username(self):
-    #     for i in self.fields['username'].error_messages.values():
-    #         self.errors.append("username: " + str(i))
-
 class ProfilePicForm(forms.Form):
     profile_pic = forms.ImageField(label='Profile Picture Upload')
+    
+class ChangePasswordForm(PasswordChangeForm):
+    old_password = forms.PasswordInput(attrs={'class': 'form-control', 'type': 'password'})
+    # new_password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'type': 'password'}))
+    # new_password_confirm = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'type': 'password'}))
+
+    class Meta:
+        model = User 
+        fields = (
+            'old_password',
+            'new_password',
+            'new_password_confirm'
+        )

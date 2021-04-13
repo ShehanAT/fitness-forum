@@ -11,21 +11,31 @@
     <p>Gender: {{request.user.forumuser.gender}}</p>
     <p>Member Since: {{request.user.forumuser.member_since}}</p>
 </div>
+<div class='form-error-container'>
+    {% if update_profile_form.errors %}
+        <div class="alert alert-danger">
+            {% for field in update_profile_form %} 
+                {% for error in field.errors %}
+                    <strong>{{ field.label }} : {{ error|escape }}</strong><br>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% if change_password_form.errors %}
+        <div class="alert alert-danger">
+            {% for field in change_password_form %}
+                {% for error in field.errors %}
+                    <strong>{{ field.label }} : {{ error|escape }}</strong><br>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
 <div class='open-modal-btn-container'>
     <button id='edit-profile-btn' class='open-modal-btn'>Edit profile</button>
     <button id='change-password-btn' class='open-modal-btn'>Change password</button>
 </div>
-<div class='update-profile-error-container'>
-    {% if update_profile_form.errors %}
-        {% for field in update_profile_form %} 
-            {% for error in field.errors %}
-                <div class="alert alert-danger">
-                    <strong>{{ field.label }} : {{ error|escape }}</strong>
-                </div>
-            {% endfor %}
-        {% endfor %}
-    {% endif %}
-</div>
+
 <form action="profile" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     Change/upload profile picture:
@@ -48,26 +58,53 @@
         </div>
     </form>
 </div>
+<div class='change-password-modal'>
+    <form action="profile" class="form-horizontal" role="form" method="post">
+        {% csrf_token %}
+        {% for field in change_password_form %}
+            <div class="form-group">
+                <label class="col-lg-3 control-label">{{ field.label }}</label>
+                <div class="col-lg-8">
+                    <input class="form-control" type="password" value="" name="{{ field.name }}" />
+                </div>
+            </div>
+        {% endfor %}
+        <div class="form-group" id="change-password-btn-container">
+            <input type="submit" value="Update Password" name="update_password" />
+        </div>
+    </form>
+</div>
 <div class="modal-overlay"></div>
 
 <script type='text/javascript'>
 $(document).ready(function() {
-    modalOpen = false 
+    changePasswordModalOpen = false 
+    updateProfileModalOpen = false 
     const body = document.querySelector("body");
     const modalOverlay = document.querySelector(".modal-overlay")
     $('#edit-profile-btn').on('click', function(e){
-        if(modalOpen == false){
-            openModal(e)
+        if(updateProfileModalOpen == false){
+            openModal(e, "update-profile")
         }else{
-            closeModal(e)
+            closeModal(e, "update-profile")
+        }
+    })
+
+    $('#change-password-btn').on('click', function(e){
+        if(changePasswordModalOpen == false){
+            openModal(e, "change-password")
+        }else{
+            closeModal(e, "change-password")
         }
     })
 
     $(document).on('click', function(e){
         const target = event.target;
-        console.log(e)
-        if (target == modalOverlay && modalOpen) {
-            closeModal(e);
+        if (target == modalOverlay && updateProfileModalOpen) {
+            closeModal(e, "update-profile");
+        }
+        else if(target == modalOverlay && changePasswordModalOpen){
+            closeModal(e, "change-password")
         }
     })
 
@@ -75,24 +112,40 @@ $(document).ready(function() {
         closeModal(e);
     })
 
-    function openModal(e){
+    function openModal(e, modal){
         e.preventDefault();
         e.stopPropagation();
         
-        isOpen = true;
-        $(".update-profile-modal").addClass("open");
-        $(".modal-overlay").addClass("open");
-        modalOpen = true 
+        if(modal == "update-profile"){
+            // updateProfileModalIsOpen = true 
+            $(".update-profile-modal").addClass("open");
+            $(".modal-overlay").addClass("open");
+            updateProfileModalOpen = true 
+        }
+        else if(modal == "change-password"){
+            // changePasswordModalIsOpen = true 
+            $(".change-password-modal").addClass("open");
+            $(".modal-overlay").addClass("open");
+            changePasswordModalOpen = true 
+        } 
     }
 
-    function closeModal(e){
+    function closeModal(e, modal){
         e.preventDefault();
         e.stopPropagation();
 
-        isOpen = false;
-        $(".update-profile-modal").removeClass("open");
-        $(".modal-overlay").removeClass("open");
-        modalOpen = false 
+        if(modal == "update-profile"){
+            // updateProfileModalIsOpen = false 
+            $(".update-profile-modal").removeClass("open");
+            $(".modal-overlay").removeClass("open");
+            updateProfileModalOpen = false 
+        }
+        else if(modal == "change-password"){
+            // changePasswordModalIsOpen = false
+            $(".change-password-modal").removeClass("open");
+            $(".modal-overlay").removeClass("open");
+            changePasswordModalOpen = false 
+        }
     }
 });
 </script>

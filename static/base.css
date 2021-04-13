@@ -138,7 +138,7 @@ a{
     width: 15%;
 }
 
-.update-profile-modal {
+.update-profile-modal, .change-password-modal {
     display: none;
     padding: 20px;
     background: white;
@@ -203,4 +203,9 @@ a{
 
 #update-profile-btn-container {
     text-align: center;
+}
+
+/* Change password section */
+.change-password-modal {
+
 }

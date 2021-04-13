@@ -5,9 +5,10 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout 
 from django.contrib.sessions.backends.db import SessionStore 
 from django.shortcuts import redirect
-from .forms import AddCategoryForm, AddThreadForm, SignUpForm, AddPostForm, ForumUserForm, ProfilePicForm, UpdateProfileForm
+from .forms import AddCategoryForm, AddThreadForm, SignUpForm, AddPostForm, ForumUserForm, ProfilePicForm, UpdateProfileForm, ChangePasswordForm
 from .models import Category, Thread, Post, ForumUser
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.core.exceptions import ObjectDoesNotExist
 import logging 
 
 logger = logging.getLogger(__name__)
@@ -53,28 +54,37 @@ def logout_view(request):
     return redirect("/")
 
 def profile_view(request):
-    forum_user = ForumUser.objects.get(id=request.user.id)
+    try:
+        forum_user = ForumUser.objects.get(id=request.user.id)
+        user = User.objects.get(id=request.user.id)
+    except ObjectDoesNotExist as e:
+        logger.error(e)
+        request.session["status_msg"] = "Password reset successfully! Please login using your new password..."
+        return redirect("/login")
     profile_pic_form = ProfilePicForm(request.POST, request.FILES)
-    update_profile_form = UpdateProfileForm(data=request.POST or None, instance=forum_user or None)
     if request.method == "POST":
         if "update_profile" in request.POST:
-            # update_profile_form.check_username()
+            update_profile_form = UpdateProfileForm(data=request.POST, instance=forum_user)
             if update_profile_form.is_valid():
-                username = update_profile_form.cleaned_data['username']
                 update_profile_form.save()
                 return redirect("/profile") 
-            return render(request, "profile_view.html", {"user": forum_user, "profile_pic_form": profile_pic_form, "update_profile_form": update_profile_form})
-            # for i in update_profile_form.changed_data:
-            #     if len(update_profile_form.fields[i].error_messages) > 0:
-            # errors = update_profile_form.check_username()
-            # return render(request, "profile_view.html", {"user": forum_user, "profile_pic_form": profile_pic_form, "update_profile_form": update_profile_form})
-        if "upload_profile_pic" in request.POST and profile_pic_form.is_valid():
-            avatar = profile_pic_form.cleaned_data.get('profile_pic')
-            forum_user.profile_pic = avatar 
-            forum_user.save()
+            return render(request, "profile_view.html", {"user": forum_user, "profile_pic_form": profile_pic_form, "update_profile_form": update_profile_form, "change_password_form": ChangePasswordForm(user=user)})
+        if "upload_profile_pic" in request.POST:
+            if profile_pic_form.is_valid():
+                avatar = profile_pic_form.cleaned_data.get('profile_pic')
+                forum_user.profile_pic = avatar 
+                forum_user.save()
+            return render(request, "profile_view.html", {"user": forum_user, "profile_pic_form": profile_pic_form, "update_profile_form": UpdateProfileForm(instance=forum_user), "change_password_form": ChangePasswordForm()})
+        if "update_password" in request.POST:
+            change_password_form = ChangePasswordForm(data=request.POST, user=user)
+            if change_password_form.is_valid():
+                change_password_form.save() 
+                return redirect("/profile")
+            return render(request, "profile_view.html", {"user": forum_user, "profile_pic_form": profile_pic_form, "update_profile_form": UpdateProfileForm(instance=forum_user), "change_password_form": change_password_form})
     else:
-
-        return render(request, "profile_view.html", {"user": forum_user, "profile_pic_form": profile_pic_form, "update_profile_form": update_profile_form})
+        # update_profile_form = UpdateProfileForm(data=None, instance=forum_user)
+        # change_password_form = ChangePasswordForm(data=None, user=user)
+        return render(request, "profile_view.html", {"user": forum_user, "profile_pic_form": profile_pic_form, "update_profile_form": UpdateProfileForm(instance=forum_user), "change_password_form": ChangePasswordForm(user=user)})
 
 def forum_list_view(request):
     categories = Category.objects.all().values()
