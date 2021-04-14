@@ -26,6 +26,11 @@
                 {% if request.session.logged_in %}
                     <a href="/category/{{category_id}}/thread/{{thread_id}}/reply_post/{{post.post_id}}"><img src="{% static 'img/reload.png' %}" class="reply-icon"/>Reply</a>
                 {% endif %}
+                {% if post.vote %}
+                    <a href=""><i class="fas fa-arrow-up"></a></i><i>{{ post.rep_count }}</i><a href=""><i class="fas fa-arrow-down"></i></a>
+                {% else %}
+                    <i>{{ post.rep_count }}</i> 
+                {% endif %}
                 </p>
             <p class="content">{{post.created_on}}</p>
 
@@ -37,6 +42,11 @@
                 {% if request.session.logged_in %}
                     <a href="/category/{{category_id}}/thread/{{thread_id}}/reply_post/{{post.post_id}}"><img src="{% static 'img/reload.png' %}" class="reply-icon"/>Reply</a>
                 {% endif %}
+                {% if post.vote %}
+                    <a href=""><i class="fas fa-arrow-up"></a></i><i>{{ post.rep_count }}</i><a href=""><i class="fas fa-arrow-down"></i></a>
+                {% else %}
+                    <i>{{ post.rep_count }}</i> 
+                {% endif %}
                 </p>
             <p class="content">{{post.created_on}}</p>
         {% endif %}
@@ -44,6 +54,11 @@
         <p class="content">{{post.message}}<br>
         {% if request.session.logged_in %}
             <a href="/category/{{category_id}}/thread/{{thread_id}}/reply_post/{{post.post_id}}"><img src="{% static 'img/reload.png' %}" class="reply-icon"/>Reply</a>
+        {% endif %}
+        {% if post.vote %}
+            <a href=""><i class="fas fa-arrow-up"></a></i><i>{{ post.rep_count }}</i><a href=""><i class="fas fa-arrow-down"></i></a>
+        {% else %}
+            <i>{{ post.rep_count }}</i> 
         {% endif %}
         </p>
         <p class="content">{{post.created_on}}</p>

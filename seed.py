@@ -8,7 +8,7 @@ from django.core.management import call_command
 
 from django_seed import Seed 
 import random
-from forum.models import Category, Thread, Post
+from forum.models import Category, Thread, Post, PostVote, PostVote, ForumUser 
 from django_seed import Seed 
 from django.contrib.auth.models import User 
 seeder = Seed.seeder()
@@ -16,6 +16,8 @@ seeder = Seed.seeder()
 category_num = 10
 thread_num = 50
 post_num = 100
+post_vote_num = 100
+VoteValueChoice = PostVote.VoteValueChoice
 # seeder.add_entity(Category, category_num)
 # seeder.execute()
 
@@ -46,3 +48,40 @@ post_num = 100
 #     post.posted_by_id = User.objects.get(id=random.randint(1, 4))
 #     post.reply_to_id = Post.objects.get(post_id=random.randint(1, 100))
 #     post.save()
+
+# seeder.add_entity(PostVote, 100, {
+#     'post_id': Post.objects.get(post_id=1),
+#     'user_id': ForumUser.objects.get(id=1),
+#     'vote_value': VoteValueChoice(1)
+# })
+# seeder.execute()
+
+# for i in range(post_vote_num):
+#     post_vote = PostVote.objects.get(vote_id=i+1)
+#     post_vote.post_id = Post.objects.get(post_id=i+1)
+#     post_vote.save()
+
+user_vote_1st_quater = int(post_vote_num/4)
+user_vote_2nd_quater = int(user_vote_1st_quater*2)
+user_vote_3rd_quater = int(user_vote_1st_quater*3)
+
+# for i in range(user_vote_1st_quater):
+#     post_vote = PostVote.objects.get(vote_id=i+1)
+#     post_vote.user_id = ForumUser.objects.get(id=1)
+#     post_vote.save()
+
+# for i in range(user_vote_1st_quater, user_vote_2nd_quater):
+#     post_vote = PostVote.objects.get(vote_id=i+1)
+#     post_vote.user_id = ForumUser.objects.get(id=2)
+#     post_vote.save()
+
+# for i in range(user_vote_2nd_quater, user_vote_3rd_quater):
+#     post_vote = PostVote.objects.get(vote_id=i+1)
+#     post_vote.user_id = ForumUser.objects.get(id=3)
+#     post_vote.save()
+
+# for i in range(user_vote_3rd_quater, post_vote_num):
+#     post_vote = PostVote.objects.get(vote_id=i+1)
+#     post_vote.user_id = ForumUser.objects.get(id=4)
+#     post_vote.save() 
+

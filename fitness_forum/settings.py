@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'forum',
     'fitness_forum',
     'django_seed',
-    'jquery'
+    'jquery',
+    'fontawesome-free'
 ]
 
 MIDDLEWARE = [

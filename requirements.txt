@@ -60,6 +60,7 @@ flake8 @ file:///tmp/build/80754af9/flake8_1601911421857/work
 Flask==1.1.2
 fsspec @ file:///tmp/build/80754af9/fsspec_1602684995936/work
 ftputil==5.0.1
+fontawesome-free==5.15.3
 future==0.18.2
 gevent @ file:///C:/ci/gevent_1601397627942/work
 glob2==0.7

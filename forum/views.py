@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.sessions.backends.db import SessionStore 
 from django.shortcuts import redirect
 from .forms import AddCategoryForm, AddThreadForm, SignUpForm, AddPostForm, ForumUserForm, ProfilePicForm, UpdateProfileForm, ChangePasswordForm
-from .models import Category, Thread, Post, ForumUser
+from .models import Category, Thread, Post, ForumUser, PostVote
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.exceptions import ObjectDoesNotExist
 import logging 
@@ -74,7 +74,7 @@ def profile_view(request):
                 avatar = profile_pic_form.cleaned_data.get('profile_pic')
                 forum_user.profile_pic = avatar 
                 forum_user.save()
-            return render(request, "profile_view.html", {"user": forum_user, "profile_pic_form": profile_pic_form, "update_profile_form": UpdateProfileForm(instance=forum_user), "change_password_form": ChangePasswordForm()})
+            return render(request, "profile_view.html", {"user": forum_user, "profile_pic_form": profile_pic_form, "update_profile_form": UpdateProfileForm(instance=forum_user), "change_password_form": ChangePasswordForm(user=user)})
         if "update_password" in request.POST:
             change_password_form = ChangePasswordForm(data=request.POST, user=user)
             if change_password_form.is_valid():
@@ -82,8 +82,6 @@ def profile_view(request):
                 return redirect("/profile")
             return render(request, "profile_view.html", {"user": forum_user, "profile_pic_form": profile_pic_form, "update_profile_form": UpdateProfileForm(instance=forum_user), "change_password_form": change_password_form})
     else:
-        # update_profile_form = UpdateProfileForm(data=None, instance=forum_user)
-        # change_password_form = ChangePasswordForm(data=None, user=user)
         return render(request, "profile_view.html", {"user": forum_user, "profile_pic_form": profile_pic_form, "update_profile_form": UpdateProfileForm(instance=forum_user), "change_password_form": ChangePasswordForm(user=user)})
 
 def forum_list_view(request):
@@ -155,6 +153,12 @@ def thread_detail_view(request, category_id, thread_id):
         if post.first_reply_to_id != None and post.first_reply_to_id.post_id > 0:
             first_reply_post = post.set_first_reply_message()
             post.set_second_reply_message(first_reply_post)
+        if len(PostVote.objects.filter(post_id=post.post_id, user_id=request.user.id)) > 0:
+            # vote found, user is not allowed to vote on this post 
+            post.vote = False 
+        else:
+            # vote not found, user is allowed to vote on this post 
+            post.vote = True 
     return render(request, "thread_detail_view.html", {"posts":  posts, "category_id": category_id, "thread_id": thread_id, "thread_name": thread_name, "category_name": category_name})
 
 def add_post_view(request, category_id, thread_id):

@@ -48,6 +48,7 @@ class Post(models.Model):
     first_reply_to_id = models.ForeignKey('self', null=True, on_delete=models.CASCADE, related_name='first_reply')
     second_reply_to_id = models.ForeignKey('self', null=True, on_delete=models.CASCADE, related_name='second_reply')
     rep_count = models.IntegerField(default=0)
+    vote = False 
     created_on = models.DateTimeField(default=datetime.now())
     editted_on = models.DateTimeField(default=datetime.now())
     
@@ -100,3 +101,15 @@ class Image(models.Model):
 
     def __str__(self):
         return self.title
+
+class PostVote(models.Model):
+    vote_id = models.AutoField(primary_key=True)
+    post_id = models.ForeignKey(Post, null=True, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(ForumUser, null=True, on_delete=models.CASCADE)
+    class VoteValueChoice(models.IntegerChoices):
+        upvote = 1, _('upvote')
+        downvote = -1, _('downvote')
+    vote_value = models.IntegerField(choices=VoteValueChoice.choices)
+
+    def __str__(self):
+        return "Vote Id: " + str(self.vote_id) + ", Post id: " + str(self.post_id) + ", User id: " + str(self.user_id)
