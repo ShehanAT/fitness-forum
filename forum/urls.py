@@ -13,5 +13,6 @@ urlpatterns = [
     path('category/<int:category_id>/thread/<int:thread_id>', views.thread_detail_view),
     path('category/<int:category_id>/thread/<int:thread_id>/add_post', views.add_post_view),
     path('category/<int:category_id>/thread/<int:thread_id>/reply_post/<int:post_id>', views.add_reply_post_view),
-    path('test', views.test_view)
+    path('test', views.test_view),
+    path('vote_up', views.vote_up)
 ]

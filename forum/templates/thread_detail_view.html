@@ -9,6 +9,7 @@
 
 {% for post in posts %}
 <div class="thread-content">
+    {% csrf_token %}
     <img class="profilePic" src="{{post.posted_by_id.forumuser.profile_pic.url}}"/>
     <b class="content">{{post.posted_by_id.username}}</b><i>&nbsp; Posted {{post.created_on}}</i>
     {% if post.first_reply_message %}
@@ -25,11 +26,11 @@
                     <p class="content">{{post.message}}<br>
                 {% if request.session.logged_in %}
                     <a href="/category/{{category_id}}/thread/{{thread_id}}/reply_post/{{post.post_id}}"><img src="{% static 'img/reload.png' %}" class="reply-icon"/>Reply</a>
-                {% endif %}
-                {% if post.vote %}
-                    <a href=""><i class="fas fa-arrow-up"></a></i><i>{{ post.rep_count }}</i><a href=""><i class="fas fa-arrow-down"></i></a>
-                {% else %}
-                    <i>{{ post.rep_count }}</i> 
+                    {% if post.vote %}
+                        <a data-post-id="{{ post.post_id }}" data-category-id="{{ category_id }}" data-thread-id="{{ thread_id }}" href="#" role="button" class="up-arrow-vote"><i class="fas fa-arrow-up"></a></i><i id="{{ post.post_id }}" >{{ post.rep_count }}</i><i class="fas fa-arrow-down"></i></a>
+                    {% else %}
+                        <i id="{{ post.post_id }}" >{{ post.rep_count }}</i> 
+                    {% endif %}
                 {% endif %}
                 </p>
             <p class="content">{{post.created_on}}</p>
@@ -41,11 +42,11 @@
                     <p class="content">{{post.message}}<br>
                 {% if request.session.logged_in %}
                     <a href="/category/{{category_id}}/thread/{{thread_id}}/reply_post/{{post.post_id}}"><img src="{% static 'img/reload.png' %}" class="reply-icon"/>Reply</a>
-                {% endif %}
-                {% if post.vote %}
-                    <a href=""><i class="fas fa-arrow-up"></a></i><i>{{ post.rep_count }}</i><a href=""><i class="fas fa-arrow-down"></i></a>
-                {% else %}
-                    <i>{{ post.rep_count }}</i> 
+                    {% if post.vote %}
+                        <a data-post-id="{{ post.post_id }}" data-category-id="{{ category_id }}" data-thread-id="{{ thread_id }}" href="#" role="button" class="up-arrow-vote"><i class="fas fa-arrow-up"></a></i><i id="{{ post.post_id }}" >{{ post.rep_count }}</i><i class="fas fa-arrow-down"></i></a>
+                    {% else %}
+                        <i id="{{ post.post_id }}">{{ post.rep_count }}</i> 
+                    {% endif %}
                 {% endif %}
                 </p>
             <p class="content">{{post.created_on}}</p>
@@ -54,12 +55,13 @@
         <p class="content">{{post.message}}<br>
         {% if request.session.logged_in %}
             <a href="/category/{{category_id}}/thread/{{thread_id}}/reply_post/{{post.post_id}}"><img src="{% static 'img/reload.png' %}" class="reply-icon"/>Reply</a>
+            {% if post.vote %}
+                <a data-post-id="{{ post.post_id }}" data-category-id="{{ category_id }}" data-thread-id="{{ thread_id }}" href="#" role="button" class="up-arrow-vote"><i class="fas fa-arrow-up"></a></i><i id="{{ post.post_id }}">{{ post.rep_count }}</i><i class="fas fa-arrow-down"></i></a>
+            {% else %}
+                <i id="{{ post.post_id }}">{{ post.rep_count }}</i> 
+            {% endif %}
         {% endif %}
-        {% if post.vote %}
-            <a href=""><i class="fas fa-arrow-up"></a></i><i>{{ post.rep_count }}</i><a href=""><i class="fas fa-arrow-down"></i></a>
-        {% else %}
-            <i>{{ post.rep_count }}</i> 
-        {% endif %}
+      
         </p>
         <p class="content">{{post.created_on}}</p>
     {% endif %}
@@ -72,5 +74,62 @@
 {% else %}
     <p class="nav-body-content">You must be <a href="/login">logged in</a> to post in this thread</p>
 {% endif %}
+
+
+<script>
+$(document).ready(function(){
+    const handleAlerts = (type, text) => {
+        alertBox.innerHTML = `<div class="alert alert-${type} role="alert">
+                                ${text}
+                              </div>`
+    }
+
+    voteUpUrl = "/vote_up/"
+    $(".up-arrow-vote").on('click', function(e){
+        e.preventDefault()
+        postId = e.currentTarget.dataset.postId
+        threadId = e.currentTarget.dataset.threadId
+        categoryId = e.currentTarget.dataset.categoryId
+
+        callVoteUp(postId, threadId, categoryId)
+    });
+
+    function callVoteUp(postId, threadId, categoryId){
+        const csrf = document.getElementsByName('csrfmiddlewaretoken')
+        const url = '/vote_up'
+        const fd = new FormData()
+        fd.append('csrfmiddlewaretoken', csrf[0].value)
+        fd.append('post_id', postId)
+        fd.append('thread_id', threadId)
+        fd.append('category_id', categoryId)
+
+        $.ajax({
+            type: 'POST',
+            url: url, 
+            enctype: 'multipart/form-data',
+            data: fd,
+            success: function(response){
+                post_rep_count = response.post_rep_count
+                repCountText = $("#" + postId)
+                repCountText.text(post_rep_count) // updating rep count to new amount
+                upArrow = repCountText.prev() // hiding up and down arrows after user votes once 
+                upArrow.hide()
+                downArrow = repCountText.next() 
+                downArrow.hide() 
+
+            },
+            error: function(error){
+                console.log(error)
+                handleAlerts('danger', 'oops... something went wrong! Please try again later')
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+    }
+
+
+});
+</script>
 
 {% endblock %}

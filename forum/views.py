@@ -1,4 +1,4 @@
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render 
 from datetime import datetime
 from django.contrib.auth.models import User 
@@ -198,6 +198,28 @@ def add_reply_post_view(request, category_id, thread_id, post_id):
         return redirect(redirect_url)
     else:
         return render(request, "add_reply_post_view.html", {"category_name": category_name, "category_id": category_id, "thread_subject": thread_subject, "reply_post_message": reply_post_message, "thread_id": thread_id})
+
+def vote_up(request):
+    if request.method == "POST":
+        user = ForumUser.objects.get(id=request.user.id)
+        # second param in request.GET.get is the default value if no post_id is found
+        category_id = request.POST.get('category_id', '')
+        thread_id = request.POST.get('thread_id', '')
+        post = Post.objects.get(post_id=request.POST.get('post_id', ''))
+        response_data = {}
+        post.rep_count += 1 
+        new_vote = PostVote.objects.create(post_id=post, user_id=user, vote_value=1)
+        posted_by_user = ForumUser.objects.get(id=post.posted_by_id.id)
+        if posted_by_user.id != user.id:
+            # current user is not the original poster of current post so increment their rep_points by 1 
+            posted_by_user.rep_points += 1 
+        post.save() 
+        new_vote.save()
+        posted_by_user.save()
+        response_data['post_rep_count'] = post.rep_count
+        return JsonResponse(response_data)
+    else:
+        return redirect("/category/" + category_id + "/thread/" + thread_id)
 
 def test_view(request):
     request.session["login_status"] = "Thanks for registering! Please login using your new credentials..."
