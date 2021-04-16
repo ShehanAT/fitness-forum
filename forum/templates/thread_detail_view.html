@@ -17,13 +17,13 @@
             <div class="first-reply-content">
             <div class="second-reply-content">
                 <span><p>Posted by: {{ post.second_reply_to_id.posted_by_id.username }} on {{ post.second_reply_to_id.created_on }}</p></span>
-                    <p><img src="{% static 'img/leftQuote.png' %}" class="reply_left_quote" />{{ post.second_reply_message }}</p>
+                    <p><img src="{% static 'img/leftQuote.png' %}" class="reply_left_quote" />{{ post.second_reply_message|safe }}</p>
             </div>
                 <span><p>Posted by: {{post.first_reply_to_id.posted_by_id.username}} on {{post.first_reply_to_id.created_on}}</p></span>
-                    <p class="content">{{post.first_reply_message}}<br>
+                    <p class="content">{{post.first_reply_message|safe}}<br>
             </div>
                 <span><p>Posted by: {{ post.posted_by_id.username }} on {{ post.created_on }}</p></span>
-                    <p class="content">{{post.message}}<br>
+                    <p class="content">{{post.message|safe}}<br>
                 {% if request.session.logged_in %}
                     <a href="/category/{{category_id}}/thread/{{thread_id}}/reply_post/{{post.post_id}}"><img src="{% static 'img/reload.png' %}" class="reply-icon"/>Reply</a>
                     {% if post.vote %}
@@ -40,8 +40,8 @@
         {% else %}
             <div class="reply-content">
                 <span><p>Posted by: {{ post.first_reply_to_id.posted_by_id.username }} on {{ post.first_reply_to_id.created_on }}</p></span>
-                    <p><img src="{% static 'img/leftQuote.png' %}" class="reply_left_quote" />{{ post.first_reply_message }}</p></div>
-                    <p class="content">{{post.message}}<br>
+                    <p><img src="{% static 'img/leftQuote.png' %}" class="reply_left_quote" />{{ post.first_reply_message|safe }}</p></div>
+                    <p class="content">{{post.message|safe}}<br>
                 {% if request.session.logged_in %}
                     <a href="/category/{{category_id}}/thread/{{thread_id}}/reply_post/{{post.post_id}}"><img src="{% static 'img/reload.png' %}" class="reply-icon"/>Reply</a>
                     {% if post.vote %}
@@ -56,7 +56,7 @@
             <p class="content">{{post.created_on}}</p>
         {% endif %}
     {% else %}
-        <p class="content">{{post.message}}<br>
+        <p class="content">{{post.message|safe}}<br>
         {% if request.session.logged_in %}
             <a href="/category/{{category_id}}/thread/{{thread_id}}/reply_post/{{post.post_id}}"><img src="{% static 'img/reload.png' %}" class="reply-icon"/>Reply</a>
             {% if post.vote %}

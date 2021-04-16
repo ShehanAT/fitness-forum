@@ -1,4 +1,4 @@
-from django.urls import path 
+from django.urls import path, include
 from forum import views 
 
 urlpatterns = [
@@ -14,5 +14,6 @@ urlpatterns = [
     path('category/<int:category_id>/thread/<int:thread_id>/add_post', views.add_post_view),
     path('category/<int:category_id>/thread/<int:thread_id>/reply_post/<int:post_id>', views.add_reply_post_view),
     path('test', views.test_view),
-    path('post_vote', views.vote)
+    path('post_vote', views.vote),
+    path('ckeditor/', include('ckeditor_uploader.urls')),
 ]

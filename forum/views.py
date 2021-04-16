@@ -169,12 +169,13 @@ def add_post_view(request, category_id, thread_id):
         form = AddPostForm(request.POST)
         if form.is_valid():
             post_message = form.cleaned_data["message"]
-            new_post = Post(message=post_message, posted_by_id=user, thread_id=thread, created_on=datetime.now(), reply_to_id=None)
+            new_post = Post(message=post_message, posted_by_id=user, thread_id=thread, created_on=datetime.now())
             new_post.save()
         redirect_url = "/category/" + str(category_id) + "/thread/" + str(thread_id)
         return redirect(redirect_url)
     else:
-        return render(request, "add_post_view.html", {"category_name": category_name, "thread_name": thread_subject })
+        form = AddPostForm()
+        return render(request, "add_post_view.html", {"category_name": category_name, "thread_name": thread_subject, "form": form })
 
 def add_reply_post_view(request, category_id, thread_id, post_id):
     category_name = Category.objects.filter(category_id=category_id).values()[0]["name"]

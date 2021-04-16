@@ -5,7 +5,7 @@ from .models import ForumUser
 from django.core.validators import validate_email
 from django.contrib.auth.validators import ASCIIUsernameValidator
 from django.core.exceptions import ValidationError
-
+from ckeditor.widgets import CKEditorWidget 
 
 class SignUpForm(UserCreationForm):
     email = forms.EmailField(max_length=200)
@@ -23,7 +23,7 @@ class AddThreadForm(forms.Form):
     message = forms.CharField(label='Message', max_length=500)
     
 class AddPostForm(forms.Form):
-    message = forms.CharField(label='Message', max_length=500)
+    message = forms.CharField(widget=CKEditorWidget())
 
 class ForumUserForm(forms.Form):
     '''Form for the image model'''

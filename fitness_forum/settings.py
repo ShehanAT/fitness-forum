@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'fitness_forum',
     'django_seed',
     'jquery',
-    'fontawesome-free'
+    'fontawesome-free',
+    'ckeditor'
 ]
 
 MIDDLEWARE = [
@@ -135,3 +136,7 @@ STATICFILES_DIRS = (
 MEDIA_URL = '/images/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
+
+CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"
+
+CKEDITOR_UPLOAD_PATH = "/images/"

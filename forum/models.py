@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.constraints import UniqueConstraint
+from ckeditor.fields import RichTextField
 import logging 
 
 logger = logging.getLogger()
@@ -42,7 +43,7 @@ class Thread(models.Model):
 class Post(models.Model):
     post_id = models.AutoField(primary_key=True)
     thread_id = models.ForeignKey(Thread, on_delete=models.CASCADE, null=True)
-    message = models.TextField()
+    message = RichTextField(blank=True, null=True)
     # add default to posted_by_id
     posted_by_id = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)
     first_reply_to_id = models.ForeignKey('self', null=True, on_delete=models.CASCADE, related_name='first_reply')
