@@ -94,14 +94,6 @@ class PostSignature(models.Model):
     message = models.TextField()
     signature_picture = models.ImageField(blank=True, null=True, upload_to='signature_pics/%Y/%m/%d')
 
-
-class Image(models.Model):
-    title = models.CharField(max_length=200)
-    image = models.ImageField(upload_to='images')
-
-    def __str__(self):
-        return self.title
-
 class PostVote(models.Model):
     vote_id = models.AutoField(primary_key=True)
     post_id = models.ForeignKey(Post, null=True, on_delete=models.CASCADE)

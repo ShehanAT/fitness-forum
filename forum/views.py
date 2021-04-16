@@ -24,7 +24,6 @@ def signup_view(request):
             user.save()
             # redirect to /login
             return redirect("/login")
-            # return render(request, "login.html", {"signup_success_msg": "Thanks for registering! Please login using your new credentials..."})
     else:
         form = SignUpForm()
     return render(request, "signup_view.html", {'signupForm': form})
@@ -199,20 +198,21 @@ def add_reply_post_view(request, category_id, thread_id, post_id):
     else:
         return render(request, "add_reply_post_view.html", {"category_name": category_name, "category_id": category_id, "thread_subject": thread_subject, "reply_post_message": reply_post_message, "thread_id": thread_id})
 
-def vote_up(request):
+def vote(request):
     if request.method == "POST":
         user = ForumUser.objects.get(id=request.user.id)
-        # second param in request.GET.get is the default value if no post_id is found
+        # second param in request.GET.get is the default value if required param is not found
         category_id = request.POST.get('category_id', '')
         thread_id = request.POST.get('thread_id', '')
+        vote_value = int(request.POST.get('vote_value', ''))
         post = Post.objects.get(post_id=request.POST.get('post_id', ''))
         response_data = {}
-        post.rep_count += 1 
+        post.rep_count += vote_value
         new_vote = PostVote.objects.create(post_id=post, user_id=user, vote_value=1)
         posted_by_user = ForumUser.objects.get(id=post.posted_by_id.id)
         if posted_by_user.id != user.id:
-            # current user is not the original poster of current post so increment their rep_points by 1 
-            posted_by_user.rep_points += 1 
+            # current user is not the original poster of current post so increment/decrement their rep_points by 1 
+            posted_by_user.rep_points += vote_value 
         post.save() 
         new_vote.save()
         posted_by_user.save()
@@ -224,16 +224,3 @@ def vote_up(request):
 def test_view(request):
     request.session["login_status"] = "Thanks for registering! Please login using your new credentials..."
     return render(request, "login_view.html", {})
-
-def image_upload_view(request):
-    '''Process images uploaded by users'''
-    if request.method == 'POST':
-        form = ImageForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-
-            img_obj = form.instance 
-            return render (request, "test_image_upload.html", {'form': form, 'img_obj': img_obj})
-    else:
-        form = ImageForm()
-    return render(request, "test_image_upload.html", {'form': form})

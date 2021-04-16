@@ -27,7 +27,9 @@
                 {% if request.session.logged_in %}
                     <a href="/category/{{category_id}}/thread/{{thread_id}}/reply_post/{{post.post_id}}"><img src="{% static 'img/reload.png' %}" class="reply-icon"/>Reply</a>
                     {% if post.vote %}
-                        <a data-post-id="{{ post.post_id }}" data-category-id="{{ category_id }}" data-thread-id="{{ thread_id }}" href="#" role="button" class="up-arrow-vote"><i class="fas fa-arrow-up"></a></i><i id="{{ post.post_id }}" >{{ post.rep_count }}</i><i class="fas fa-arrow-down"></i></a>
+                    <a data-post-id="{{ post.post_id }}" data-category-id="{{ category_id }}" data-thread-id="{{ thread_id }}" href="#" role="button" class="up-arrow-vote"><i class="fas fa-arrow-up"></a></i>
+                        <i id="{{ post.post_id }}">{{ post.rep_count }}</i>
+                    <a href="#" data-post-id="{{ post.post_id }}" data-category-id="{{ category_id }}" data-thread-id="{{ thread_id }}" role="button" class="down-arrow-vote" ><i class="fas fa-arrow-down"></i></a>
                     {% else %}
                         <i id="{{ post.post_id }}" >{{ post.rep_count }}</i> 
                     {% endif %}
@@ -43,7 +45,9 @@
                 {% if request.session.logged_in %}
                     <a href="/category/{{category_id}}/thread/{{thread_id}}/reply_post/{{post.post_id}}"><img src="{% static 'img/reload.png' %}" class="reply-icon"/>Reply</a>
                     {% if post.vote %}
-                        <a data-post-id="{{ post.post_id }}" data-category-id="{{ category_id }}" data-thread-id="{{ thread_id }}" href="#" role="button" class="up-arrow-vote"><i class="fas fa-arrow-up"></a></i><i id="{{ post.post_id }}" >{{ post.rep_count }}</i><i class="fas fa-arrow-down"></i></a>
+                    <a data-post-id="{{ post.post_id }}" data-category-id="{{ category_id }}" data-thread-id="{{ thread_id }}" href="#" role="button" class="up-arrow-vote"><i class="fas fa-arrow-up"></a></i>
+                        <i id="{{ post.post_id }}">{{ post.rep_count }}</i>
+                    <a href="#" data-post-id="{{ post.post_id }}" data-category-id="{{ category_id }}" data-thread-id="{{ thread_id }}" role="button" class="down-arrow-vote" ><i class="fas fa-arrow-down"></i></a>
                     {% else %}
                         <i id="{{ post.post_id }}">{{ post.rep_count }}</i> 
                     {% endif %}
@@ -56,7 +60,9 @@
         {% if request.session.logged_in %}
             <a href="/category/{{category_id}}/thread/{{thread_id}}/reply_post/{{post.post_id}}"><img src="{% static 'img/reload.png' %}" class="reply-icon"/>Reply</a>
             {% if post.vote %}
-                <a data-post-id="{{ post.post_id }}" data-category-id="{{ category_id }}" data-thread-id="{{ thread_id }}" href="#" role="button" class="up-arrow-vote"><i class="fas fa-arrow-up"></a></i><i id="{{ post.post_id }}">{{ post.rep_count }}</i><i class="fas fa-arrow-down"></i></a>
+                <a data-post-id="{{ post.post_id }}" data-category-id="{{ category_id }}" data-thread-id="{{ thread_id }}" href="#" role="button" class="up-arrow-vote"><i class="fas fa-arrow-up"></a></i>
+                    <i id="{{ post.post_id }}">{{ post.rep_count }}</i>
+                <a href="#" data-post-id="{{ post.post_id }}" data-category-id="{{ category_id }}" data-thread-id="{{ thread_id }}" role="button" class="down-arrow-vote" ><i class="fas fa-arrow-down"></i></a>
             {% else %}
                 <i id="{{ post.post_id }}">{{ post.rep_count }}</i> 
             {% endif %}
@@ -85,24 +91,35 @@ $(document).ready(function(){
     }
 
     voteUpUrl = "/vote_up/"
+    voteDownUrl = "/vote_down/"
     $(".up-arrow-vote").on('click', function(e){
         e.preventDefault()
         postId = e.currentTarget.dataset.postId
         threadId = e.currentTarget.dataset.threadId
         categoryId = e.currentTarget.dataset.categoryId
 
-        callVoteUp(postId, threadId, categoryId)
+        callVote(postId, threadId, categoryId, 1)
     });
 
-    function callVoteUp(postId, threadId, categoryId){
+    $(".down-arrow-vote").on('click', function(e){
+        e.preventDefault()
+        postId = e.currentTarget.dataset.postId
+        threadId = e.currentTarget.dataset.threadId
+        categoryId = e.currentTarget.dataset.categoryId
+
+        callVote(postId, threadId, categoryId, -1)
+    });
+
+    function callVote(postId, threadId, categoryId, voteValue){
+        // voteValue of 1 for upvote, -1 for downvote
         const csrf = document.getElementsByName('csrfmiddlewaretoken')
-        const url = '/vote_up'
+        var url = '/post_vote'
         const fd = new FormData()
         fd.append('csrfmiddlewaretoken', csrf[0].value)
         fd.append('post_id', postId)
         fd.append('thread_id', threadId)
         fd.append('category_id', categoryId)
-
+        fd.append('vote_value', voteValue)
         $.ajax({
             type: 'POST',
             url: url, 
@@ -112,7 +129,8 @@ $(document).ready(function(){
                 post_rep_count = response.post_rep_count
                 repCountText = $("#" + postId)
                 repCountText.text(post_rep_count) // updating rep count to new amount
-                upArrow = repCountText.prev() // hiding up and down arrows after user votes once 
+                // hiding up and down arrows after user votes once
+                upArrow = repCountText.prev()  
                 upArrow.hide()
                 downArrow = repCountText.next() 
                 downArrow.hide() 

@@ -60,8 +60,6 @@ class ProfilePicForm(forms.Form):
     
 class ChangePasswordForm(PasswordChangeForm):
     old_password = forms.PasswordInput(attrs={'class': 'form-control', 'type': 'password'})
-    # new_password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'type': 'password'}))
-    # new_password_confirm = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'type': 'password'}))
 
     class Meta:
         model = User 
