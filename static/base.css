@@ -154,6 +154,22 @@ a{
     text-align: left;
 }
 
+.post-signature-modal {
+    display: none;
+    padding: 20px;
+    background: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    z-index: 1;
+    width: 60vw;
+    text-align: left;
+}
+
 .modal-overlay {
     display: none;
     position: absolute;

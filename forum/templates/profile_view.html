@@ -34,6 +34,7 @@
 <div class='open-modal-btn-container'>
     <button id='edit-profile-btn' class='open-modal-btn'>Edit profile</button>
     <button id='change-password-btn' class='open-modal-btn'>Change password</button>
+    <button id='post-signature-btn' class='open-modal-btn'>Add/Change Post Signature</button>
 </div>
 
 <form action="profile" method="post" enctype="multipart/form-data">
@@ -42,6 +43,16 @@
     {{ profile_pic_form }}
     <input type="submit" value="Upload Image" name="upload_profile_pic">
 </form>
+
+<div class="post-signature-modal">
+    <form action="profile" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        Change/upload your post signature: 
+        {{ post_signature_form.media }}
+        {{ post_signature_form.as_p }}
+        <input type="submit" value="Upload Post Signature" name="upload_post_signature"/>
+    </form>
+</div>
 <div class="update-profile-modal">
     <form action="profile" class="form-horizontal" role="form" method="post">
         {% csrf_token %}
@@ -80,6 +91,7 @@
 $(document).ready(function() {
     changePasswordModalOpen = false 
     updateProfileModalOpen = false 
+    postSignatureModalOpen = false 
     const body = document.querySelector("body");
     const modalOverlay = document.querySelector(".modal-overlay")
     $('#edit-profile-btn').on('click', function(e){
@@ -98,6 +110,14 @@ $(document).ready(function() {
         }
     })
 
+    $('#post-signature-btn').on('click', function(e){
+        if(postSignatureModalOpen == false){
+            openModal(e, "post-signature")
+        }else{
+            closeModal(e, "post-signature")
+        }
+    })
+
     $(document).on('click', function(e){
         const target = event.target;
         if (target == modalOverlay && updateProfileModalOpen) {
@@ -105,6 +125,9 @@ $(document).ready(function() {
         }
         else if(target == modalOverlay && changePasswordModalOpen){
             closeModal(e, "change-password")
+        }
+        else if(target == modalOverlay && postSignatureModalOpen){
+            closeModal(e, "post-signature")
         }
     })
 
@@ -128,6 +151,11 @@ $(document).ready(function() {
             $(".modal-overlay").addClass("open");
             changePasswordModalOpen = true 
         } 
+        else if(modal == "post-signature"){
+            $(".post-signature-modal").addClass("open");
+            $(".modal-overlay").addClass("open")
+            postSignatureModalOpen = true 
+        }
     }
 
     function closeModal(e, modal){
@@ -135,16 +163,19 @@ $(document).ready(function() {
         e.stopPropagation();
 
         if(modal == "update-profile"){
-            // updateProfileModalIsOpen = false 
             $(".update-profile-modal").removeClass("open");
             $(".modal-overlay").removeClass("open");
             updateProfileModalOpen = false 
         }
         else if(modal == "change-password"){
-            // changePasswordModalIsOpen = false
             $(".change-password-modal").removeClass("open");
             $(".modal-overlay").removeClass("open");
             changePasswordModalOpen = false 
+        }
+        else if(modal == "post-signature"){
+            $(".post-signature-modal").removeClass("open")
+            $(".modal-overlay").removeClass("open")
+            postSignatureModalOpen = false 
         }
     }
 });

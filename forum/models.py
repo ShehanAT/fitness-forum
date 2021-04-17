@@ -44,7 +44,6 @@ class Post(models.Model):
     post_id = models.AutoField(primary_key=True)
     thread_id = models.ForeignKey(Thread, on_delete=models.CASCADE, null=True)
     message = RichTextField(blank=True, null=True)
-    # add default to posted_by_id
     posted_by_id = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)
     first_reply_to_id = models.ForeignKey('self', null=True, on_delete=models.CASCADE, related_name='first_reply')
     second_reply_to_id = models.ForeignKey('self', null=True, on_delete=models.CASCADE, related_name='second_reply')
@@ -92,8 +91,7 @@ class FitnessProfile(models.Model):
 class PostSignature(models.Model):
     signature_id = models.AutoField(primary_key=True)
     signature_for_id = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)
-    message = models.TextField()
-    signature_picture = models.ImageField(blank=True, null=True, upload_to='signature_pics/%Y/%m/%d')
+    message = RichTextField(blank=True, null=True)
 
 class PostVote(models.Model):
     vote_id = models.AutoField(primary_key=True)

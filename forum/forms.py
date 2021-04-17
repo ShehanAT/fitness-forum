@@ -68,3 +68,6 @@ class ChangePasswordForm(PasswordChangeForm):
             'new_password',
             'new_password_confirm'
         )
+
+class PostSignatureForm(forms.Form):
+    content = forms.CharField(widget=CKEditorWidget())
