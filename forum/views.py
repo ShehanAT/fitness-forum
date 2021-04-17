@@ -168,6 +168,12 @@ def thread_detail_view(request, category_id, thread_id):
         else:
             # vote not found, user is allowed to vote on this post 
             post.vote = True 
+        # get post signature is user uploaded it 
+        try:
+            post_signature = PostSignature.objects.filter(signature_for_id=post.posted_by_id.id).latest('created_on')
+            post.signature = post_signature 
+        except ObjectDoesNotExist: 
+            post.signature = None 
     return render(request, "thread_detail_view.html", {"posts":  posts, "category_id": category_id, "thread_id": thread_id, "thread_name": thread_name, "category_name": category_name})
 
 def add_post_view(request, category_id, thread_id):

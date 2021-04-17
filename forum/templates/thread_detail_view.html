@@ -36,7 +36,11 @@
                 {% endif %}
                 </p>
             <p class="content">{{post.created_on}}</p>
-
+            {% if post.signature %}
+                <div class="post-signature-container">
+                    {{ post.signature.message|safe }}
+                </div>
+            {% endif %}
         {% else %}
             <div class="reply-content">
                 <span><p>Posted by: {{ post.first_reply_to_id.posted_by_id.username }} on {{ post.first_reply_to_id.created_on }}</p></span>
@@ -54,6 +58,11 @@
                 {% endif %}
                 </p>
             <p class="content">{{post.created_on}}</p>
+            {% if post.signature %}
+                <div class="post-signature-container">
+                    {{ post.signature.message|safe }}
+                </div>
+            {% endif %}
         {% endif %}
     {% else %}
         <p class="content">{{post.message|safe}}<br>
@@ -67,9 +76,13 @@
                 <i id="{{ post.post_id }}">{{ post.rep_count }}</i> 
             {% endif %}
         {% endif %}
-      
-        </p>
         <p class="content">{{post.created_on}}</p>
+        {% if post.signature %}
+            <div class="post-signature-container">
+                {{ post.signature.message|safe }}
+            </div>
+        {% endif %}
+        </p>
     {% endif %}
 </div>
 {% endfor %}

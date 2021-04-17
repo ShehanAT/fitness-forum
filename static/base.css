@@ -114,6 +114,10 @@ a{
     width: 80%;
 }
 
+.post-signature-container{
+    border: 1px solid black;
+}
+
 /* Reply content styles  */
 .reply_left_quote{
     width: 20px;

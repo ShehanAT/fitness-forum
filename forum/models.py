@@ -49,6 +49,7 @@ class Post(models.Model):
     second_reply_to_id = models.ForeignKey('self', null=True, on_delete=models.CASCADE, related_name='second_reply')
     rep_count = models.IntegerField(default=0)
     vote = False 
+    signature = False 
     created_on = models.DateTimeField(default=datetime.now())
     editted_on = models.DateTimeField(default=datetime.now())
     
@@ -92,6 +93,7 @@ class PostSignature(models.Model):
     signature_id = models.AutoField(primary_key=True)
     signature_for_id = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)
     message = RichTextField(blank=True, null=True)
+    created_on = models.DateTimeField(default=datetime.now())
 
 class PostVote(models.Model):
     vote_id = models.AutoField(primary_key=True)
