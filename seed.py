@@ -8,7 +8,7 @@ from django.core.management import call_command
 
 from django_seed import Seed 
 import random
-from forum.models import Category, Thread, Post, PostVote, PostVote, ForumUser 
+from forum.models import Category, Thread, Post, PostVote, PostVote, ForumUser, Tag
 from django_seed import Seed 
 from django.contrib.auth.models import User 
 seeder = Seed.seeder()
@@ -85,3 +85,6 @@ user_vote_3rd_quater = int(user_vote_1st_quater*3)
 #     post_vote.user_id = ForumUser.objects.get(id=4)
 #     post_vote.save() 
 
+
+# seeder.add_entity(Tag, 30)
+# seeder.execute()

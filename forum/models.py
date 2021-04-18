@@ -21,10 +21,16 @@ class ForumUser(User):
     gender = models.CharField(max_length=1, choices=Gender.choices)
     rep_points = models.IntegerField(default=0)
 
+class Tag(models.Model):
+    tag_id = models.AutoField(primary_key=True, default=None)
+    name = models.CharField(max_length=100)
+
 class Category(models.Model):
     category_id = models.AutoField(primary_key=True, default=None)
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=500)
+    tags = models.ManyToManyField(Tag)
+    likes = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name 

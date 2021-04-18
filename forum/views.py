@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.sessions.backends.db import SessionStore 
 from django.shortcuts import redirect
 from .forms import AddCategoryForm, AddThreadForm, SignUpForm, AddPostForm, ForumUserForm, ProfilePicForm, UpdateProfileForm, ChangePasswordForm, PostSignatureForm
-from .models import Category, Thread, Post, ForumUser, PostVote, PostSignature 
+from .models import Category, Thread, Post, ForumUser, PostVote, PostSignature, Tag
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.exceptions import ObjectDoesNotExist
 import logging 
@@ -23,34 +23,43 @@ def signup_view(request):
             user = ForumUser.objects.create_user(username, email, password1)
             user.save()
             # redirect to /login
+            request.session['status_msg'] = "You have registered successfully! Please login with your new credentials..."
             return redirect("/login")
     else:
         form = SignUpForm()
-    return render(request, "signup_view.html", {'signupForm': form})
+    # return render(request, "signup_view.html", {'signupForm': form})
+    return render(request, "page-signup.html", {"signup_form": form})
 
 def login_view(request):
     s = SessionStore()
     if request.method == "POST":
         username = request.POST["username"]
         password = request.POST["password"]
-        request.session['username'] = username
         user = authenticate(username=username, password=password)
         if user is not None:
             login(request, user)
             request.session['username'] = username
             request.session['logged_in'] = True
             categories = Category.objects.all().values()
-            return redirect("/")
+            return redirect("/test")
         else:
-            return render(request, "login_view.html", {"errors": "Incorrect username/password combo"})
+            # return render(request, "login_view.html", {"errors": "Incorrect username/password combo"})
+            errors = []
+            if username == "":
+                errors.append("Username: This field is required")
+            if password == "":
+                errors.append("Password: This field is required")
+            errors.append("Invalid Username/Password combination")
+            return render(request, "page-login.html", {"errors": errors})
     else:
         request.session['logged_in'] = False 
-        return render(request, "login_view.html", {})
+        # return render(request, "login_view.html", {})
+        return render(request, "page-login.html", {})
 
 def logout_view(request):
     logout(request)
     categories = Category.objects.all().values()
-    return redirect("/")
+    return redirect("/test")
 
 def profile_view(request):
     try:
@@ -104,8 +113,22 @@ def forum_list_view(request):
             postCounter += postCount
         c["threadNum"] = threadCount
         c["postNum"] = postCounter 
-    
-    return render(request, 'forum_list_view.html', {'categories': categories})
+    return render(request, 'page-categories.html', {'categories': categories})
+
+def index_view(request):
+    categories = Category.objects.all().values()
+    for c in categories: 
+        threadCount = Thread.objects.filter(category_id=c['category_id']).count()
+        threads = Thread.objects.filter(category_id=c['category_id'])
+        postCounter = 0
+        for i in threads:
+            postCount = Post.objects.filter(thread_id=i.thread_id).count()
+            postCounter += postCount
+        c["threadNum"] = threadCount
+        c["postNum"] = postCounter 
+        tags = Tag.objects.filter(category_id=c['category_id'])
+        c["tags"] = tags  
+    return render(request, 'page-categories.html', {'categories': categories})
 
 def add_category_view(request):
     if request.method == "POST":
@@ -240,4 +263,7 @@ def vote(request):
 
 def test_view(request):
     request.session["login_status"] = "Thanks for registering! Please login using your new credentials..."
-    return render(request, "login_view.html", {})
+    return render(request, "index.html", {})
+
+def test_login(request):
+    return render(request, "page-login.html", {})
