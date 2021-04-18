@@ -126,7 +126,7 @@ def index_view(request):
             postCounter += postCount
         c["threadNum"] = threadCount
         c["postNum"] = postCounter 
-        tags = Tag.objects.filter(category_id=c['category_id'])
+        tags = Category.objects.get(category_id=c['category_id']).tags.all()
         c["tags"] = tags  
     return render(request, 'page-categories.html', {'categories': categories})
 
