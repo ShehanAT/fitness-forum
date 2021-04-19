@@ -228,22 +228,52 @@
                             </div>
                         </div>
                         <div class="tt-item-description">
-                            {{ post.message }}
-                            <!--
-                            <h6 class="tt-title">Get ready for Movember!</h6>
-                            <p>
-                                It’s time to channel your inner Magnum P.I., Ron Swanson or Hercule Poroit! It’s the time that all guys (or gals) love and all our
-                                partners hate It’s Movember!
-                            </p>
-                            <p>
-                                Throughout November we will be inviting all community members to help raise awareness and funds for the lives of men affected
-                                by cancer and mental health problems via the Movember Foundation 10.
-                            </p>
-                            <h6 class="tt-title">How Does it Work?</h6>
-                            <p>
-                                Authors and customers with facial hair unite! Simply grow, groom, and share your facial hair during November! Even females can enter if they desire (be creative, ladies!). Be inspired by checking out last year’s highlights 28.
-                            </p>
-                            -->
+                            {{ post.message|safe }}
+                            {% if post.first_reply_message  %}
+                                {% if post.second_reply_message %}
+                                    <div class="topic-inner-list">
+                                        <div class="topic-inner">
+                                            <div class="topic-inner-title">
+                                                <div class="topic-inner-avatar">
+                                                    <i class="tt-icon"><svg><use xlink:href="#icon-ava-s"></use></svg></i>
+                                                </div>
+                                                <div class="topic-inner-title"><a href="#">{{ post.first_reply_to_id.posted_by_id.username }}</a></div>
+                                            </div>
+                                            <div class="topic-inner-description">
+                                                {{ post.first_reply_message|safe }}
+                                                <div class="topic-inner-list">
+                                                    <div class="topic-inner">
+                                                        <div class="topic-inner-title">
+                                                            <div class="topic-inner-avatar">
+                                                                <i class="tt-icon"><svg><use xlink:href="#icon-ava-s"></use></svg></i>
+                                                            </div>
+                                                            <div class="topic-inner-title"><a href="#">{{ post.second_reply_to_id.posted_by_id.username }}</a></div>
+                                                        </div>
+                                                        <div class="topic-inner-description">
+                                                            {{ post.second_reply_message|safe }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <div class="topic-inner-list">
+                                        <div class="topic-inner">
+                                            <div class="topic-inner-title">
+                                                <div class="topic-inner-avatar">
+                                                    <i class="tt-icon"><svg><use xlink:href="#icon-ava-s"></use></svg></i>
+                                                </div>
+                                                <div class="topic-inner-title"><a href="#">{{ post.first_reply_to_id.posted_by_id.username }}</a></div>
+                                            </div>
+                                            <div class="topic-inner-description">
+                                                {{ post.first_reply_message|safe }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+                               
                         </div>
                         <div class="tt-item-info info-bottom">
                             <a href="#" class="tt-icon-btn">
