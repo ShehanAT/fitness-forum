@@ -42,7 +42,7 @@
                 <!-- /toggle mobile menu -->
                 <!-- logo -->
                 <div class="tt-logo">
-                    <a href="index.html"><img src="images/logo.png" alt=""></a>
+                    <a href="/"><img src="images/logo.png" alt=""></a>
                 </div>
                 <!-- /logo -->
                 <!-- desctop menu -->
@@ -55,7 +55,7 @@
                             <li>
                                 <a href="page-single-user.html"><span>Pages</span></a>
                                 <ul>
-                                    <li><a href="index.html">Home</a></li>
+                                    <li><a href="/">Home</a></li>
                                     <li><a href="page-single-topic.html">Single Topic</a></li>
                                     <li><a href="page-create-topic.html">Create Topic</a></li>
                                     <li><a href="page-single-user.html">Single User Activity</a></li>
@@ -166,30 +166,30 @@
             </div>
             <div class="col-auto ml-auto">
                  <div class="tt-user-info d-flex justify-content-center">
-                    <a href="#" class="tt-btn-icon">
-                         <i class="tt-icon"><svg><use xlink:href="#icon-notification"></use></svg></i>
-                    </a>
-                    <div class="tt-avatar-icon tt-size-md">
-                        <i class="tt-icon"><svg><use xlink:href="#icon-ava-a"></use></svg></i>
-                    </div>
-                    {% if request.session.logged_in %}
-                        <div class="custom-select-01">
-                            <div class="dropdown">
-                                <button class="dropbtn">{{ request.session.username }}</button>
-                                <div class="dropdown-content">
-                                    <a href="/profile">My Profile</a>
-                                    <a href="/logout">Log out</a>
-                                </div>
-                            </div>
-                        </div>
-                    {% else %}
-                        <div class="col-auto ml-auto">
-                            <div class="tt-account-btn">
-                                <a href="/login" class="btn btn-primary">Log in</a>
-                                <a href="/signup" class="btn btn-secondary">Sign up</a>
-                            </div>
-                        </div>
-                    {% endif %}
+					{% if request.session.logged_in %}
+						<a href="#" class="tt-btn-icon">
+							<i class="tt-icon"><svg><use xlink:href="#icon-notification"></use></svg></i>
+						</a>
+						<div class="tt-avatar-icon tt-size-md">
+							<img class="tt-icon" id="user-profile-pic" src="{{ forum_user.profile_pic_path }}"/>
+						</div>
+						<div class="custom-select-01">
+							<div class="dropdown">
+								<button class="dropbtn">{{ request.session.username }}</button>
+								<div class="dropdown-content">
+									<a href="/profile">My Profile</a>
+									<a href="/logout">Log out</a>
+								</div>
+							</div>
+						</div>
+					{% else %}
+						<div class="col-auto ml-auto">
+							<div class="tt-account-btn">
+								<a href="/login" class="btn btn-primary">Log in</a>
+								<a href="/signup" class="btn btn-secondary">Sign up</a>
+							</div>
+						</div>
+					{% endif %}
                 </div>
             </div>
         </div>

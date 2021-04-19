@@ -148,18 +148,27 @@ def add_category_view(request):
 def category_detail_view(request, category_id):
     category = Category.objects.filter(category_id=category_id)
     threads = Thread.objects.filter(category_id=category_id).values()
+    forum_user = None 
+    if request.session['logged_in']:
+        forum_user = ForumUser.objects.get(id=request.user.id)
+        forum_user.profile_pic_path = str(forum_user.profile_pic)
     try:
         for thread in threads:
             posts = Post.objects.filter(thread_id=thread["thread_id"]).order_by("created_on")
             posted_user_id = posts.first().posted_by_id.id
             username = User.objects.get(id=posted_user_id).get_username()
             thread["started_by"] = username 
+            # gets profile pic of original poster in each thread
+            posted_by_user = ForumUser.objects.get(id=posted_user_id)
+            start_user_pic = posted_by_user.profile_pic
+            thread["start_user_pic"] = str(start_user_pic)
             timedelta = (datetime.now(timezone.utc) - thread["latest_post_on"])
+            # converts time elapsed since latest post to human readable format
             timedelta = humanize.naturaldelta(timedelta)
             thread["latest_activity"] = timedelta
     except AttributeError as e:
         logger.error("ERROR: " + str(e))
-    return render(request, "page-categories-single.html", {"category": category.values()[0], "category_id": category_id, "threads": threads})
+    return render(request, "page-categories-single.html", {"category": category.values()[0], "category_id": category_id, "threads": threads, "forum_user": forum_user})
 
 def add_thread_view(request, category_id):
     category = Category.objects.filter(category_id=category_id).values()

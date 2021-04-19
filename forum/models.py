@@ -17,6 +17,7 @@ class ForumUser(User):
         female = 'F', _('Female')
     forum_user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE, related_name='user')
     profile_pic = models.ImageField(null=True, blank=True, upload_to='images')
+    profile_pic_path = ''
     member_since = models.DateField(default=timezone.now())
     gender = models.CharField(max_length=1, choices=Gender.choices)
     rep_points = models.IntegerField(default=0)

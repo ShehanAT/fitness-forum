@@ -166,13 +166,13 @@
             </div>
             <div class="col-auto ml-auto">
                  <div class="tt-user-info d-flex justify-content-center">
-                    <a href="#" class="tt-btn-icon">
-                         <i class="tt-icon"><svg><use xlink:href="#icon-notification"></use></svg></i>
-                    </a>
-                    <div class="tt-avatar-icon tt-size-md">
-                        <i class="tt-icon"><svg><use xlink:href="#icon-ava-a"></use></svg></i>
-                    </div>
                     {% if request.session.logged_in %}
+                        <a href="#" class="tt-btn-icon">
+                            <i class="tt-icon"><svg><use xlink:href="#icon-notification"></use></svg></i>
+                        </a>
+                        <div class="tt-avatar-icon tt-size-md">
+                            <img class="tt-icon" id="user-profile-pic" src="{{ forum_user.profile_pic_path }}"/>
+                        </div>
                         <div class="custom-select-01">
                             <div class="dropdown">
                                 <button class="dropbtn">{{ request.session.username }}</button>
@@ -201,7 +201,7 @@
             <div class="tt-innerwrapper tt-row">
                 <div class="tt-col-left">
                     <ul class="tt-list-badge">
-                        <li><a href="#"><span class="tt-color01 tt-badge">politics</span></a></li>
+                        <li><a href="#"><span class="tt-color01 tt-badge">{{ category.name }}</span></a></li>
                     </ul>
                 </div>
                 <div class="ml-left tt-col-right">
@@ -240,7 +240,7 @@
                 </div>
             </div>
             <div class="tt-innerwrapper">
-                Lets discuss about whats happening around the world politics.
+                {{ category.description }}
             </div>
             <div class="tt-innerwrapper">
                 <h6 class="tt-title">Similar TAGS</h6>
@@ -322,7 +322,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="tt-col-category"><span class="tt-color01 tt-badge">politics</span></div>
+                <div class="tt-col-category"><span class="tt-color01 tt-badge">{{ category.name }}</span></div>
                 <div class="tt-col-value hide-mobile">584</div>
                 <div class="tt-col-value tt-color-select  hide-mobile">35</div>
                 <div class="tt-col-value hide-mobile">1.3k</div>
@@ -360,9 +360,10 @@
             {% for thread in threads %}
                 <div class="tt-item">
                     <div class="tt-col-avatar">
-                        <svg class="tt-icon">
+                        <!-- <svg class="tt-icon">
                         <use xlink:href="#icon-ava-c"></use>
-                        </svg>
+                        </svg> -->
+                        <img src="{{ thread.start_user_pic }}" class="tt-icon"/>
                     </div>
                     <div class="tt-col-description">
                         <h6 class="tt-title"><a href="#">
