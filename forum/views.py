@@ -1,6 +1,6 @@
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render 
-from datetime import datetime
+from datetime import datetime, timezone
 from django.contrib.auth.models import User 
 from django.contrib.auth import authenticate, login, logout 
 from django.contrib.sessions.backends.db import SessionStore 
@@ -10,6 +10,7 @@ from .models import Category, Thread, Post, ForumUser, PostVote, PostSignature, 
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.exceptions import ObjectDoesNotExist
 import logging 
+import humanize
 
 logger = logging.getLogger(__name__)
 def signup_view(request):
@@ -153,10 +154,12 @@ def category_detail_view(request, category_id):
             posted_user_id = posts.first().posted_by_id.id
             username = User.objects.get(id=posted_user_id).get_username()
             thread["started_by"] = username 
-            print("Thread Subject", thread["subject"],"Views: ", thread["views"])
+            timedelta = (datetime.now(timezone.utc) - thread["latest_post_on"])
+            timedelta = humanize.naturaldelta(timedelta)
+            thread["latest_activity"] = timedelta
     except AttributeError as e:
         logger.error("ERROR: " + str(e))
-    return render(request, "category_detail_view.html", {"category": category.values()[0], "category_id": category_id, "threads": threads})
+    return render(request, "page-categories-single.html", {"category": category.values()[0], "category_id": category_id, "threads": threads})
 
 def add_thread_view(request, category_id):
     category = Category.objects.filter(category_id=category_id).values()

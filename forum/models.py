@@ -43,6 +43,7 @@ class Thread(models.Model):
     views = models.IntegerField()
     replies = models.IntegerField()
     created_on = models.DateTimeField(default=datetime.now())
+    latest_post_on = models.DateTimeField(default=datetime.now())
     def __str__(self):
         return "Topic: " + self.subject + "Started By: " + self.started_by
 

@@ -172,13 +172,24 @@
                     <div class="tt-avatar-icon tt-size-md">
                         <i class="tt-icon"><svg><use xlink:href="#icon-ava-a"></use></svg></i>
                     </div>
-                    <div class="custom-select-01">
-                        <select>
-                            <option value="Default Sorting">azyrusmax</option>
-                            <option value="value 01">value 01</option>
-                            <option value="value 02">value 02</option>
-                        </select>
-                    </div>
+                    {% if request.session.logged_in %}
+                        <div class="custom-select-01">
+                            <div class="dropdown">
+                                <button class="dropbtn">{{ request.session.username }}</button>
+                                <div class="dropdown-content">
+                                    <a href="/profile">My Profile</a>
+                                    <a href="/logout">Log out</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="col-auto ml-auto">
+                            <div class="tt-account-btn">
+                                <a href="/login" class="btn btn-primary">Log in</a>
+                                <a href="/signup" class="btn btn-secondary">Sign up</a>
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -346,35 +357,38 @@
                 <div class="tt-col-value  hide-mobile">12.6k</div>
                 <div class="tt-col-value hide-mobile">2h</div>
             </div>
-            <div class="tt-item">
-                <div class="tt-col-avatar">
-                    <svg class="tt-icon">
-                      <use xlink:href="#icon-ava-c"></use>
-                    </svg>
-                </div>
-                <div class="tt-col-description">
-                    <h6 class="tt-title"><a href="#">
-                        Review Queue Changes for VideoHive & PhotoDune
-                    </a></h6>
-                    <div class="row align-items-center no-gutters">
-                        <div class="col-11">
-                            <ul class="tt-list-badge">
-                                <li class="show-mobile"><a href="#"><span class="tt-color01 tt-badge">politics</span></a></li>
-                                <li><a href="#"><span class="tt-badge">videohive</span></a></li>
-                                <li><a href="#"><span class="tt-badge">photodune</span></a></li>
-                            </ul>
-                        </div>
-                        <div class="col-1 ml-auto show-mobile">
-                            <div class="tt-value">1d</div>
+            {% for thread in threads %}
+                <div class="tt-item">
+                    <div class="tt-col-avatar">
+                        <svg class="tt-icon">
+                        <use xlink:href="#icon-ava-c"></use>
+                        </svg>
+                    </div>
+                    <div class="tt-col-description">
+                        <h6 class="tt-title"><a href="#">
+                            {{ thread.subject }}
+                        </a></h6>
+                        <div class="row align-items-center no-gutters">
+                            <div class="col-11">
+                                <ul class="tt-list-badge">
+                                    <li class="show-mobile"><a href="#"><span class="tt-color01 tt-badge">{{ category.name }}</span></a></li>
+                                    <!-- <li><a href="#"><span class="tt-badge">videohive</span></a></li>
+                                    <li><a href="#"><span class="tt-badge">photodune</span></a></li> -->
+                                </ul>
+                            </div>
+                            <div class="col-1 ml-auto show-mobile">
+                                <div class="tt-value">1d</div>
+                            </div>
                         </div>
                     </div>
+                    <div class="tt-col-category"><span class="tt-color01 tt-badge">{{ category.name }}</span></div>
+                    <div class="tt-col-value  hide-mobile">{{ category.likes }}</div>
+                    <div class="tt-col-value tt-color-select  hide-mobile">{{ thread.replies }}</div>
+                    <div class="tt-col-value  hide-mobile">{{ thread.views }}</div>
+                    <div class="tt-col-value hide-mobile">{{ thread.latest_activity }}</div>
                 </div>
-                <div class="tt-col-category"><span class="tt-color01 tt-badge">politics</span></div>
-                <div class="tt-col-value  hide-mobile">308</div>
-                <div class="tt-col-value tt-color-select  hide-mobile">660</div>
-                <div class="tt-col-value  hide-mobile">8.3k</div>
-                <div class="tt-col-value hide-mobile">1d</div>
-            </div>
+            {% endfor %}
+            <!--  
             <div class="tt-item">
                 <div class="tt-col-avatar">
                     <svg class="tt-icon">
@@ -673,6 +687,7 @@
                 </button>
             </div>
         </div>
+        -->
     </div>
 </main>
 <div id="js-popup-settings" class="tt-popup-settings">
