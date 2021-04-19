@@ -42,14 +42,14 @@
                 <!-- /toggle mobile menu -->
                 <!-- logo -->
                 <div class="tt-logo">
-                    <a href="index.html"><img src="images/logo.png" alt=""></a>
+                    <a href="/"><img src="images/logo.png" alt=""></a>
                 </div>
                 <!-- /logo -->
                 <!-- desctop menu -->
                   <div class="tt-desktop-menu">
                     <nav>
                         <ul>
-                            <li><a href="page-categories.html"><span>Categories</span></a></li>
+                            <li><a href="/categories"><span>Categories</span></a></li>
                             <li><a href="page-tabs.html"><span>Trending</span></a></li>
                             <li><a href="page-create-topic.html"><span>New</span></a></li>
                             <li>
@@ -245,15 +245,10 @@
             <div class="tt-innerwrapper">
                 <h6 class="tt-title">Similar TAGS</h6>
                 <ul class="tt-list-badge">
-                    <li><a href="#"><span class="tt-badge">world politics</span></a></li>
-                    <li><a href="#"><span class="tt-badge">human rights</span></a></li>
-                    <li><a href="#"><span class="tt-badge">trump</span></a></li>
-                    <li><a href="#"><span class="tt-badge">climate change</span></a></li>
-                    <li><a href="#"><span class="tt-badge">foreign policy</span></a></li>
-                    <li><a href="#"><span class="tt-badge">world politics</span></a></li>
-                    <li><a href="#"><span class="tt-badge">human rights</span></a></li>
-                    <li><a href="#"><span class="tt-badge">trump</span></a></li>
-                    <li><a href="#"><span class="tt-badge">climate change</span></a></li>
+                    {% for tag in tags %}
+                        <li><a href="#"><span class="tt-badge">{{ tag.name }}</span></a></li>
+                    {% endfor %}
+
                 </ul>
             </div>
         </div>
@@ -360,21 +355,16 @@
             {% for thread in threads %}
                 <div class="tt-item">
                     <div class="tt-col-avatar">
-                        <!-- <svg class="tt-icon">
-                        <use xlink:href="#icon-ava-c"></use>
-                        </svg> -->
                         <img src="{{ thread.start_user_pic }}" class="tt-icon"/>
                     </div>
                     <div class="tt-col-description">
-                        <h6 class="tt-title"><a href="#">
+                        <h6 class="tt-title"><a href="/category/{{ category.category_id }}/thread/{{ thread.thread_id }}">
                             {{ thread.subject }}
                         </a></h6>
                         <div class="row align-items-center no-gutters">
                             <div class="col-11">
                                 <ul class="tt-list-badge">
                                     <li class="show-mobile"><a href="#"><span class="tt-color01 tt-badge">{{ category.name }}</span></a></li>
-                                    <!-- <li><a href="#"><span class="tt-badge">videohive</span></a></li>
-                                    <li><a href="#"><span class="tt-badge">photodune</span></a></li> -->
                                 </ul>
                             </div>
                             <div class="col-1 ml-auto show-mobile">

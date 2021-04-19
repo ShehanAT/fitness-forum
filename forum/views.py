@@ -118,6 +118,10 @@ def forum_list_view(request):
 
 def index_view(request):
     categories = Category.objects.all().values()
+    forum_user = None 
+    if request.session['logged_in']:
+        forum_user = ForumUser.objects.get(id=request.user.id)
+        forum_user.profile_pic_path = str(forum_user.profile_pic)
     for c in categories: 
         threadCount = Thread.objects.filter(category_id=c['category_id']).count()
         threads = Thread.objects.filter(category_id=c['category_id'])
@@ -129,7 +133,7 @@ def index_view(request):
         c["postNum"] = postCounter 
         tags = Category.objects.get(category_id=c['category_id']).tags.all()
         c["tags"] = tags  
-    return render(request, 'page-categories.html', {'categories': categories})
+    return render(request, 'page-categories.html', {'categories': categories, "forum_user": forum_user})
 
 def add_category_view(request):
     if request.method == "POST":
@@ -146,9 +150,10 @@ def add_category_view(request):
         return render(request, 'add_category_view.html')
 
 def category_detail_view(request, category_id):
-    category = Category.objects.filter(category_id=category_id)
+    category = Category.objects.get(category_id=category_id)
     threads = Thread.objects.filter(category_id=category_id).values()
     forum_user = None 
+    tags = category.tags.all()  
     if request.session['logged_in']:
         forum_user = ForumUser.objects.get(id=request.user.id)
         forum_user.profile_pic_path = str(forum_user.profile_pic)
@@ -168,7 +173,7 @@ def category_detail_view(request, category_id):
             thread["latest_activity"] = timedelta
     except AttributeError as e:
         logger.error("ERROR: " + str(e))
-    return render(request, "page-categories-single.html", {"category": category.values()[0], "category_id": category_id, "threads": threads, "forum_user": forum_user})
+    return render(request, "page-categories-single.html", {"category": category, "threads": threads, "forum_user": forum_user, "tags": tags})
 
 def add_thread_view(request, category_id):
     category = Category.objects.filter(category_id=category_id).values()
@@ -189,10 +194,14 @@ def add_thread_view(request, category_id):
 def thread_detail_view(request, category_id, thread_id):
     posts = Post.objects.filter(thread_id=thread_id).order_by("created_on")
     category_name = Category.objects.get(category_id=category_id).name
+    forum_user = None 
     thread_name = Thread.objects.get(thread_id=thread_id).subject
     thread = Thread.objects.get(thread_id=thread_id)
     thread.views = thread.views + 1
     thread.save()
+    if request.session['logged_in']:
+        forum_user = ForumUser.objects.get(id=request.user.id)
+        forum_user.profile_pic_path = str(forum_user.profile_pic)
     for post in posts:
         if post.first_reply_to_id != None and post.first_reply_to_id.post_id > 0:
             first_reply_post = post.set_first_reply_message()
@@ -209,7 +218,7 @@ def thread_detail_view(request, category_id, thread_id):
             post.signature = post_signature 
         except ObjectDoesNotExist: 
             post.signature = None 
-    return render(request, "thread_detail_view.html", {"posts":  posts, "category_id": category_id, "thread_id": thread_id, "thread_name": thread_name, "category_name": category_name})
+    return render(request, "page-single-topic.html", {"posts":  posts, "category_id": category_id, "thread_id": thread_id, "thread_name": thread_name, "category_name": category_name, "forum_user": forum_user})
 
 def add_post_view(request, category_id, thread_id):
     category_name = Category.objects.filter(category_id=category_id).values()[0]["name"]

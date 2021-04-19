@@ -42,14 +42,14 @@
                 <!-- /toggle mobile menu -->
                 <!-- logo -->
                 <div class="tt-logo">
-                    <a href="index.html"><img src="images/logo.png" alt=""></a>
+                    <a href="/"><img src="/static/images/logo.png" alt=""></a>
                 </div>
                 <!-- /logo -->
                 <!-- desctop menu -->
                   <div class="tt-desktop-menu">
                     <nav>
                         <ul>
-                            <li><a href="page-categories.html"><span>Categories</span></a></li>
+                            <li><a href="/categories"><span>Categories</span></a></li>
                             <li><a href="page-tabs.html"><span>Trending</span></a></li>
                             <li><a href="page-create-topic.html"><span>New</span></a></li>
                             <li>
@@ -166,19 +166,30 @@
             </div>
             <div class="col-auto ml-auto">
                  <div class="tt-user-info d-flex justify-content-center">
-                    <a href="#" class="tt-btn-icon">
-                         <i class="tt-icon"><svg><use xlink:href="#icon-notification"></use></svg></i>
-                    </a>
-                    <div class="tt-avatar-icon tt-size-md">
-                        <i class="tt-icon"><svg><use xlink:href="#icon-ava-a"></use></svg></i>
-                    </div>
-                    <div class="custom-select-01">
-                        <select>
-                            <option value="Default Sorting">azyrusmax</option>
-                            <option value="value 01">value 01</option>
-                            <option value="value 02">value 02</option>
-                        </select>
-                    </div>
+                    {% if request.session.logged_in %}
+                        <a href="#" class="tt-btn-icon">
+                            <i class="tt-icon"><svg><use xlink:href="#icon-notification"></use></svg></i>
+                        </a>
+                        <div class="tt-avatar-icon tt-size-md">
+                            <img class="tt-icon" id="user-profile-pic" src="{{ forum_user.profile_pic_path }}"/>
+                        </div>
+                        <div class="custom-select-01">
+                            <div class="dropdown">
+                                <button class="dropbtn">{{ request.session.username }}</button>
+                                <div class="dropdown-content">
+                                    <a href="/profile">My Profile</a>
+                                    <a href="/logout">Log out</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="col-auto ml-auto">
+                            <div class="tt-account-btn">
+                                <a href="/login" class="btn btn-primary">Log in</a>
+                                <a href="/signup" class="btn btn-secondary">Sign up</a>
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -187,72 +198,82 @@
 <main id="tt-pageContent">
     <div class="container">
         <div class="tt-single-topic-list">
-            <div class="tt-item">
-                 <div class="tt-single-topic">
-                    <div class="tt-item-header">
-                        <div class="tt-item-info info-top">
-                            <div class="tt-avatar-icon">
-                                <i class="tt-icon"><svg><use xlink:href="#icon-ava-d"></use></svg></i>
+            {% for post in posts %}
+                <div class="tt-item">
+                    <div class="tt-single-topic">
+                        <div class="tt-item-header">
+                            <div class="tt-item-info info-top">
+                                <div class="tt-avatar-icon">
+                                    <img src="{{ post.posted_by_id.forumuser.profile_pic }}" class="tt-icon"/>
+                                    <!-- <i class="tt-icon"><svg><use xlink:href="#icon-ava-d"></use></svg></i> -->
+                                </div>
+                                <div class="tt-avatar-title">
+                                <a href="#">{{ post.posted_by_id.username }}</a>
+                                </div>
+                                <a href="#" class="tt-info-time">
+                                    <i class="tt-icon"><svg><use xlink:href="#icon-time"></use></svg></i>6 Jan,2019
+                                </a>
                             </div>
-                            <div class="tt-avatar-title">
-                               <a href="#">dylan89</a>
+                            {% if post.title %}
+                                <h3 class="tt-item-title">
+                                    <a href="#">{{ post.title }}</a>
+                                </h3>
+                            {% endif %}
+                            <div class="tt-item-tag">
+                                <ul class="tt-list-badge">
+                                    <li><a href="#"><span class="tt-color03 tt-badge">exchange</span></a></li>
+                                    <li><a href="#"><span class="tt-badge">themeforest</span></a></li>
+                                    <li><a href="#"><span class="tt-badge">elements</span></a></li>
+                                </ul>
                             </div>
-                            <a href="#" class="tt-info-time">
-                                <i class="tt-icon"><svg><use xlink:href="#icon-time"></use></svg></i>6 Jan,2019
+                        </div>
+                        <div class="tt-item-description">
+                            {{ post.message }}
+                            <!--
+                            <h6 class="tt-title">Get ready for Movember!</h6>
+                            <p>
+                                It’s time to channel your inner Magnum P.I., Ron Swanson or Hercule Poroit! It’s the time that all guys (or gals) love and all our
+                                partners hate It’s Movember!
+                            </p>
+                            <p>
+                                Throughout November we will be inviting all community members to help raise awareness and funds for the lives of men affected
+                                by cancer and mental health problems via the Movember Foundation 10.
+                            </p>
+                            <h6 class="tt-title">How Does it Work?</h6>
+                            <p>
+                                Authors and customers with facial hair unite! Simply grow, groom, and share your facial hair during November! Even females can enter if they desire (be creative, ladies!). Be inspired by checking out last year’s highlights 28.
+                            </p>
+                            -->
+                        </div>
+                        <div class="tt-item-info info-bottom">
+                            <a href="#" class="tt-icon-btn">
+                                <i class="tt-icon"><svg><use xlink:href="#icon-like"></use></svg></i>
+                                <!-- <span class="tt-text">{{ post.vote}}</span> -->
+                            </a>
+                            <span class="tt-text vote-number">{{ post.rep_count }}</span>
+                            <a href="#" class="tt-icon-btn">
+                                <i class="tt-icon"><svg><use xlink:href="#icon-dislike"></use></svg></i>
+                                <!-- <span class="tt-text">39</span> -->
+                            </a>
+                            <a href="#" class="tt-icon-btn">
+                                <i class="tt-icon"><svg><use xlink:href="#icon-favorite"></use></svg></i>
+                                <span class="tt-text">12</span>
+                            </a>
+                            <div class="col-separator"></div>
+                            <a href="#" class="tt-icon-btn tt-hover-02 tt-small-indent">
+                                <i class="tt-icon"><svg><use xlink:href="#icon-share"></use></svg></i>
+                            </a>
+                            <a href="#" class="tt-icon-btn tt-hover-02 tt-small-indent">
+                                <i class="tt-icon"><svg><use xlink:href="#icon-flag"></use></svg></i>
+                            </a>
+                            <a href="#" class="tt-icon-btn tt-hover-02 tt-small-indent">
+                                <i class="tt-icon"><svg><use xlink:href="#icon-reply"></use></svg></i>
                             </a>
                         </div>
-                        <h3 class="tt-item-title">
-                            <a href="#">Web Hosting Packages for ThemeForest WordPress</a>
-                        </h3>
-                        <div class="tt-item-tag">
-                            <ul class="tt-list-badge">
-                                <li><a href="#"><span class="tt-color03 tt-badge">exchange</span></a></li>
-                                <li><a href="#"><span class="tt-badge">themeforest</span></a></li>
-                                <li><a href="#"><span class="tt-badge">elements</span></a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="tt-item-description">
-                        <h6 class="tt-title">Get ready for Movember!</h6>
-                        <p>
-                            It’s time to channel your inner Magnum P.I., Ron Swanson or Hercule Poroit! It’s the time that all guys (or gals) love and all our
-                            partners hate It’s Movember!
-                        </p>
-                        <p>
-                            Throughout November we will be inviting all community members to help raise awareness and funds for the lives of men affected
-                            by cancer and mental health problems via the Movember Foundation 10.
-                        </p>
-                        <h6 class="tt-title">How Does it Work?</h6>
-                        <p>
-                            Authors and customers with facial hair unite! Simply grow, groom, and share your facial hair during November! Even females can enter if they desire (be creative, ladies!). Be inspired by checking out last year’s highlights 28.
-                        </p>
-                    </div>
-                    <div class="tt-item-info info-bottom">
-                        <a href="#" class="tt-icon-btn">
-                            <i class="tt-icon"><svg><use xlink:href="#icon-like"></use></svg></i>
-                            <span class="tt-text">671</span>
-                        </a>
-                        <a href="#" class="tt-icon-btn">
-                             <i class="tt-icon"><svg><use xlink:href="#icon-dislike"></use></svg></i>
-                            <span class="tt-text">39</span>
-                        </a>
-                        <a href="#" class="tt-icon-btn">
-                             <i class="tt-icon"><svg><use xlink:href="#icon-favorite"></use></svg></i>
-                            <span class="tt-text">12</span>
-                        </a>
-                        <div class="col-separator"></div>
-                        <a href="#" class="tt-icon-btn tt-hover-02 tt-small-indent">
-                            <i class="tt-icon"><svg><use xlink:href="#icon-share"></use></svg></i>
-                        </a>
-                        <a href="#" class="tt-icon-btn tt-hover-02 tt-small-indent">
-                            <i class="tt-icon"><svg><use xlink:href="#icon-flag"></use></svg></i>
-                        </a>
-                        <a href="#" class="tt-icon-btn tt-hover-02 tt-small-indent">
-                             <i class="tt-icon"><svg><use xlink:href="#icon-reply"></use></svg></i>
-                        </a>
                     </div>
                 </div>
-            </div>
+            {% endfor %}
+            <!--
             <div class="tt-item">
                 <div class="tt-info-box">
                     <h6 class="tt-title">Thread Status</h6>
@@ -705,6 +726,7 @@
                     </div>
                 </div>
             </div>
+            -->
         </div>
         <div class="tt-wrapper-inner">
             <h4 class="tt-title-separator"><span>You’ve reached the end of replies</span></h4>

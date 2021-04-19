@@ -7910,3 +7910,9 @@ div.alert-danger > strong{
 #user-profile-pic{
   width: 75px;
 }
+
+/* page-single-topic.html styles */ 
+img.tt-icon {
+  border-radius: 100%;
+  width: 30%;
+}
