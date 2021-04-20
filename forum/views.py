@@ -42,7 +42,7 @@ def login_view(request):
             request.session['username'] = username
             request.session['logged_in'] = True
             categories = Category.objects.all().values()
-            return redirect("/test")
+            return redirect("/")
         else:
             # return render(request, "login_view.html", {"errors": "Incorrect username/password combo"})
             errors = []

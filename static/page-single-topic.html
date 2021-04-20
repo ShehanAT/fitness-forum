@@ -277,18 +277,26 @@
                                
                         </div>
                         <div class="tt-item-info info-bottom">
-                            <a href="#" class="tt-icon-btn up-arrow-vote" data-post-id="{{ post.post_id }}" data-category-id="{{ category_id }}" data-thread-id="{{ thread_id }}">
-                                <i class="tt-icon"><svg><use xlink:href="#icon-like"></use></svg></i>
-                                <!-- <span class="tt-text">{{ post.vote}}</span> -->
-                            </a>
-                            <span class="tt-text vote-number" id="{{ post.post_id }}rep_count">{{ post.rep_count }}</span>
-                            <a href="#" class="tt-icon-btn down-arrow-vote" data-post-id="{{ post.post_id }}" data-category-id="{{ category_id }}" data-thread-id="{{ thread_id }}">
-                                <i class="tt-icon"><svg><use xlink:href="#icon-dislike"></use></svg></i>
-                                <!-- <span class="tt-text">39</span> -->
-                            </a>
+                            {% if request.session.logged_in %}
+                                {% if post.vote %}
+                                    <a href="#" class="tt-icon-btn up-arrow-vote" data-post-id="{{ post.post_id }}" data-category-id="{{ category_id }}" data-thread-id="{{ thread_id }}">
+                                        <i class="tt-icon"><svg><use xlink:href="#icon-like"></use></svg></i>
+                                        <!-- <span class="tt-text">{{ post.vote}}</span> -->
+                                    </a>
+                                    <span class="tt-text vote-number" id="{{ post.post_id }}rep_count">{{ post.rep_count }}</span>
+                                    <a href="#" class="tt-icon-btn down-arrow-vote" data-post-id="{{ post.post_id }}" data-category-id="{{ category_id }}" data-thread-id="{{ thread_id }}">
+                                        <i class="tt-icon"><svg><use xlink:href="#icon-dislike"></use></svg></i>
+                                        <!-- <span class="tt-text">39</span> -->
+                                    </a>
+                                {% else %}
+                                    <span class="tt-text vote-number" id="{{ post.post_id }}rep_count">{{ post.rep_count }}</span>
+                                {% endif %}
+                            {% else %}
+                                <span class="tt-text vote-number" id="{{ post.post_id }}rep_count">{{ post.rep_count }}</span>
+                            {% endif %}
                             <a href="#" class="tt-icon-btn">
-                                <i class="tt-icon"><svg><use xlink:href="#icon-favorite"></use></svg></i>
-                                <span class="tt-text">12</span>
+                            <i class="tt-icon"><svg><use xlink:href="#icon-favorite"></use></svg></i>
+                            <span class="tt-text">12</span>
                             </a>
                             <div class="col-separator"></div>
                             <a href="#" class="tt-icon-btn tt-hover-02 tt-small-indent">
