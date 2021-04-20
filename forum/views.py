@@ -193,10 +193,11 @@ def add_thread_view(request, category_id):
 
 def thread_detail_view(request, category_id, thread_id):
     posts = Post.objects.filter(thread_id=thread_id).order_by("created_on")
-    category_name = Category.objects.get(category_id=category_id).name
+    category = Category.objects.get(category_id=category_id)
+    category_name = category.name
     forum_user = None 
-    thread_name = Thread.objects.get(thread_id=thread_id).subject
     thread = Thread.objects.get(thread_id=thread_id)
+    thread_name = thread.subject
     thread.views = thread.views + 1
     thread.save()
     if request.session['logged_in']:
@@ -218,7 +219,8 @@ def thread_detail_view(request, category_id, thread_id):
             post.signature = post_signature 
         except ObjectDoesNotExist: 
             post.signature = None 
-    return render(request, "page-single-topic.html", {"posts":  posts, "category_id": category_id, "thread_id": thread_id, "thread_name": thread_name, "category_name": category_name, "forum_user": forum_user})
+    add_post_form = AddPostForm()
+    return render(request, "page-single-topic.html", {"posts":  posts, "category": category, "thread": thread, "forum_user": forum_user, "add_post_form": add_post_form})
 
 def add_post_view(request, category_id, thread_id):
     category_name = Category.objects.filter(category_id=category_id).values()[0]["name"]
@@ -238,26 +240,25 @@ def add_post_view(request, category_id, thread_id):
         return render(request, "add_post_view.html", {"category_name": category_name, "thread_name": thread_subject, "form": form })
 
 def add_reply_post_view(request, category_id, thread_id, post_id):
-    category_name = Category.objects.filter(category_id=category_id).values()[0]["name"]
+    category= Category.objects.get(category_id=category_id)
     thread = Thread.objects.get(thread_id=thread_id)
     thread_subject = thread.subject
     user = User.objects.get(id=request.user.id)
-    reply_post = Post.objects.get(post_id=post_id)
-    reply_post_id = reply_post.post_id
-    reply_post_message = reply_post.message
+    original_post = Post.objects.get(post_id=post_id)
+    add_reply_form = AddPostForm(request.POST)
     if request.method == "POST":
-        form = AddPostForm(request.POST)
-        if form.is_valid():
+        # form = AddPostForm(request.POST)
+        if add_reply_form.is_valid():
             thread = Thread.objects.get(thread_id=thread_id)
             thread.replies = thread.replies + 1
             thread.save()
-            post_message = form.cleaned_data["message"]
-            new_post = Post(message=post_message, posted_by_id=user, thread_id=thread, created_on=datetime.now(), first_reply_to_id=reply_post, second_reply_to_id=reply_post.first_reply_to_id)
+            post_message = add_reply_form.cleaned_data["message"]
+            new_post = Post(message=post_message, posted_by_id=user, thread_id=thread, created_on=datetime.now(), first_reply_to_id=original_post, second_reply_to_id=original_post.first_reply_to_id)
             new_post.save()
         redirect_url = "/category/" + str(category_id) + "/thread/" + str(thread_id)
         return redirect(redirect_url)
     else:
-        return render(request, "add_reply_post_view.html", {"category_name": category_name, "category_id": category_id, "thread_subject": thread_subject, "reply_post_message": reply_post_message, "thread_id": thread_id})
+        return render(request, "page-single-topic-reply.html", {"category": category, "thread": thread, "original_post": original_post, "add_reply_form": add_reply_form})
 
 def vote(request):
     if request.method == "POST":
