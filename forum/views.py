@@ -136,6 +136,10 @@ def index_view(request):
     return render(request, 'page-categories.html', {'categories': categories, "forum_user": forum_user})
 
 def add_category_view(request):
+    forum_user = None 
+    if request.session['logged_in']:
+        forum_user = ForumUser.objects.get(id=request.user.id)
+        forum_user.profile_pic_path = str(forum_user.profile_pic)
     if request.method == "POST":
         form = AddCategoryForm(request.POST)
         if form.is_valid():
@@ -143,11 +147,17 @@ def add_category_view(request):
             category_description = form.cleaned_data['category_description']
             category = Category(name=category_name, description=category_description)
             category.save()
+            tags_input = form.cleaned_data['category_tags']
+            tags = tags_input.split(',')
+            for tag in tags:
+                new_tag = Tag.objects.create(name=tag)
+                new_tag.save
+                category.tags.add(new_tag)
             return HttpResponseRedirect('/')
         else:
-            return render(request, 'add_category_view.html', {})
+            return render(request, 'page-create-category.html', {"forum_user": forum_user})
     else:
-        return render(request, 'add_category_view.html')
+        return render(request, 'page-create-category.html', {"forum_user": forum_user})
 
 def category_detail_view(request, category_id):
     category = Category.objects.get(category_id=category_id)
@@ -176,12 +186,12 @@ def category_detail_view(request, category_id):
     return render(request, "page-categories-single.html", {"category": category, "threads": threads, "forum_user": forum_user, "tags": tags})
 
 def add_thread_view(request, category_id):
-    category = Category.objects.filter(category_id=category_id).values()
+    category = Category.objects.get(category_id=category_id)
+    add_thread_form = AddThreadForm(request.POST)
     if request.method == "POST":
-        form = AddThreadForm(request.POST)
-        if form.is_valid():
-            thread_subject = form.cleaned_data['subject']
-            thread_message = form.cleaned_data['message']
+        if add_thread_form.is_valid():
+            thread_subject = add_thread_form.cleaned_data['subject']
+            thread_message = add_thread_form.cleaned_data['message']
             new_thread = Thread(subject=thread_subject, category_id=category_id, views=0, replies=0)
             new_thread.save()
             new_post = Post(message=thread_message, posted_by="ShehanTest", thread_id=new_thread.thread_id)
@@ -189,7 +199,7 @@ def add_thread_view(request, category_id):
         redirect_url = "/category/" + str(category_id)
         return redirect(redirect_url)
     else:
-        return render(request, "add_thread_view.html", {"category_name": category[0]['name']})
+        return render(request, "page-create-thread.html", {"category": category, "add_thread_form": add_thread_form})
 
 def thread_detail_view(request, category_id, thread_id):
     posts = Post.objects.filter(thread_id=thread_id).order_by("created_on")

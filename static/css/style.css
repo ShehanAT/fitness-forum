@@ -7861,7 +7861,7 @@ html.ie.gecko body.modal-open {
       fill: #182730; }
   @media (min-width: 1283px) {
     .tt-btn-create-topic {
-      top: 14px; } }
+      bottom: 14px; } }
   @media (max-width: 1282px) {
     .tt-btn-create-topic {
       bottom: 20px; } }
