@@ -19,7 +19,17 @@ This program was developed on Windows but can also run on Unix like operating sy
 4. run ```python manage.py runserver```
 
 # Screenshots: 
+Main page:
+![Main page](/static/images/screenshot_1.png)
 
+Thread view page:
+![Thread view page](/static/images/screenshot_2.png)
+
+Post view page:
+![Post view page](/static/images/screenshot_3.png)
+
+Replies for post:
+![Reply post image](/static/images/screenshot_4.png)
 
 ### Contributing:
 Please feel free to contribute to this project however possible by forking this repo, making changes and initiating pull requests. Thanks!
