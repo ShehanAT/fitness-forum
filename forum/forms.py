@@ -20,14 +20,25 @@ class AddCategoryForm(forms.Form):
     category_tags = forms.CharField(label="Tags for new category", max_length=500)
 
 class AddThreadForm(forms.Form):
-    message = forms.CharField(widget=CKEditorWidget(), label="")
+    subject = forms.CharField(label="Thread Title", max_length=100)
+    message = forms.CharField(widget=CKEditorWidget(), label="Original Post message")
+    tags = forms.CharField(label="Tags for new post", max_length=500)
+
+    def __init__(self, *args, **kwargs):
+        super(AddThreadForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'
     
+# class AddThreadTagForm(forms.Form):    
+#     tags = forms.CharField(label="Tags for new post: ", max_length=500)
+    
+#     def __init__(self, *args, **kwargs):
+#         super(AddThreadTagForm, self).__init__(*args, **kwargs)
+#         for visible in self.visible_fields():
+#             visible.field.widget.attrs['class'] = 'form-control'
+
 class AddPostForm(forms.Form):
     message = forms.CharField(widget=CKEditorWidget())
-
-class ForumUserForm(forms.Form):
-    '''Form for the image model'''
-    profic_pic = forms.ImageField(label='Profilc Picture') 
 
 class MultiEmailField(forms.Field):
     def to_python(self, value):

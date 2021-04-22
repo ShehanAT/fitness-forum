@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout 
 from django.contrib.sessions.backends.db import SessionStore 
 from django.shortcuts import redirect
-from .forms import AddCategoryForm, AddThreadForm, SignUpForm, AddPostForm, ForumUserForm, ProfilePicForm, UpdateProfileForm, ChangePasswordForm, PostSignatureForm
+from .forms import AddCategoryForm, AddThreadForm, SignUpForm, AddPostForm, ProfilePicForm, UpdateProfileForm, ChangePasswordForm, PostSignatureForm
 from .models import Category, Thread, Post, ForumUser, PostVote, PostSignature, Tag
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.exceptions import ObjectDoesNotExist
@@ -187,19 +187,35 @@ def category_detail_view(request, category_id):
 
 def add_thread_view(request, category_id):
     category = Category.objects.get(category_id=category_id)
-    add_thread_form = AddThreadForm(request.POST)
     if request.method == "POST":
+        add_thread_form = AddThreadForm(request.POST)
+        # add_thread_tags_form = AddThreadTagForm(request.POST)
         if add_thread_form.is_valid():
             thread_subject = add_thread_form.cleaned_data['subject']
             thread_message = add_thread_form.cleaned_data['message']
-            new_thread = Thread(subject=thread_subject, category_id=category_id, views=0, replies=0)
+            thread_tags = add_thread_form.cleaned_data['tags']
+            user = User.objects.get(id=request.user.id)
+            new_thread = Thread(subject=thread_subject, category_id=category, views=0, replies=0, started_by_id=user)
             new_thread.save()
-            new_post = Post(message=thread_message, posted_by="ShehanTest", thread_id=new_thread.thread_id)
+            posted_by = User.objects.get(id=request.user.id)
+            new_post = Post(message=thread_message, posted_by_id=posted_by, thread_id=new_thread)
             new_post.save()
+            tags = thread_tags.split(',')
+            add_tag = None 
+            for tag in tags:
+                if Tag.objects.filter(name=tag).exists():
+                    add_tag = Tag.objects.get(name=tag)
+                else:
+                    add_tag = Tag.objects.create(name=tag)
+                    add_tag.save
+                new_thread.tags.add(add_tag)
+                new_post.tags.add(add_tag)
         redirect_url = "/category/" + str(category_id)
         return redirect(redirect_url)
     else:
-        return render(request, "page-create-thread.html", {"category": category, "add_thread_form": add_thread_form})
+        add_thread_form = AddThreadForm()
+        # add_thread_tags_form = AddThreadTagForm()
+        return render(request, "page-create-thread.html", {"category": category, "add_thread_form": add_thread_form })
 
 def thread_detail_view(request, category_id, thread_id):
     posts = Post.objects.filter(thread_id=thread_id).order_by("created_on")

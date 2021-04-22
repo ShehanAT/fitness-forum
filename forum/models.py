@@ -43,6 +43,7 @@ class Thread(models.Model):
     started_by_id = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)
     views = models.IntegerField()
     replies = models.IntegerField()
+    tags = models.ManyToManyField(Tag)
     created_on = models.DateTimeField(default=datetime.now())
     latest_post_on = models.DateTimeField(default=datetime.now())
     def __str__(self):
