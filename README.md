@@ -15,7 +15,7 @@ This program was developed on Windows but can also run on Unix like operating sy
 # Development Usage: 
 1. Clone repo
 2. open project folder in IDE of your choise 
-3. install Django via: ```pip install Django```
+3. install all dependencies by running: ```pip install -r requirements.txt```
 4. run ```python manage.py runserver```
 
 # Screenshots: 
