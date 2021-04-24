@@ -246,7 +246,7 @@ def thread_detail_view(request, category_id, thread_id):
         except ObjectDoesNotExist: 
             post.signature = None 
     add_post_form = AddPostForm()
-    return render(request, "page-single-topic.html", {"posts":  posts, "category": category, "thread": thread, "forum_user": forum_user, "add_post_form": add_post_form})
+    return render(request, "page-single-thread.html", {"posts":  posts, "category": category, "thread": thread, "forum_user": forum_user, "add_post_form": add_post_form})
 
 def add_post_view(request, category_id, thread_id):
     category_name = Category.objects.filter(category_id=category_id).values()[0]["name"]
@@ -284,7 +284,7 @@ def add_reply_post_view(request, category_id, thread_id, post_id):
         redirect_url = "/category/" + str(category_id) + "/thread/" + str(thread_id)
         return redirect(redirect_url)
     else:
-        return render(request, "page-single-topic-reply.html", {"category": category, "thread": thread, "original_post": original_post, "add_reply_form": add_reply_form})
+        return render(request, "page-single-thread-reply.html", {"category": category, "thread": thread, "original_post": original_post, "add_reply_form": add_reply_form})
 
 def trending_view(request):
     return render(request, "page-tabs.html", {})
