@@ -20,5 +20,6 @@ urlpatterns = [
     path('test-login', views.test_login),
     path('post_vote', views.vote),
     path('trending', views.trending_view),
+    path('about', views.about_view),
     path('ckeditor/', include('ckeditor_uploader.urls')),
 ]

@@ -289,6 +289,9 @@ def add_reply_post_view(request, category_id, thread_id, post_id):
 def trending_view(request):
     return render(request, "page-tabs.html", {})
 
+def about_view(request):
+    return render(request, "page-tabs_guidelines.html", {})
+
 def vote(request):
     if request.method == "POST":
         user = ForumUser.objects.get(id=request.user.id)
