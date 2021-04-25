@@ -177,6 +177,7 @@ def category_detail_view(request, category_id):
             posted_by_user = ForumUser.objects.get(id=posted_user_id)
             start_user_pic = posted_by_user.profile_pic
             thread["start_user_pic"] = str(start_user_pic)
+            thread["tags"] = Thread.objects.get(thread_id=thread["thread_id"]).tags.all()
             timedelta = (datetime.now(timezone.utc) - thread["latest_post_on"])
             # converts time elapsed since latest post to human readable format
             timedelta = humanize.naturaldelta(timedelta)

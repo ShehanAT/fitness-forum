@@ -60,31 +60,6 @@
 									<li><a href="/profile">Change password</a></li>
 								</ul>
 							</li>
-                            <!-- <li><a href="/profile"><span>Profile</span></a></li>
-                                <ul>
-                                    <li><a href="index.html">Home</a></li>
-                                    <li><a href="page-single-topic.html">Single Topic</a></li>
-                                    <li><a href="page-create-topic.html">Create Topic</a></li>
-                                    <li><a href="page-single-user.html">Single User Activity</a></li>
-                                    <li><a href="page-single_threads.html">Single User Threads</a></li>
-                                    <li><a href="page-single_replies.html">Single User Replies</a></li>
-                                    <li><a href="page-single_followers.html">Single User Followers</a></li>
-                                    <li><a href="page-single_categories.html">Single User Categories</a></li>
-                                    <li><a href="page-single_settings.html">Single User Settings</a></li>
-                                    <li><a href="page-signup.html">Sign up</a></li>
-                                    <li><a href="page-login.html">Log in</a></li>
-                                    <li><a href="page-categories.html">Categories</a></li>
-                                    <li><a href="page-categories-single.html">Single Category</a></li>
-                                    <li><a href="page-tabs.html">About</a></li>
-                                    <li><a href="page-tabs_guidelines.html">Guidelines</a></li>
-                                    <li><a href="_demo_modal-advancedSearch.html">Advanced Search</a></li>
-                                    <li><a href="error404.html">Error 404</a></li>
-                                    <li><a href="_demo_modal-age-confirmation.html">Age Verification</a></li>
-                                    <li><a href="_demo_modal-level-up.html">Level up Notification</a></li>
-                                    <li><a href="messages-page.html">Message</a></li>
-                                    <li><a href="messages-compose.html">Message Compose</a></li>
-                                </ul>
-                            </li> -->
                         </ul>
                     </nav>
                 </div>
@@ -366,7 +341,12 @@
                     </div>
                     <div class="tt-col-description">
                         <h6 class="tt-title"><a href="/category/{{ category.category_id }}/thread/{{ thread.thread_id }}">
-                            {{ thread.subject }}
+                            {{ thread.subject }}<br/>
+                            {% for tag in thread.tags %}
+                                <span class="tt-color01 tt-badge">
+                                    {{ tag.name }}
+                                </span>
+                            {% endfor %}
                         </a></h6>
                         <div class="row align-items-center no-gutters">
                             <div class="col-11">
@@ -688,7 +668,7 @@
         -->
     </div>
 </main>
-<div id="js-popup-settings" class="tt-popup-settings">
+<!-- <div id="js-popup-settings" class="tt-popup-settings">
 	<div class="tt-btn-col-close">
 		<a href="#">
 			<span class="tt-icon-title">
@@ -776,7 +756,7 @@
 			<a href="#" class="btn btn-secondary">Save</a>
 		</div>
 		</form>
-</div>
+</div> -->
 <a href="/category/{{ category.category_id }}/add_thread" class="tt-btn-create-topic">
     <span class="tt-icon">
         <svg>
