@@ -59,7 +59,8 @@ class Post(models.Model):
     first_reply_to_id = models.ForeignKey('self', null=True, on_delete=models.CASCADE, related_name='first_reply')
     second_reply_to_id = models.ForeignKey('self', null=True, on_delete=models.CASCADE, related_name='second_reply')
     rep_count = models.IntegerField(default=0)
-    vote = False 
+    vote_value = ""
+    voted_previous = False 
     signature = False 
     created_on = models.DateTimeField(default=datetime.now())
     editted_on = models.DateTimeField(default=datetime.now())
@@ -110,6 +111,7 @@ class PostVote(models.Model):
     vote_id = models.AutoField(primary_key=True)
     post_id = models.ForeignKey(Post, null=True, on_delete=models.CASCADE)
     user_id = models.ForeignKey(ForumUser, null=True, on_delete=models.CASCADE)
+    created_on = models.DateTimeField(default=datetime.now())
     class VoteValueChoice(models.IntegerChoices):
         upvote = 1, _('upvote')
         downvote = -1, _('downvote')

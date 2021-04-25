@@ -261,17 +261,35 @@
                         </div>
                         <div class="tt-item-info info-bottom">
                             {% if request.session.logged_in %}
-                                <a href="#" class="tt-icon-btn up-arrow-vote" data-post-id="{{ post.post_id }}" data-category-id="{{ category_id }}" data-thread-id="{{ thread_id }}">
+                                {% if post.vote_value == 1 %}
+                                    <a href="#" class="tt-icon-btn up-arrow-vote" data-post-id="{{ post.post_id }}" data-category-id="{{ category_id }}" data-thread-id="{{ thread_id }}" data-voted="true">
+                                        <i class="fa fa-thumbs-up" aria-hidden="true" style="color: red;"></i>
+                                    </a>
+                                    <span class="tt-text vote-number" id="{{ post.post_id }}rep_count">{{ post.rep_count }}</span>
+                                    <a href="#" style="display: none;" class="tt-icon-btn down-arrow-vote" data-post-id="{{ post.post_id }}" data-category-id="{{ category_id }}" data-thread-id="{{ thread_id }}" data-voted="false">
+                                        <i class="fa fa-thumbs-down" aria-hidden="true" style="color: red;"></i>
+                                    </a>
+                                {% elif post.vote_value == -1 %} 
+                                    <a href="#" style="display: none;" class="tt-icon-btn up-arrow-vote" data-post-id="{{ post.post_id }}" data-category-id="{{ category_id }}" data-thread-id="{{ thread_id }}" data-voted="false">
+                                        <i class="fa fa-thumbs-up" aria-hidden="true" style="color: blue;"></i>
+                                    </a>
+                                    <span class="tt-text vote-number" id="{{ post.post_id }}rep_count">{{ post.rep_count }}</span>
+                                    <a href="#" class="tt-icon-btn down-arrow-vote" data-post-id="{{ post.post_id }}" data-category-id="{{ category_id }}" data-thread-id="{{ thread_id }}" data-voted="true">
+                                        <i class="fa fa-thumbs-down" aria-hidden="true" style="color: red;"></i>
+                                    </a>
+                                {% else %}
+                                <a href="#" class="tt-icon-btn up-arrow-vote" data-post-id="{{ post.post_id }}" data-category-id="{{ category_id }}" data-thread-id="{{ thread_id }}" data-voted="false">
                                     <!-- <i class="tt-icon"><svg><use xlink:href="#icon-like"></use></svg></i> -->
-                                    <i class="fa fa-thumbs-up" aria-hidden="true"></i>
+                                    <i class="fa fa-thumbs-up" aria-hidden="true" style="color: blue;"></i>
                                     <!-- <span class="tt-text">{{ post.vote}}</span> -->
                                 </a>
                                 <span class="tt-text vote-number" id="{{ post.post_id }}rep_count">{{ post.rep_count }}</span>
-                                <a href="#" class="tt-icon-btn down-arrow-vote" data-post-id="{{ post.post_id }}" data-category-id="{{ category_id }}" data-thread-id="{{ thread_id }}">
+                                <a href="#" class="tt-icon-btn down-arrow-vote" data-post-id="{{ post.post_id }}" data-category-id="{{ category_id }}" data-thread-id="{{ thread_id }}" data-voted="false">
                                     <!-- <i class="tt-icon"><svg><use xlink:href="#icon-dislike"></use></svg></i> -->
-                                    <i class="fa fa-thumbs-down" aria-hidden="true"></i>
+                                    <i class="fa fa-thumbs-down" aria-hidden="true" style="color: blue;"></i>
                                     <!-- <span class="tt-text">39</span> -->
                                 </a>
+                                {% endif %}
                             {% else %}
                                 <span class="tt-text vote-number" id="{{ post.post_id }}rep_count">{{ post.rep_count }}</span>
                             {% endif %}
@@ -752,12 +770,14 @@ $(".up-arrow-vote").on('click', function(e){
     postId = e.currentTarget.dataset.postId
     threadId = e.currentTarget.dataset.threadId
     categoryId = e.currentTarget.dataset.categoryId
-    if($(this).attr("voted") == "true"){
-        $(this).children().css("color", "none")
-    }else{
-        $(this).children().css("color", "red")
+    if($(this).attr("data-voted") == "true"){
+        $(this).children().css("color", "blue")
+        callVote(postId, threadId, categoryId, 1, true)
     }
-    callVote(postId, threadId, categoryId, 1)
+    else if($(this).attr("data-voted") == "false"){
+        $(this).children().css("color", "red")
+        callVote(postId, threadId, categoryId, 1)
+    }
 });
 
 $(".down-arrow-vote").on('click', function(e){
@@ -765,15 +785,16 @@ $(".down-arrow-vote").on('click', function(e){
     postId = e.currentTarget.dataset.postId
     threadId = e.currentTarget.dataset.threadId
     categoryId = e.currentTarget.dataset.categoryId
-    if($(this).attr("voted") == "true"){
-        $(this).children().css("color", "none")
-    }else{
-        $(this).children().css("color", "red")
+    if($(this).attr("data-voted") == "true"){
+        callVote(postId, threadId, categoryId, -1, true)
     }
-    callVote(postId, threadId, categoryId, -1)
+    else if($(this).attr("data-voted") == "false"){
+       
+        callVote(postId, threadId, categoryId, -1)
+    }
 });
 
-function callVote(postId, threadId, categoryId, voteValue){
+function callVote(postId, threadId, categoryId, voteValue, voted=false){
     // voteValue of 1 for upvote, -1 for downvote
     const csrf = document.getElementsByName('csrfmiddlewaretoken')
     var url = '/post_vote'
@@ -785,7 +806,7 @@ function callVote(postId, threadId, categoryId, voteValue){
     fd.append('post_id', postId)
     fd.append('thread_id', threadId)
     fd.append('category_id', categoryId)
-    if(upArrow.attr("voted") == "true"){
+    if(voted == true){
         if(voteValue > 0){
             // this converts positive vote value to negative, which is undoing the already cast vote 
             fd.append('vote_value', -Math.abs(voteValue))
@@ -794,9 +815,11 @@ function callVote(postId, threadId, categoryId, voteValue){
             // this converts negative vote value to positive, which is undoing the already cast vote 
             fd.append('vote_value', Math.abs(voteValue))
         }
+        fd.append("undo_vote", "true")
         undoVote(postId, threadId, categoryId, voteValue, repCountText, upArrow, downArrow, fd)
     }else{
         fd.append('vote_value', voteValue)
+        fd.append("undo_vote", "false")
         $.ajax({
         type: 'POST',
         url: url, 
@@ -807,12 +830,16 @@ function callVote(postId, threadId, categoryId, voteValue){
             repCountText.text(post_rep_count) // updating rep count to new amount
             // hiding up and down arrows after user votes once
             if(voteValue > 0){
-                upArrow.attr("voted", "true")
-                downArrow.hide()
+                upArrow.attr("data-voted", "true")
+                downArrow.attr("data-voted", "false")
+                upArrow.children().css("color", "red")
+                downArrow.css('display', 'none')
             }
             else if(voteValue < 0){
-                downArrow.attr("voted", "true")
-                upArrow.hide()
+                upArrow.attr("data-voted", "false")
+                downArrow.attr("data-voted", "true")
+                downArrow.children().css("color", "red")
+                upArrow.css('display', 'none')
             }
 
         },
@@ -837,14 +864,14 @@ function undoVote(postId, threadId, categoryId, voteValue, repCountText, upArrow
         success: function(response){
             post_rep_count = response.post_rep_count
             repCountText.text(post_rep_count) // updating rep count to new amount
-            if(voteValue > 0){
-                upArrow.attr("voted", "false")
-                downArrow.show()
-            }
-            else if(voteValue < 0){
-                downArrow.attr("voted", "false")
-                upArrow.show()
-            }
+
+            upArrow.attr("data-voted", "false")
+            downArrow.attr("data-voted", "false")
+            upArrow.css('display', 'block')
+            downArrow.css('display', 'block')
+            upArrow.children().css('color', 'blue')
+            downArrow.children().css('color', 'blue')
+           
         },
         error: function(error){
             console.log(error)

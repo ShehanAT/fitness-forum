@@ -229,16 +229,27 @@ def thread_detail_view(request, category_id, thread_id):
     if request.session['logged_in']:
         forum_user = ForumUser.objects.get(id=request.user.id)
         forum_user.profile_pic_path = str(forum_user.profile_pic)
+    post_votes = []
     for post in posts:
         if post.first_reply_to_id != None and post.first_reply_to_id.post_id > 0:
             first_reply_post = post.set_first_reply_message()
             post.set_second_reply_message(first_reply_post)
-        if len(PostVote.objects.filter(post_id=post.post_id, user_id=request.user.id)) > 0:
+        post_votes = PostVote.objects.filter(post_id=post.post_id, user_id=request.user.id)
+        if  len(post_votes) > 0:
             # vote found, user is not allowed to vote on this post 
-            post.vote = False 
+            latest_vote = post_votes.latest('vote_id')
+            post.vote_value = latest_vote.vote_value
+            post_votes = post_votes.exclude(vote_id=latest_vote.vote_id)
+            try:
+                second_latest_vote = post_votes.latest('vote_id')
+                if second_latest_vote is not None:
+                    if ((latest_vote.vote_value + second_latest_vote.vote_value) == 0) and post.voted_previous == False:
+                        post.vote_value = ""
+            except ObjectDoesNotExist as e:
+                logger.error(e)
         else:
             # vote not found, user is allowed to vote on this post 
-            post.vote = True 
+            post.vote_value = "" 
         # get post signature is user uploaded it 
         try:
             post_signature = PostSignature.objects.filter(signature_for_id=post.posted_by_id.id).latest('created_on')
@@ -300,9 +311,16 @@ def vote(request):
         thread_id = request.POST.get('thread_id', '')
         vote_value = int(request.POST.get('vote_value', ''))
         post = Post.objects.get(post_id=request.POST.get('post_id', ''))
+        undo_vote = request.POST.get("undo_vote", "")
         response_data = {}
         post.rep_count += vote_value
-        new_vote = PostVote.objects.create(post_id=post, user_id=user, vote_value=1)
+        if undo_vote == "true":
+            post.vote_value = ""
+            post.voted_previous = False 
+        else:
+            post.vote_value = str(vote_value) 
+            post.voted_previous = True
+        new_vote = PostVote.objects.create(post_id=post, user_id=user, vote_value=vote_value)
         posted_by_user = ForumUser.objects.get(id=post.posted_by_id.id)
         if posted_by_user.id != user.id:
             # current user is not the original poster of current post so increment/decrement their rep_points by 1 
