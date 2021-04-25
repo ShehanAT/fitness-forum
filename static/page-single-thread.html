@@ -10,6 +10,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://use.fontawesome.com/d465c4cfa8.js"></script>
 </head>
 <body>
 <!-- tt-mobile menu -->
@@ -60,32 +61,6 @@
 									<li><a href="/profile">Change password</a></li>
 								</ul>
 							</li>
-                            <!-- <li>
-                                <a href="page-single-user.html"><span>Pages</span></a>
-                                <ul>
-                                    <li><a href="index.html">Home</a></li>
-                                    <li><a href="page-single-topic.html">Single Topic</a></li>
-                                    <li><a href="page-create-topic.html">Create Topic</a></li>
-                                    <li><a href="page-single-user.html">Single User Activity</a></li>
-                                    <li><a href="page-single_threads.html">Single User Threads</a></li>
-                                    <li><a href="page-single_replies.html">Single User Replies</a></li>
-                                    <li><a href="page-single_followers.html">Single User Followers</a></li>
-                                    <li><a href="page-single_categories.html">Single User Categories</a></li>
-                                    <li><a href="page-single_settings.html">Single User Settings</a></li>
-                                    <li><a href="page-signup.html">Sign up</a></li>
-                                    <li><a href="page-login.html">Log in</a></li>
-                                    <li><a href="page-categories.html">Categories</a></li>
-                                    <li><a href="page-categories-single.html">Single Category</a></li>
-                                    <li><a href="page-tabs.html">About</a></li>
-                                    <li><a href="page-tabs_guidelines.html">Guidelines</a></li>
-                                    <li><a href="_demo_modal-advancedSearch.html">Advanced Search</a></li>
-                                    <li><a href="error404.html">Error 404</a></li>
-                                    <li><a href="_demo_modal-age-confirmation.html">Age Verification</a></li>
-                                    <li><a href="_demo_modal-level-up.html">Level up Notification</a></li>
-                                    <li><a href="messages-page.html">Message</a></li>
-                                    <li><a href="messages-compose.html">Message Compose</a></li>
-                                </ul>
-                            </li> -->
                         </ul>
                     </nav>
                 </div>
@@ -286,19 +261,17 @@
                         </div>
                         <div class="tt-item-info info-bottom">
                             {% if request.session.logged_in %}
-                                {% if post.vote %}
-                                    <a href="#" class="tt-icon-btn up-arrow-vote" data-post-id="{{ post.post_id }}" data-category-id="{{ category_id }}" data-thread-id="{{ thread_id }}">
-                                        <i class="tt-icon"><svg><use xlink:href="#icon-like"></use></svg></i>
-                                        <!-- <span class="tt-text">{{ post.vote}}</span> -->
-                                    </a>
-                                    <span class="tt-text vote-number" id="{{ post.post_id }}rep_count">{{ post.rep_count }}</span>
-                                    <a href="#" class="tt-icon-btn down-arrow-vote" data-post-id="{{ post.post_id }}" data-category-id="{{ category_id }}" data-thread-id="{{ thread_id }}">
-                                        <i class="tt-icon"><svg><use xlink:href="#icon-dislike"></use></svg></i>
-                                        <!-- <span class="tt-text">39</span> -->
-                                    </a>
-                                {% else %}
-                                    <span class="tt-text vote-number" id="{{ post.post_id }}rep_count">{{ post.rep_count }}</span>
-                                {% endif %}
+                                <a href="#" class="tt-icon-btn up-arrow-vote" data-post-id="{{ post.post_id }}" data-category-id="{{ category_id }}" data-thread-id="{{ thread_id }}">
+                                    <!-- <i class="tt-icon"><svg><use xlink:href="#icon-like"></use></svg></i> -->
+                                    <i class="fa fa-thumbs-up" aria-hidden="true"></i>
+                                    <!-- <span class="tt-text">{{ post.vote}}</span> -->
+                                </a>
+                                <span class="tt-text vote-number" id="{{ post.post_id }}rep_count">{{ post.rep_count }}</span>
+                                <a href="#" class="tt-icon-btn down-arrow-vote" data-post-id="{{ post.post_id }}" data-category-id="{{ category_id }}" data-thread-id="{{ thread_id }}">
+                                    <!-- <i class="tt-icon"><svg><use xlink:href="#icon-dislike"></use></svg></i> -->
+                                    <i class="fa fa-thumbs-down" aria-hidden="true"></i>
+                                    <!-- <span class="tt-text">39</span> -->
+                                </a>
                             {% else %}
                                 <span class="tt-text vote-number" id="{{ post.post_id }}rep_count">{{ post.rep_count }}</span>
                             {% endif %}
@@ -779,7 +752,11 @@ $(".up-arrow-vote").on('click', function(e){
     postId = e.currentTarget.dataset.postId
     threadId = e.currentTarget.dataset.threadId
     categoryId = e.currentTarget.dataset.categoryId
-
+    if($(this).attr("voted") == "true"){
+        $(this).children().css("color", "none")
+    }else{
+        $(this).children().css("color", "red")
+    }
     callVote(postId, threadId, categoryId, 1)
 });
 
@@ -788,7 +765,11 @@ $(".down-arrow-vote").on('click', function(e){
     postId = e.currentTarget.dataset.postId
     threadId = e.currentTarget.dataset.threadId
     categoryId = e.currentTarget.dataset.categoryId
-
+    if($(this).attr("voted") == "true"){
+        $(this).children().css("color", "none")
+    }else{
+        $(this).children().css("color", "red")
+    }
     callVote(postId, threadId, categoryId, -1)
 });
 
@@ -797,11 +778,57 @@ function callVote(postId, threadId, categoryId, voteValue){
     const csrf = document.getElementsByName('csrfmiddlewaretoken')
     var url = '/post_vote'
     const fd = new FormData()
+    repCountText = $("#" + postId + "rep_count")
+    upArrow = repCountText.prev() 
+    downArrow = repCountText.next() 
     fd.append('csrfmiddlewaretoken', csrf[0].value)
     fd.append('post_id', postId)
     fd.append('thread_id', threadId)
     fd.append('category_id', categoryId)
-    fd.append('vote_value', voteValue)
+    if(upArrow.attr("voted") == "true"){
+        if(voteValue > 0){
+            // this converts positive vote value to negative, which is undoing the already cast vote 
+            fd.append('vote_value', -Math.abs(voteValue))
+        }
+        else if(voteValue < 0){
+            // this converts negative vote value to positive, which is undoing the already cast vote 
+            fd.append('vote_value', Math.abs(voteValue))
+        }
+        undoVote(postId, threadId, categoryId, voteValue, repCountText, upArrow, downArrow, fd)
+    }else{
+        fd.append('vote_value', voteValue)
+        $.ajax({
+        type: 'POST',
+        url: url, 
+        enctype: 'multipart/form-data',
+        data: fd,
+        success: function(response){
+            post_rep_count = response.post_rep_count
+            repCountText.text(post_rep_count) // updating rep count to new amount
+            // hiding up and down arrows after user votes once
+            if(voteValue > 0){
+                upArrow.attr("voted", "true")
+                downArrow.hide()
+            }
+            else if(voteValue < 0){
+                downArrow.attr("voted", "true")
+                upArrow.hide()
+            }
+
+        },
+        error: function(error){
+            console.log(error)
+            handleAlerts('danger', 'oops... something went wrong! Please try again later')
+        },
+        cache: false,
+        contentType: false,
+        processData: false
+    });
+    }
+}
+
+function undoVote(postId, threadId, categoryId, voteValue, repCountText, upArrow, downArrow, fd){
+    var url = '/post_vote'
     $.ajax({
         type: 'POST',
         url: url, 
@@ -809,14 +836,15 @@ function callVote(postId, threadId, categoryId, voteValue){
         data: fd,
         success: function(response){
             post_rep_count = response.post_rep_count
-            repCountText = $("#" + postId + "rep_count")
             repCountText.text(post_rep_count) // updating rep count to new amount
-            // hiding up and down arrows after user votes once
-            upArrow = repCountText.prev()  
-            upArrow.hide()
-            downArrow = repCountText.next() 
-            downArrow.hide() 
-
+            if(voteValue > 0){
+                upArrow.attr("voted", "false")
+                downArrow.show()
+            }
+            else if(voteValue < 0){
+                downArrow.attr("voted", "false")
+                upArrow.show()
+            }
         },
         error: function(error){
             console.log(error)
