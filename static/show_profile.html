@@ -10,6 +10,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://use.fontawesome.com/d465c4cfa8.js"></script>
 </head>
 <body>
 <!-- tt-mobile menu -->
@@ -49,35 +50,17 @@
                   <div class="tt-desktop-menu">
                     <nav>
                         <ul>
-                            <li><a href="page-categories.html"><span>Categories</span></a></li>
-                            <li><a href="page-tabs.html"><span>Trending</span></a></li>
-                            <li><a href="page-create-topic.html"><span>New</span></a></li>
+                            <li><a href="/categories"><span>Categories</span></a></li>
+                            <li><a href="/trending"><span>Trending</span></a></li>
+                            <li><a href="/about"><span>About</span></a></li>
                             <li>
-                                <a href="page-single-user.html"><span>Pages</span></a>
-                                <ul>
-                                    <li><a href="index.html">Home</a></li>
-                                    <li><a href="page-single-topic.html">Single Topic</a></li>
-                                    <li><a href="page-create-topic.html">Create Topic</a></li>
-                                    <li><a href="page-single-user.html">Single User Activity</a></li>
-                                    <li><a href="page-single_threads.html">Single User Threads</a></li>
-                                    <li><a href="page-single_replies.html">Single User Replies</a></li>
-                                    <li><a href="page-single_followers.html">Single User Followers</a></li>
-                                    <li><a href="page-single_categories.html">Single User Categories</a></li>
-                                    <li><a href="page-single_settings.html">Single User Settings</a></li>
-                                    <li><a href="page-signup.html">Sign up</a></li>
-                                    <li><a href="page-login.html">Log in</a></li>
-                                    <li><a href="page-categories.html">Categories</a></li>
-                                    <li><a href="page-categories-single.html">Single Category</a></li>
-                                    <li><a href="page-tabs.html">About</a></li>
-                                    <li><a href="page-tabs_guidelines.html">Guidelines</a></li>
-                                    <li><a href="_demo_modal-advancedSearch.html">Advanced Search</a></li>
-                                    <li><a href="error404.html">Error 404</a></li>
-                                    <li><a href="_demo_modal-age-confirmation.html">Age Verification</a></li>
-                                    <li><a href="_demo_modal-level-up.html">Level up Notification</a></li>
-                                    <li><a href="messages-page.html">Message</a></li>
-                                    <li><a href="messages-compose.html">Message Compose</a></li>
-                                </ul>
-                            </li>
+                                <a href="/profile/show_profile"><span>Profile</span></a>
+								<ul>
+									<li><a href="/profile/show_profile">Show Profile</a></li>
+									<li><a href="/profile/update_profile">Update Info</a></li>
+									<li><a href="/profile/change_password">Change password</a></li>
+								</ul>
+							</li>
                         </ul>
                     </nav>
                 </div>
@@ -167,17 +150,19 @@
             <div class="col-auto ml-auto">
                  <div class="tt-user-info d-flex justify-content-center">
                     <a href="#" class="tt-btn-icon">
-                         <i class="tt-icon"><svg><use xlink:href="#icon-notification"></use></svg></i>
+                        <i class="tt-icon"><svg><use xlink:href="#icon-notification"></use></svg></i>
                     </a>
                     <div class="tt-avatar-icon tt-size-md">
-                        <i class="tt-icon"><svg><use xlink:href="#icon-ava-a"></use></svg></i>
+                        <img class="tt-icon" id="user-profile-pic" src="{{ user.profile_pic_path }}"/>
                     </div>
                     <div class="custom-select-01">
-                        <select>
-                            <option value="Default Sorting">azyrusmax</option>
-                            <option value="value 01">value 01</option>
-                            <option value="value 02">value 02</option>
-                        </select>
+                        <div class="dropdown">
+                            <button class="dropbtn">{{ request.session.username }}</button>
+                            <div class="dropdown-content">
+                                <a href="/profile">My Profile</a>
+                                <a href="/logout">Log out</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -190,25 +175,25 @@
             <div class="tt-user-header">
                 <div class="tt-col-avatar">
                     <div class="tt-icon">
-                       <svg class="tt-icon">
-                          <use xlink:href="#icon-ava-d"></use>
-                        </svg>
+                        <img class="tt-icon" id="user-profile-pic" src="{{ user.profile_pic_path }}"/>
                     </div>
                 </div>
                 <div class="tt-col-title">
                     <div class="tt-title">
-                        <a href="#">Dylan89</a>
+                        <a href="#">{{ user.username}}</a>
                     </div>
                     <ul class="tt-list-badge">
-                        <li><a href="#"><span class="tt-color14 tt-badge">LVL : 26</span></a></li>
+                        <li><a href="#"><span class="tt-color14 tt-badge">Rep points : {{ user.rep_points }}</span></a></li>
                     </ul>
                 </div>
-                <div class="tt-col-btn" id="js-settings-btn">
+                <!-- id="js-settings-btn" -->
+                <div class="tt-col-btn" >
                     <div class="tt-list-btn">
-                        <a href="#" class="tt-btn-icon">
-                            <svg class="tt-icon">
+                        <a href="/profile/update_profile" class="tt-btn-icon settings-btn">
+                            <i class="fa fa-cogs"></i>
+                            <!-- <svg class="tt-icon">
                               <use xlink:href="#icon-settings_fill"></use>
-                            </svg>
+                            </svg> -->
                         </a>
                         <a href="#" class="btn btn-primary">Message</a>
                         <a href="#" class="btn btn-secondary">Follow</a>
@@ -222,10 +207,10 @@
             <div class="tt-wrapper-inner">
                 <ul class="nav nav-tabs pt-tabs-default" role="tablist">
                     <li class="nav-item show">
-                        <a class="nav-link active" data-toggle="tab" href="#tt-tab-01" role="tab"><span>Profile</span></a>
+                        <a class="nav-link active" data-toggle="tab" href="#tt-tab-01" role="tab"><span>Activity</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#tt-tab-02" role="tab"><span>Activity</span></a>
+                        <a class="nav-link" data-toggle="tab" href="#tt-tab-02" role="tab"><span>Threads</span></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" data-toggle="tab" href="#tt-tab-03" role="tab"><span>Replies</span></a>
@@ -242,11 +227,12 @@
                 <div class="tab-pane tt-indent-none  show active" id="tt-tab-01" role="tabpanel">
                    <div class="tt-topic-list">
                         <div class="tt-list-header">
-                            <div class="tt-col-topic">Thread</div>
+                            <div class="tt-col-topic">Action</div>
+                            <div class="tt-col-value-large hide-mobile">Thread</div>
                             <div class="tt-col-value-large hide-mobile">Category</div>
-                            <div class="tt-col-value-large hide-mobile">Status</div>
-                            <div class="tt-col-value-large hide-mobile">Activity</div>
+                            <div class="tt-col-value-large hide-mobile">Performed</div>
                         </div>
+                        <!--
                         <div class="tt-item">
                             <div class="tt-col-avatar">
                                 <svg class="tt-icon">
@@ -689,7 +675,7 @@
                                   <use xlink:href="#icon-load_lore_icon"></use>
                                 </svg>
                             </button>
-                        </div>
+                        </div>-->
                     </div>
                 </div>
                 <div class="tab-pane tt-indent-none" id="tt-tab-02" role="tabpanel">
@@ -2564,7 +2550,7 @@
 </main>
 <div id="js-popup-settings" class="tt-popup-settings">
 	<div class="tt-btn-col-close">
-		<a href="#">
+		<a href="#" class="setting-btn">
 			<span class="tt-icon-title">
 				<svg>
 					<use xlink:href="#icon-settings_fill"></use>
@@ -2784,7 +2770,15 @@
 		</div>
 	</div>
 </div>
-<script src="js/bundle.js"></script>
+<script src="/static/js/bundle.js"></script>
+<script src="/static/js/jquery.js"></script>
+<script type="application/javascript">
+$(document).ready(function(){
+    $(".settings-btn").on('click', function(e){
+        console.log("open settings")
+    });
+});
+</script>
 <svg width="0" height="0" class="hidden">
 	 <symbol aria-hidden="true" data-prefix="fab" data-icon="facebook-f" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 264 512" id="facebook-f-brands">
     <path fill="currentColor" d="M215.8 85H264V3.6C255.7 2.5 227.1 0 193.8 0 124.3 0 76.7 42.4 76.7 120.3V192H0v91h76.7v229h94V283h73.6l11.7-91h-85.3v-62.7c0-26.3 7.3-44.3 45.1-44.3z"></path>

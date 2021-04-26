@@ -103,6 +103,31 @@ def profile_view(request):
     else:
         return render(request, "profile_view.html", {"user": forum_user, "profile_pic_form": profile_pic_form, "update_profile_form": UpdateProfileForm(instance=forum_user), "change_password_form": ChangePasswordForm(user=user), "post_signature_form": post_signature_form})
 
+def show_profile_view(request):
+    try:
+        forum_user = ForumUser.objects.get(id=request.user.id)
+        user = User.objects.get(id=request.user.id)
+        forum_user.profile_pic_path = str(forum_user.profile_pic)
+    except ObjectDoesNotExist as e:
+        logger.error(e)
+        request.session["status_msg"] = "Password reset successfully! Please login using your new password..."
+        return redirect("/login")
+    profile_pic_form = ProfilePicForm(request.POST, request.FILES)
+    return render(request, "show_profile.html", {"user": forum_user})
+
+
+def update_profile_view(request):
+    try:
+        forum_user = ForumUser.objects.get(id=request.user.id)
+        user = User.objects.get(id=request.user.id)
+        forum_user.profile_pic_path = str(forum_user.profile_pic)
+    except ObjectDoesNotExist as e:
+        logger.error(e)
+    return render(request, "update_profile.html", {"user": forum_user})
+
+def change_password_view(request):
+    return render(request, "change_password.html", {})
+
 def forum_list_view(request):
     categories = Category.objects.all().values()
     for c in categories:
