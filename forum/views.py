@@ -11,6 +11,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.exceptions import ObjectDoesNotExist
 import logging 
 import humanize
+from itertools import chain
 
 logger = logging.getLogger(__name__)
 def signup_view(request):
@@ -104,14 +105,24 @@ def profile_view(request):
         return render(request, "profile_view.html", {"user": forum_user, "profile_pic_form": profile_pic_form, "update_profile_form": UpdateProfileForm(instance=forum_user), "change_password_form": ChangePasswordForm(user=user), "post_signature_form": post_signature_form})
 
 def show_profile_view(request):
-    try:
-        forum_user = ForumUser.objects.get(id=request.user.id)
-        user = User.objects.get(id=request.user.id)
-        forum_user.profile_pic_path = str(forum_user.profile_pic)
-    except ObjectDoesNotExist as e:
-        logger.error(e)
-        request.session["status_msg"] = "Password reset successfully! Please login using your new password..."
-        return redirect("/login")
+    # try:
+    forum_user = ForumUser.objects.get(id=request.user.id)
+    user = User.objects.get(id=request.user.id)
+    forum_user.profile_pic_path = str(forum_user.profile_pic)
+    users_threads = Thread.objects.filter(started_by_id=user)
+
+    user_started_threads = []
+    user_commented_threads = []
+
+    for thread in users_threads:
+        try:
+            original_post = Post.objects.filter(thread_id=thread.thread_id).earliest('created_on')
+            user_started_threads.append(list(chain(thread, original_post)))
+            comment_posts = Post.objects.filter(thread_id=thread.thread_id).exclude(original_post)
+            user_commented_threads.appen(list(chain(thread, comment_posts)))
+
+        except ObjectDoesNotExist as e:
+            logger.error(e)
     profile_pic_form = ProfilePicForm(request.POST, request.FILES)
     return render(request, "show_profile.html", {"user": forum_user})
 
@@ -322,6 +333,24 @@ def add_reply_post_view(request, category_id, thread_id, post_id):
         return redirect(redirect_url)
     else:
         return render(request, "page-single-thread-reply.html", {"category": category, "thread": thread, "original_post": original_post, "add_reply_form": add_reply_form})
+
+def edit_post_view(request, category_id, thread_id, post_id):
+    category = Category.objects.get(category_id=category_id)
+    thread = Thread.objects.get(thread_id=thread_id)
+    post = Post.objects.get(post_id=post_id)
+    if request.method == "POST":
+        edit_form = AddPostForm(request.POST)
+        if edit_form.is_valid():
+            post = Post.objects.get(post_id=post_id)
+            post.message = edit_form.cleaned_data["message"]
+            post.editted_on = datetime.now()
+            post.save()
+        redirect_url = "/category/" + str(category_id) + "/thread/" + str(thread_id)
+        return redirect(redirect_url)
+    else:
+        original_message = Post.objects.get(post_id=post_id).message 
+        edit_form = AddPostForm({"message": original_message})
+        return render(request, "page-single-thread-edit.html", {"edit_post_form": edit_form, "category": category, "thread": thread, "post": post})
 
 def trending_view(request):
     return render(request, "page-tabs.html", {})
