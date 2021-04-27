@@ -279,15 +279,11 @@
                                     </a>
                                 {% else %}
                                 <a href="#" class="tt-icon-btn up-arrow-vote" data-post-id="{{ post.post_id }}" data-category-id="{{ category_id }}" data-thread-id="{{ thread_id }}" data-voted="false">
-                                    <!-- <i class="tt-icon"><svg><use xlink:href="#icon-like"></use></svg></i> -->
                                     <i class="fa fa-thumbs-up" aria-hidden="true" style="color: blue;"></i>
-                                    <!-- <span class="tt-text">{{ post.vote}}</span> -->
                                 </a>
                                 <span class="tt-text vote-number" id="{{ post.post_id }}rep_count">{{ post.rep_count }}</span>
                                 <a href="#" class="tt-icon-btn down-arrow-vote" data-post-id="{{ post.post_id }}" data-category-id="{{ category_id }}" data-thread-id="{{ thread_id }}" data-voted="false">
-                                    <!-- <i class="tt-icon"><svg><use xlink:href="#icon-dislike"></use></svg></i> -->
                                     <i class="fa fa-thumbs-down" aria-hidden="true" style="color: blue;"></i>
-                                    <!-- <span class="tt-text">39</span> -->
                                 </a>
                                 {% endif %}
                             {% else %}
@@ -301,10 +297,11 @@
                             <a href="#" class="tt-icon-btn tt-hover-02 tt-small-indent">
                                 <i class="tt-icon"><svg><use xlink:href="#icon-share"></use></svg></i>
                             </a>
-                            <a href="/category/{{ category.category_id }}/thread/{{ thread.thread_id }}/edit_post/{{ post.post_id }}" class="tt-icon-btn tt-hover-02 tt-small-indent">
-                                <!-- <i class="tt-icon"><svg><use xlink:href="#icon-flag"></use></svg></i> -->
-                                <i class="fa fa-edit" style="color: grey;" title="Edit Post"></i>
-                            </a>
+                            {% if request.user.id == post.posted_by_id.id %}
+                                <a href="/category/{{ category.category_id }}/thread/{{ thread.thread_id }}/edit_post/{{ post.post_id }}" class="tt-icon-btn tt-hover-02 tt-small-indent">
+                                    <i class="fa fa-edit" style="color: grey;" title="Edit Post"></i>
+                                </a>
+                            {% endif %}
                             <a href="/category/{{ category.category_id }}/thread/{{ thread.thread_id }}/reply_post/{{ post.post_id }}" class="tt-icon-btn tt-hover-02 tt-small-indent">
                                 <i class="tt-icon" title="Reply To Post"><svg><use xlink:href="#icon-reply"></use></svg></i>
                             </a>
