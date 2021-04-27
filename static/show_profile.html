@@ -229,6 +229,50 @@
                             <div class="tt-col-value-large hide-mobile">Category</div>
                             <div class="tt-col-value-large hide-mobile">Performed</div>
                         </div>
+                        {% for post in all_activity %}
+                            <div class="tt-item">
+                                <div class="tt-col-avatar">
+                                    <svg class="tt-icon">
+                                    <use xlink:href="#icon-ava-n"></use>
+                                    </svg>
+                                </div>
+                                <div class="tt-col-description">
+                                    <h6 class="tt-title"><a href="#">
+                                        {% if post.original_post is True %}
+                                            Created Thread 
+                                        {% elif post.original_post is False %}
+                                            Commented on Thread 
+                                        {% endif %}
+                                    </a></h6>
+                                    <h6 class="tt-title">
+                                        {{ post.thread_id.subject }}
+                                    </h6>
+                                    <div class="tt-col-message">
+                                        {{ post.message }}
+                                    </div>
+                                    <div class="row align-items-center no-gutters hide-desktope">
+                                        <div class="col-9">
+                                            <ul class="tt-list-badge">
+                                                <li class="show-mobile"><a href="#"><span class="tt-color05 tt-badge">music</span></a></li>
+                                            </ul>
+                                            <a href="#" class="tt-btn-icon show-mobile">
+                                                <i class="tt-icon"><svg><use xlink:href="#icon-reply"></use></svg></i>
+                                            </a>
+                                        </div>
+                                        <div class="col-3 ml-auto show-mobile">
+                                        <div class="tt-value">{{ post.created_on }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tt-col-category tt-col-value-large hide-mobile"><span class="tt-color05 tt-badge">{{ post.thread_id.subject }}</span></div>
+                                    <div class="tt-col-value-large hide-mobile">
+                                        <a href="#" class="tt-btn-icon">
+                                            <i class="tt-icon"><svg><use xlink:href="#icon-reply"></use></svg></i>
+                                        </a>
+                                    </div>
+                                    <div class="tt-col-value-large hide-mobile">{{ post.created_on }}</div>
+                            </div>
+                        {% endfor %}
                         <!--
                         <div class="tt-item">
                             <div class="tt-col-avatar">

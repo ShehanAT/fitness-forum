@@ -46,8 +46,12 @@ class Thread(models.Model):
     tags = models.ManyToManyField(Tag)
     created_on = models.DateTimeField(default=datetime.now())
     latest_post_on = models.DateTimeField(default=datetime.now())
+    
+    class Meta:
+        ordering = ['created_on']
     def __str__(self):
         return "Topic: " + self.subject + "Started By: " + self.started_by
+    
 
 class Post(models.Model):
     post_id = models.AutoField(primary_key=True)
@@ -62,6 +66,7 @@ class Post(models.Model):
     vote_value = ""
     voted_previous = False 
     signature = False 
+    original_post = models.BooleanField(default=False) 
     created_on = models.DateTimeField(default=datetime.now())
     editted_on = models.DateTimeField(default=datetime.now())
     

@@ -12,6 +12,7 @@ from django.core.exceptions import ObjectDoesNotExist
 import logging 
 import humanize
 from itertools import chain
+from django.db.models import Q 
 
 logger = logging.getLogger(__name__)
 def signup_view(request):
@@ -109,22 +110,36 @@ def show_profile_view(request):
     forum_user = ForumUser.objects.get(id=request.user.id)
     user = User.objects.get(id=request.user.id)
     forum_user.profile_pic_path = str(forum_user.profile_pic)
-    users_threads = Thread.objects.filter(started_by_id=user)
+    threads = Thread.objects.all()
 
-    user_started_threads = []
-    user_commented_threads = []
-
-    for thread in users_threads:
+    # user_started_threads = []
+    # user_commented_threads = []
+    comment_posts = None 
+    original_post = None 
+    all_posted_posts = []
+    # all_activity = []
+    all_activity = Post.objects.none()
+    for thread in threads:
+        counter = 0
         try:
-            original_post = Post.objects.filter(thread_id=thread.thread_id).earliest('created_on')
-            user_started_threads.append(list(chain(thread, original_post)))
-            comment_posts = Post.objects.filter(thread_id=thread.thread_id).exclude(original_post)
-            user_commented_threads.appen(list(chain(thread, comment_posts)))
-
+            # making extra filter call to make thread object of type queryset in order to list(chain(thread, original_post)) to work 
+            all_posted_posts = Post.objects.filter(thread_id=thread.thread_id, posted_by_id=user).order_by('created_on')
+            all_activity |= all_posted_posts
         except ObjectDoesNotExist as e:
             logger.error(e)
+        except TypeError as e:
+            logger.error(e)
+        except IndexError as e:
+            logger.error("thread: " + str(thread.thread_id) + " is out of range")
+            logger.error(e)
+        except AttributeError as e:
+            logger.error("thread: " + str(thread.thread_id))
+            logger.error(e)
+    all_activity = all_activity.order_by('-created_on')
+    for post in all_activity:
+        print(post.original_post)
     profile_pic_form = ProfilePicForm(request.POST, request.FILES)
-    return render(request, "show_profile.html", {"user": forum_user})
+    return render(request, "show_profile.html", {"user": forum_user, "all_activity": all_activity})
 
 
 def update_profile_view(request):
@@ -236,6 +251,7 @@ def add_thread_view(request, category_id):
             new_thread.save()
             posted_by = User.objects.get(id=request.user.id)
             new_post = Post(message=thread_message, posted_by_id=posted_by, thread_id=new_thread)
+            new_post.original_post = True 
             new_post.save()
             tags = thread_tags.split(',')
             add_tag = None 
