@@ -112,17 +112,12 @@ def show_profile_view(request):
     forum_user.profile_pic_path = str(forum_user.profile_pic)
     threads = Thread.objects.all()
 
-    # user_started_threads = []
-    # user_commented_threads = []
     comment_posts = None 
     original_post = None 
     all_posted_posts = []
-    # all_activity = []
     all_activity = Post.objects.none()
     for thread in threads:
-        counter = 0
         try:
-            # making extra filter call to make thread object of type queryset in order to list(chain(thread, original_post)) to work 
             all_posted_posts = Post.objects.filter(thread_id=thread.thread_id, posted_by_id=user).order_by('created_on')
             all_activity |= all_posted_posts
         except ObjectDoesNotExist as e:
@@ -136,8 +131,6 @@ def show_profile_view(request):
             logger.error("thread: " + str(thread.thread_id))
             logger.error(e)
     all_activity = all_activity.order_by('-created_on')
-    for post in all_activity:
-        print(post.original_post)
     profile_pic_form = ProfilePicForm(request.POST, request.FILES)
     return render(request, "show_profile.html", {"user": forum_user, "all_activity": all_activity})
 

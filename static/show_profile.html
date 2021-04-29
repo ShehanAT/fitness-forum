@@ -225,8 +225,8 @@
                    <div class="tt-topic-list">
                         <div class="tt-list-header">
                             <div class="tt-col-topic">Action</div>
-                            <div class="tt-col-value-large hide-mobile">Thread</div>
                             <div class="tt-col-value-large hide-mobile">Category</div>
+                            <div class="tt-col-value-large hide-mobile"></div>
                             <div class="tt-col-value-large hide-mobile">Performed</div>
                         </div>
                         {% for post in all_activity %}
@@ -244,11 +244,12 @@
                                             Commented on Thread 
                                         {% endif %}
                                     </a></h6>
-                                    <h6 class="tt-title">
-                                        {{ post.thread_id.subject }}
+                                    <h6 class="tt-title no-gutters">
+                                        
                                     </h6>
                                     <div class="tt-col-message">
-                                        {{ post.message }}
+                                        Thread: {{ post.thread_id.subject }}<br/>
+                                        Post: {{ post.message }}
                                     </div>
                                     <div class="row align-items-center no-gutters hide-desktope">
                                         <div class="col-9">
@@ -264,13 +265,15 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="tt-col-category tt-col-value-large hide-mobile"><span class="tt-color05 tt-badge">{{ post.thread_id.subject }}</span></div>
+                                <div class="tt-col-category tt-col-value-large hide-mobile">
+                                    <span class="tt-color05 tt-badge">{{ post.thread_id.category_id.name }}</span>
+                                </div>
                                     <div class="tt-col-value-large hide-mobile">
-                                        <a href="#" class="tt-btn-icon">
+                                        <!--<a href="#" class="tt-btn-icon">
                                             <i class="tt-icon"><svg><use xlink:href="#icon-reply"></use></svg></i>
-                                        </a>
+                                        </a> -->
                                     </div>
-                                    <div class="tt-col-value-large hide-mobile">{{ post.created_on }}</div>
+                                <div class="tt-col-value-large hide-mobile">{{ post.created_on }}</div>
                             </div>
                         {% endfor %}
                         <!--
