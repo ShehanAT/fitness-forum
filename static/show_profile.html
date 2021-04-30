@@ -210,7 +210,10 @@
                         <a class="nav-link active" data-toggle="tab" href="#tt-tab-01" role="tab"><span>Activity</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#tt-tab-03" role="tab" id="reply-btn-tab"><span>Replies</span></a>
+                        <form>
+                            {% csrf_token %}
+                            <a class="nav-link" data-toggle="tab" href="#tt-tab-03" role="tab" id="reply-btn-tab"><span>Replies</span></a>
+                        </form>
                     </li>
                     <li class="nav-item tt-hide-xs">
                         <a class="nav-link" data-toggle="tab" href="#tt-tab-04" role="tab"><span>Followers</span></a>
@@ -288,6 +291,7 @@
                             <div class="tt-col-value hide-mobile">Views</div>
                             <div class="tt-col-value">Activity</div>
                         </div>
+                        <!--
                         <div class="tt-item">
                             <div class="tt-col-avatar">
                                 <svg class="tt-icon">
@@ -731,6 +735,7 @@
                             <div class="tt-col-value hide-mobile">2.3k</div>
                             <div class="tt-col-value hide-mobile">5d</div>
                         </div>
+                    -->
                         <div class="tt-row-btn">
                             <button type="button" class="btn-icon js-topiclist-showmore">
                                 <svg class="tt-icon">
@@ -747,6 +752,7 @@
                             <div class="tt-col-category">Category</div>
                             <div class="tt-col-value">Activity</div>
                         </div>
+                        <!--
                         <div class="tt-item">
                             <div class="tt-col-avatar">
                                <svg class="tt-icon">
@@ -1363,6 +1369,7 @@
                             <div class="tt-col-value-large hide-mobile">16</div>
                             <div class="tt-col-value"><span class="tt-color21 tt-badge">LVL : 62</span></div>
                         </div>
+                    -->
                     </div>
                 </div>
                 <div class="tab-pane tt-indent-none" id="tt-tab-05" role="tabpanel">
@@ -2378,15 +2385,50 @@ $(document).ready(function(){
         console.log("open settings")
     });
     $("#reply-btn-tab").on("click", function(e){
+        const csrf = document.getElementsByName('csrfmiddlewaretoken')
         var url = "/profile/show_profile/replies"
+        var fd = new FormData()
+        fd.append('csrfmiddlewaretoken', csrf[0].value)
         $.ajax({
         type: 'POST',
         url: url, 
         enctype: 'multipart/form-data',
-        data: {},
+        data: fd,
         success: function(response){
-            console.log(response)
-
+            console.log(response);
+            var postObjects = response
+            postObjects.forEach(element => {
+                console.log(element)
+                $("#tt-tab-03 .tt-topic-list").append(`
+                <div class="tt-item">
+                                <div class="tt-col-avatar">
+                                <svg class="tt-icon">
+                                    <use xlink:href="#icon-ava-d"></use>
+                                    </svg>
+                                </div>
+                                <div class="tt-col-description">
+                                    <h6 class="tt-title"><a href="#">
+                                        Thread: ${element.thread_id.subject}
+                                    </a></h6>
+                                    <div class="row align-items-center no-gutters hide-desktope">
+                                        <div class="col-9">
+                                            <ul class="tt-list-badge">
+                                                <li class="show-mobile"><a href="#"><span class="tt-color06 tt-badge">movies</span></a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-3 ml-auto show-mobile">
+                                            <div class="tt-value">5 Jan,19</div>
+                                        </div>
+                                    </div>
+                                    <div class="tt-content">
+                                        Post: ${element.message}
+                                    </div>
+                                </div>
+                                <div class="tt-col-category"><a href="#"><span class="tt-color06 tt-badge">${element.thread_id.category_id.name}</span></a></div>
+                                <div class="tt-col-value-large hide-mobile">${element.created_on}</div>
+                            </div>`)
+            });
+               
         },
         error: function(error){
             console.log(error)
