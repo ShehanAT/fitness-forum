@@ -134,6 +134,13 @@ def show_profile_view(request):
     profile_pic_form = ProfilePicForm(request.POST, request.FILES)
     return render(request, "show_profile.html", {"user": forum_user, "all_activity": all_activity})
 
+def show_profile_replies_view(request):
+    user = User.objects.get(id=request.user.id)
+    reply_posts = Post.objects.filter(first_reply_to_id=user.id)
+    response_data = {}
+    response_data["reply_posts"] = reply_posts
+    return JsonResponse(response_data)
+
 
 def update_profile_view(request):
     try:
@@ -163,21 +170,25 @@ def forum_list_view(request):
 def index_view(request):
     categories = Category.objects.all().values()
     forum_user = None 
-    if request.session['logged_in']:
-        forum_user = ForumUser.objects.get(id=request.user.id)
-        forum_user.profile_pic_path = str(forum_user.profile_pic)
-    for c in categories: 
-        threadCount = Thread.objects.filter(category_id=c['category_id']).count()
-        threads = Thread.objects.filter(category_id=c['category_id'])
-        postCounter = 0
-        for i in threads:
-            postCount = Post.objects.filter(thread_id=i.thread_id).count()
-            postCounter += postCount
-        c["threadNum"] = threadCount
-        c["postNum"] = postCounter 
-        tags = Category.objects.get(category_id=c['category_id']).tags.all()
-        c["tags"] = tags  
-    return render(request, 'page-categories.html', {'categories': categories, "forum_user": forum_user})
+    try: 
+        if request.session['logged_in']:
+            forum_user = ForumUser.objects.get(id=request.user.id)
+            forum_user.profile_pic_path = str(forum_user.profile_pic)
+        for c in categories: 
+            threadCount = Thread.objects.filter(category_id=c['category_id']).count()
+            threads = Thread.objects.filter(category_id=c['category_id'])
+            postCounter = 0
+            for i in threads:
+                postCount = Post.objects.filter(thread_id=i.thread_id).count()
+                postCounter += postCount
+            c["threadNum"] = threadCount
+            c["postNum"] = postCounter 
+            tags = Category.objects.get(category_id=c['category_id']).tags.all()
+            c["tags"] = tags  
+        return render(request, 'page-categories.html', {'categories': categories, "forum_user": forum_user})
+    except KeyError as e:
+        logger.error(e)
+        return render(request, "error404.html", {})
 
 def add_category_view(request):
     forum_user = None 
