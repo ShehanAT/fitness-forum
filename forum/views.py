@@ -142,6 +142,8 @@ def show_profile_replies_view(request):
     response_data = PostSerializer(reply_posts, many=True)
     return JsonResponse(response_data.data, safe=False)
 
+def show_profile_followers_view(request):
+    return JsonResponse()
 
 def update_profile_view(request):
     try:

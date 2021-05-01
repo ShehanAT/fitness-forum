@@ -207,7 +207,7 @@
             <div class="tt-wrapper-inner">
                 <ul class="nav nav-tabs pt-tabs-default" role="tablist">
                     <li class="nav-item show">
-                        <a class="nav-link active" data-toggle="tab" href="#tt-tab-01" role="tab"><span>Activity</span></a>
+                        <a class="nav-link active" data-toggle="tab" href="#tt-tab-01" role="tab" id="activity-btn-tab"><span>Activity</span></a>
                     </li>
                     <li class="nav-item">
                         <form>
@@ -216,10 +216,10 @@
                         </form>
                     </li>
                     <li class="nav-item tt-hide-xs">
-                        <a class="nav-link" data-toggle="tab" href="#tt-tab-04" role="tab"><span>Followers</span></a>
+                        <a class="nav-link" data-toggle="tab" href="#tt-tab-04" role="tab" id="followers-btn-tab"><span>Followers</span></a>
                     </li>
                     <li class="nav-item tt-hide-md">
-                        <a class="nav-link" data-toggle="tab" href="#tt-tab-05" role="tab"><span>Following</span></a>
+                        <a class="nav-link" data-toggle="tab" href="#tt-tab-05" role="tab" id="following-btn-tab"><span>Following</span></a>
                     </li>
                 </ul>
             </div>
@@ -747,11 +747,6 @@
                 </div>
                 <div class="tab-pane tt-indent-none" id="tt-tab-03" role="tabpanel">
                      <div class="tt-topic-list">
-                        <div class="tt-list-header">
-                            <div class="tt-col-topic">Topic</div>
-                            <div class="tt-col-category">Category</div>
-                            <div class="tt-col-value">Posted on</div>
-                        </div>
                         <!--
                         <div class="tt-item">
                             <div class="tt-col-avatar">
@@ -2384,7 +2379,18 @@ $(document).ready(function(){
     $(".settings-btn").on('click', function(e){
         console.log("open settings")
     });
+    $("#activity-btn-tab").on("click", function(e){
+        $("#reply-btn-tab").removeClass("active");
+        $("#followers-btn-tab").removeClass("active");
+        $("#following-btn-tab").removeClass("active");
+    });
+
     $("#reply-btn-tab").on("click", function(e){
+        $("#activity-btn-tab").removeClass("active");
+        $("#following-btn-tab").removeClass("active");
+        $("#following-btn-tab").removeClass("active");
+
+
         const csrf = document.getElementsByName('csrfmiddlewaretoken')
         var url = "/profile/show_profile/replies"
         var fd = new FormData()
@@ -2395,8 +2401,16 @@ $(document).ready(function(){
         enctype: 'multipart/form-data',
         data: fd,
         success: function(response){
-            console.log(response);
+            $("#tt-tab-03 .tt-topic-list").empty()
+            $("#tt-tab-03 .tt-topic-list").append(`
+                <div class="tt-list-header">
+                    <div class="tt-col-topic">Topic</div>
+                    <div class="tt-col-category">Category</div>
+                    <div class="tt-col-value">Posted on</div>
+                </div>
+            `)
             var postObjects = response
+        
             postObjects.forEach(element => {
                 console.log(element)
                 $("#tt-tab-03 .tt-topic-list").append(`
@@ -2424,11 +2438,11 @@ $(document).ready(function(){
                                         Post: ${element.message}
                                     </div>
                                 </div>
-                                <div class="tt-col-category"><a href="#"><span class="tt-color06 tt-badge">${element.thread_id.category_id.name}</span></a></div>
+                                <div class="tt-col-category"><a href="#">${element.thread_id.category_id.name}</a></div>
                                 <div class="tt-col-value-large hide-mobile">${element.created_on}</div>
                             </div>`)
             });
-               
+            //    <span class="tt-color06 tt-badge"></span>
         },
         error: function(error){
             console.log(error)
@@ -2437,6 +2451,79 @@ $(document).ready(function(){
         contentType: false,
         processData: false
     });
+
+    });
+
+    $("#followers-btn-tab").on("click", function(e){
+        $("#activity-btn-tab").removeClass("active");
+        $("#reply-btn-tab").removeClass("active");
+        $("#following-btn-tab").removeClass("active");
+
+        const csrf = document.getElementsByName('csrfmiddlewaretoken')
+        var url = "/profile/show_profile/followers"
+        var fd = new FormData()
+        fd.append('csrfmiddlewaretoken', csrf[0].value)
+    //     $.ajax({
+    //     type: 'POST',
+    //     url: url, 
+    //     enctype: 'multipart/form-data',
+    //     data: fd,
+    //     success: function(response){
+    //         console.log(response);
+    //         var postObjects = response
+    //         postObjects.forEach(element => {
+    //             console.log(element)
+    //             $("#tt-tab-04 .tt-topic-list").append(`
+    //             <div class="tt-item">
+    //                             <div class="tt-col-avatar">
+    //                             <svg class="tt-icon">
+    //                                 <use xlink:href="#icon-ava-d"></use>
+    //                                 </svg>
+    //                             </div>
+    //                             <div class="tt-col-description">
+    //                                 <h6 class="tt-title"><a href="#">
+    //                                     Thread: ${element.thread_id.subject}
+    //                                 </a></h6>
+    //                                 <div class="row align-items-center no-gutters hide-desktope">
+    //                                     <div class="col-9">
+    //                                         <ul class="tt-list-badge">
+    //                                             <li class="show-mobile"><a href="#"><span class="tt-color06 tt-badge">movies</span></a></li>
+    //                                         </ul>
+    //                                     </div>
+    //                                     <div class="col-3 ml-auto show-mobile">
+    //                                         <div class="tt-value">5 Jan,19</div>
+    //                                     </div>
+    //                                 </div>
+    //                                 <div class="tt-content">
+    //                                     Post: ${element.message}
+    //                                 </div>
+    //                             </div>
+    //                             <div class="tt-col-category"><a href="#">${element.thread_id.category_id.name}</a></div>
+    //                             <div class="tt-col-value-large hide-mobile">${element.created_on}</div>
+    //                         </div>`)
+    //         });
+    //         //    <span class="tt-color06 tt-badge"></span>
+    //     },
+    //     error: function(error){
+    //         console.log(error)
+    //     },
+    //     cache: false,
+    //     contentType: false,
+    //     processData: false
+    // });
+
+
+    });
+
+    $("#following-btn-tab").on("click", function(e){
+        $("#activity-btn-tab").removeClass("active");
+        $("#reply-btn-tab").removeClass("active");
+        $("#followers-btn-tab").removeClass("active");
+
+        const csrf = document.getElementsByName('csrfmiddlewaretoken')
+        var url = "/profile/show_profile/followers"
+        var fd = new FormData()
+        fd.append('csrfmiddlewaretoken', csrf[0].value)
 
     });
   
