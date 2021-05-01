@@ -12,7 +12,7 @@ urlpatterns = [
     path('profile', views.profile_view),
     path('profile/show_profile', views.show_profile_view),
     path('profile/show_profile/replies', views.show_profile_replies_view),
-    path('/profile/show_profile/followers', views.show_profile_followers_view),
+    path('profile/show_profile/followers', views.show_profile_followers_view),
     path('profile/update_profile', views.update_profile_view),
     path('profile/change_password', views.change_password_view),
     path('add_category', views.add_category_view),

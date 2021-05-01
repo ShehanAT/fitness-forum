@@ -22,6 +22,13 @@ class ForumUser(User):
     gender = models.CharField(max_length=1, choices=Gender.choices)
     rep_points = models.IntegerField(default=0)
 
+class UserFollowing(models.Model):
+    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="following", on_delete=models.CASCADE)
+    following_user_id = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="followers", on_delete=models.CASCADE)
+    # Automatically set the field to now when the object is first created
+    created_on = models.DateTimeField(auto_now_add=True)
+
+
 class Tag(models.Model):
     tag_id = models.AutoField(primary_key=True, default=None)
     name = models.CharField(max_length=100)

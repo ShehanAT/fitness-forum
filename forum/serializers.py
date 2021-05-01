@@ -4,6 +4,10 @@ import humanize
 from datetime import datetime, timezone
 from django.utils.timesince import timesince
 
+class ForumUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ForumUser 
+        fields = "__all__"
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta: 
@@ -22,20 +26,10 @@ class TimestampField(serializers.Field):
 
 class PostSerializer(serializers.ModelSerializer):
     thread_id = ThreadSerializer()
-    # created_on = serializers.DateTimeField(format="%F-%d-%Y %H:%M:%S")
     created_on = TimestampField()
     def get_content(self, instance):
         from django.utils.safestring import mark_safe
         return mark_safe(instance.message)
-    # def to_representation(self, instance):
-    #     representation = super(PostSerializer, self).to_representation(instance)
-    #     timedelta = (datetime.now(timezone.utc) - representation['created_on'])
-    #     timedelta = humanize.naturaldelta(timedelta)
-    #     representation['created_on'] = timedelta
-    #     return representation
-    # def FORMAT(self):
-    #    from django.utils.timesince import timesince
-    #    return timesince(self.created_on)
    
     class Meta: 
         model = Post 

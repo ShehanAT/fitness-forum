@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.sessions.backends.db import SessionStore 
 from django.shortcuts import redirect
 from .forms import AddCategoryForm, AddThreadForm, SignUpForm, AddPostForm, ProfilePicForm, UpdateProfileForm, ChangePasswordForm, PostSignatureForm
-from .models import Category, Thread, Post, ForumUser, PostVote, PostSignature, Tag
+from .models import Category, Thread, Post, ForumUser, PostVote, PostSignature, Tag, UserFollowing
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.exceptions import ObjectDoesNotExist
 import logging 
@@ -14,7 +14,7 @@ import humanize
 from itertools import chain
 from django.db.models import Q 
 from django.core import serializers
-from .serializers import PostSerializer
+from .serializers import PostSerializer, ForumUserSerializer
 
 logger = logging.getLogger(__name__)
 def signup_view(request):
@@ -143,7 +143,14 @@ def show_profile_replies_view(request):
     return JsonResponse(response_data.data, safe=False)
 
 def show_profile_followers_view(request):
-    return JsonResponse()
+    if request.method == "POST":
+        user = User.objects.get(id=request.user.id)
+        following_user = User.objects.get(id=request.POST.get("follow_id", ""))
+        return JsonResponse({"data": "testing"})
+    else:
+        all_users = ForumUser.objects.all().exclude(is_superuser=True)
+        all_users_data = ForumUserSerializer(all_users, many=True)
+        return JsonResponse({"all_users_data": all_users_data.data, "current_user_id": request.user.id}, safe=False)
 
 def update_profile_view(request):
     try:

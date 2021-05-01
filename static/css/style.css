@@ -7916,3 +7916,8 @@ img.tt-icon {
   border-radius: 100%;
   width: 30%;
 }
+
+/* show_profile.html styles */
+.follow-btn:hover { 
+  cursor: pointer;
+}
