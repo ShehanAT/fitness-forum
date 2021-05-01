@@ -140,11 +140,7 @@ def show_profile_replies_view(request):
     user = User.objects.get(id=request.user.id)
     reply_posts = Post.objects.filter(posted_by_id=user.id, first_reply_to_id__isnull=False)
     response_data = PostSerializer(reply_posts, many=True)
-    # for reply_posts in reply_posts:
-    #     response_data = PostSerializer("json")
-    #     response_data = serializers.serialize("json", reply_posts)
     return JsonResponse(response_data.data, safe=False)
-    # return JsonResponse({'response_data': response_data})
 
 
 def update_profile_view(request):
