@@ -1149,7 +1149,6 @@ $(document).ready(function(){
 
     });
 
-   
 
     $("#following-btn-tab").on("click", function(e){
         $("#activity-btn-tab").removeClass("active");
@@ -1311,7 +1310,80 @@ $(document).ready(function(){
         var url = "/profile/show_profile/followers"
         var fd = new FormData()
         fd.append('csrfmiddlewaretoken', csrf[0].value)
-
+        $.ajax({
+        type: 'GET',
+        url: url, 
+        enctype: 'multipart/form-data',
+        data: fd,
+            success: function(response){
+                var followers = response.all_followers_data
+                $("#tt-tab-05 .tt-followers-list").empty()
+                    $("#tt-tab-05 .tt-followers-list").append(`
+                    <h2 class="tt-title">Followers:</h2>
+                    <div class="tt-list-header">
+                            <div class="tt-col-name">User</div>
+                            <div class="tt-col-value-large hide-mobile">Member Since</div>
+                            <div class="tt-col-value-large hide-mobile">Rep Points</div>
+                            <div class="tt-col-value-large hide-mobile">Last Active</div>
+                            <div class="tt-col-value"></div>
+                        </div>
+                `)
+                followers.forEach(element => {
+                    if(element.profile_pic){
+                        profile_pic = element.profile_pic.slice(1)
+                        profile_pic = profile_pic.substring(profile_pic.indexOf("/"))
+                        element.profile_pic = profile_pic 
+                        $("#tt-tab-05 .tt-followers-list").append(`
+                        <div class="tt-item">
+                            <div class="tt-col-merged">
+                                <div class="tt-col-avatar">
+                                    <img src="${element.profile_pic}" class="tt-icon"/>
+                                </div>
+                            </div>
+                                <div class="tt-col-description">
+                                    <h6 class="tt-title"><a href="#">${element.username}</a></h6>
+                                    <ul>
+                                        <li><a href="#">${element.first_name} ${element.last_name}</a></li>
+                                    </ul>
+                                </div>
+                            <div class="tt-col-value-large hide-mobile">${element.member_since}</div>
+                            <div class="tt-col-value-large hide-mobile tt-color-select">${element.rep_points}</div>
+                            <div class="tt-col-value-large hide-mobile">${element.last_login}</div>
+                                             
+                        </div>
+                        `)
+                        //   <div class="tt-col-value"><span class="tt-color19 tt-badge unfollow-btn" data-user-id="${element.id}">Unfollow</span></div>     
+                    }else{
+                        $("#tt-tab-05 .tt-followers-list").append(`
+                        <div class="tt-item">
+                            <div class="tt-col-merged">
+                                <div class="tt-col-avatar">
+                                    <img src="/static/images/profilePic.png" class="tt-icon"/>
+                                </div>
+                            </div>
+                                <div class="tt-col-description">
+                                    <h6 class="tt-title"><a href="#">${element.username}</a></h6>
+                                    <ul>
+                                        <li><a href="#">${element.first_name} ${element.last_name}</a></li>
+                                    </ul>
+                                </div>
+                            <div class="tt-col-value-large hide-mobile">${element.member_since}</div>
+                            <div class="tt-col-value-large hide-mobile tt-color-select">${element.rep_points}</div>
+                            <div class="tt-col-value-large hide-mobile">${element.last_login}</div>
+                            
+                        </div>
+                        `)
+                        // <div class="tt-col-value"><span class="tt-color19 tt-badge unfollow-btn" data-user-id="${element.id}">Unfollow</span></div>
+                    }
+                });
+            },
+            error: function(error){
+                console.log(error)
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+    });
     });
   
 });

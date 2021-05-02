@@ -173,6 +173,16 @@ def show_profile_unfollow_view(request):
     else:
         return JsonResponse({"unfollow_status": "Invalid Request Type"})
 
+def show_profile_followers_view(request):
+    user = ForumUser.objects.get(id=request.user.id)
+    followers = UserFollowing.objects.filter(following_user_id=user.id)
+    followers_ids = []
+    for follower in followers:
+        followers_ids.append(follower.user_id.id)
+    all_followers = ForumUser.objects.filter(id__in=followers_ids)
+    all_followers_data = ForumUserSerializer(all_followers, many=True)
+    return JsonResponse({"all_followers_data": all_followers_data.data}, safe=False)
+
 def update_profile_view(request):
     try:
         forum_user = ForumUser.objects.get(id=request.user.id)
