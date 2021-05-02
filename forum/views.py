@@ -153,12 +153,15 @@ def show_profile_followers_view(request):
         all_users = ForumUser.objects.all().exclude(is_superuser=True)
         # need to exclude current following user=any record found in UserFollowing 
         following_users = UserFollowing.objects.filter(user_id=user.id)
-        all_following_users = ForumUser.objects.none()
+        all_following_list = []
         for following in following_users:
-            all_following_users |= following.following_user_id 
+            # all_following_users |= following.following_user_id 
+            all_following_list.append(following.following_user_id.id)
+        all_following_users = ForumUser.objects.filter(id__in=all_following_list)
         all_following_users_data = ForumUserSerializer(all_following_users, many=True)
+        all_users = all_users.exclude(id__in=all_following_list)
         all_users_data = ForumUserSerializer(all_users, many=True)
-        return JsonResponse({"all_users_data": all_users_data.data, "all_following_users_data": all_following_users_data, "current_user_id": request.user.id}, safe=False)
+        return JsonResponse({"all_users_data": all_users_data.data, "all_following_users_data": all_following_users_data.data, "current_user_id": request.user.id}, safe=False)
 
 def update_profile_view(request):
     try:
