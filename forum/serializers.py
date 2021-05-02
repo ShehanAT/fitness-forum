@@ -4,10 +4,16 @@ import humanize
 from datetime import datetime, timezone
 from django.utils.timesince import timesince
 
+class TimestampField(serializers.Field):
+    def to_representation(self, value):
+        return timesince(value)
+
 class ForumUserSerializer(serializers.ModelSerializer):
+    last_login = TimestampField()
     class Meta:
         model = ForumUser 
         fields = "__all__"
+        fields = ['id', 'last_login', 'is_superuser', 'username', 'last_name', 'email', 'is_active', 'date_joined', 'first_name', 'gender', 'rep_points', 'profile_pic', 'member_since']
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta: 
@@ -19,10 +25,6 @@ class ThreadSerializer(serializers.ModelSerializer):
     class Meta:
         model = Thread 
         fields = ["thread_id", "category_id", "subject", "started_by_id", "views", "replies", "created_on"]
-
-class TimestampField(serializers.Field):
-    def to_representation(self, value):
-        return timesince(value)
 
 class PostSerializer(serializers.ModelSerializer):
     thread_id = ThreadSerializer()

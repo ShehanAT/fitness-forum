@@ -142,7 +142,7 @@ def show_profile_replies_view(request):
     response_data = PostSerializer(reply_posts, many=True)
     return JsonResponse(response_data.data, safe=False)
 
-def show_profile_followers_view(request):
+def show_profile_following_view(request):
     user = ForumUser.objects.get(id=request.user.id)
     if request.method == "POST":
         following_user = ForumUser.objects.get(id=request.POST.get("follow_id", ""))
@@ -162,6 +162,16 @@ def show_profile_followers_view(request):
         all_users = all_users.exclude(id__in=all_following_list)
         all_users_data = ForumUserSerializer(all_users, many=True)
         return JsonResponse({"all_users_data": all_users_data.data, "all_following_users_data": all_following_users_data.data, "current_user_id": request.user.id}, safe=False)
+
+def show_profile_unfollow_view(request):
+    user = ForumUser.objects.get(id=request.user.id)
+    if request.method == "POST":
+        unfollow_user = ForumUser.objects.get(id=request.POST.get("unfollow_id", ""))
+        user_following = UserFollowing.objects.get(user_id=request.user.id, following_user_id=unfollow_user.id)
+        user_following.delete() 
+        return JsonResponse({"unfollow_status": "success"})
+    else:
+        return JsonResponse({"unfollow_status": "Invalid Request Type"})
 
 def update_profile_view(request):
     try:
