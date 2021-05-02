@@ -307,8 +307,11 @@
                     </div>
                 </div>
                 <div class="tab-pane tt-indent-none" id="tt-tab-04" role="tabpanel">
-                    <div class="tt-followers-list">
+                    <div class="tt-not-following-list">
                     
+                    </div>
+                    <div class="tt-following-list">
+
                     </div>
                 </div>
                 <div class="tab-pane tt-indent-none" id="tt-tab-05" role="tabpanel">
@@ -1028,6 +1031,10 @@ $(document).ready(function(){
         data: fd,
             success: function(response){
                     console.log(response)
+                    var following_status = response.following_status
+                    if(following_status == "success"){
+                        location.reload()
+                    }
                 },
                 error: function(error){
                     console.log(error)
@@ -1131,8 +1138,8 @@ $(document).ready(function(){
         enctype: 'multipart/form-data',
         data: fd,
             success: function(response){
-                $("#tt-tab-04 .tt-followers-list").empty()
-                $("#tt-tab-04 .tt-followers-list").append(`
+                $("#tt-tab-04 .tt-not-following-list").empty()
+                $("#tt-tab-04 .tt-not-following-list").append(`
                     <div class="tt-list-header">
                             <div class="tt-col-name">User</div>
                             <div class="tt-col-value-large hide-mobile">Follow date</div>
@@ -1143,8 +1150,9 @@ $(document).ready(function(){
                         </div>
                 `)
                 var currentUserId = response.current_user_id
-                var followers = response.all_users_data 
-                followers.forEach(element => {
+                var nonFollowing = response.all_users_data 
+                var following = response.all_following_users_data
+                nonFollowing.forEach(element => {
                     if(element.id == currentUserId){
                         // if the user is the currently logged in user then skip them 
                         return 
@@ -1153,7 +1161,7 @@ $(document).ready(function(){
                         profile_pic = element.profile_pic.slice(1)
                         profile_pic = profile_pic.substring(profile_pic.indexOf("/"))
                         element.profile_pic = profile_pic 
-                        $("#tt-tab-04 .tt-followers-list").append(`
+                        $("#tt-tab-04 .tt-not-following-list").append(`
                         <div class="tt-item">
                             <div class="tt-col-merged">
                                 <div class="tt-col-avatar">
@@ -1174,7 +1182,7 @@ $(document).ready(function(){
                         </div>
                         `)
                     }else{
-                        $("#tt-tab-04 .tt-followers-list").append(`
+                        $("#tt-tab-04 .tt-not-following-list").append(`
                         <div class="tt-item">
                             <div class="tt-col-merged">
                                 <div class="tt-col-avatar">
@@ -1196,37 +1204,68 @@ $(document).ready(function(){
                         `)
                     }
                   
-                //     $("#tt-tab-04 .tt-topic-list").append(`
-                //     <div class="tt-item">
-                //                     <div class="tt-col-avatar">
-                //                     <svg class="tt-icon">
-                //                         <use xlink:href="#icon-ava-d"></use>
-                //                         </svg>
-                //                     </div>
-                //                     <div class="tt-col-description">
-                //                         <h6 class="tt-title"><a href="#">
-                //                             Thread: ${element.thread_id.subject}
-                //                         </a></h6>
-                //                         <div class="row align-items-center no-gutters hide-desktope">
-                //                             <div class="col-9">
-                //                                 <ul class="tt-list-badge">
-                //                                     <li class="show-mobile"><a href="#"><span class="tt-color06 tt-badge">movies</span></a></li>
-                //                                 </ul>
-                //                             </div>
-                //                             <div class="col-3 ml-auto show-mobile">
-                //                                 <div class="tt-value">5 Jan,19</div>
-                //                             </div>
-                //                         </div>
-                //                         <div class="tt-content">
-                //                             Post: ${element.message}
-                //                         </div>
-                //                     </div>
-                //                     <div class="tt-col-category"><a href="#">${element.thread_id.category_id.name}</a></div>
-                //                     <div class="tt-col-value-large hide-mobile">${element.created_on}</div>
-                //                 </div>`)
-                // });
-                //    <span class="tt-color06 tt-badge"></span>
+        
                 })
+                following.forEach(element => {
+                    $("#tt-tab-04 .tt-following-list").empty()
+                    $("#tt-tab-04 .tt-following-list").append(`
+                    <div class="tt-list-header">
+                            <div class="tt-col-name">User</div>
+                            <div class="tt-col-value-large hide-mobile">Follow date</div>
+                            <div class="tt-col-value-large hide-mobile">Last Activity</div>
+                            <div class="tt-col-value-large hide-mobile">Threads</div>
+                            <div class="tt-col-value-large hide-mobile">Replies</div>
+                            <div class="tt-col-value">Level</div>
+                        </div>
+                    `)
+
+                    if(element.profile_pic){
+                        profile_pic = element.profile_pic.slice(1)
+                        profile_pic = profile_pic.substring(profile_pic.indexOf("/"))
+                        element.profile_pic = profile_pic 
+                        $("#tt-tab-04 .tt-following-list").append(`
+                        <div class="tt-item">
+                            <div class="tt-col-merged">
+                                <div class="tt-col-avatar">
+                                    <img src="${element.profile_pic}" class="tt-icon"/>
+                                </div>
+                            </div>
+                                <div class="tt-col-description">
+                                    <h6 class="tt-title"><a href="#">${element.username}</a></h6>
+                                    <ul>
+                                        <li><a href="#">${element.first_name} ${element.last_name}</a></li>
+                                    </ul>
+                                </div>
+                            <div class="tt-col-value-large hide-mobile">05/01/2019</div>
+                            <div class="tt-col-value-large hide-mobile tt-color-select">1 hours ago</div>
+                            <div class="tt-col-value-large hide-mobile">1</div>
+                            <div class="tt-col-value-large hide-mobile">3</div>
+                            <div class="tt-col-value"><span class="tt-color19 tt-badge follow-btn" data-user-id="${element.id}">Follow</span></div>                        
+                        </div>
+                        `)
+                    }else{
+                        $("#tt-tab-04 .tt-following-list").append(`
+                        <div class="tt-item">
+                            <div class="tt-col-merged">
+                                <div class="tt-col-avatar">
+                                    <img src="/static/images/profilePic.png" class="tt-icon"/>
+                                </div>
+                            </div>
+                                <div class="tt-col-description">
+                                    <h6 class="tt-title"><a href="#">${element.username}</a></h6>
+                                    <ul>
+                                        <li><a href="#">${element.first_name} ${element.last_name}</a></li>
+                                    </ul>
+                                </div>
+                            <div class="tt-col-value-large hide-mobile">05/01/2019</div>
+                            <div class="tt-col-value-large hide-mobile tt-color-select">1 hours ago</div>
+                            <div class="tt-col-value-large hide-mobile">1</div>
+                            <div class="tt-col-value-large hide-mobile">3</div>
+                            <div class="tt-col-value"><span class="tt-color19 tt-badge follow-btn" data-user-id="${element.id}">Follow</span></div>
+                        </div>
+                        `)
+                    }
+                });
             },
             error: function(error){
                 console.log(error)

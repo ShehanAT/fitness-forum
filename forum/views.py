@@ -143,14 +143,22 @@ def show_profile_replies_view(request):
     return JsonResponse(response_data.data, safe=False)
 
 def show_profile_followers_view(request):
+    user = ForumUser.objects.get(id=request.user.id)
     if request.method == "POST":
-        user = User.objects.get(id=request.user.id)
-        following_user = User.objects.get(id=request.POST.get("follow_id", ""))
-        return JsonResponse({"data": "testing"})
+        following_user = ForumUser.objects.get(id=request.POST.get("follow_id", ""))
+        user_following = UserFollowing.objects.create(user_id=user, following_user_id=following_user)
+        user_following.save()
+        return JsonResponse({"following_status": "success"})
     else:
         all_users = ForumUser.objects.all().exclude(is_superuser=True)
+        # need to exclude current following user=any record found in UserFollowing 
+        following_users = UserFollowing.objects.filter(user_id=user.id)
+        all_following_users = ForumUser.objects.none()
+        for following in following_users:
+            all_following_users |= following.following_user_id 
+        all_following_users_data = ForumUserSerializer(all_following_users, many=True)
         all_users_data = ForumUserSerializer(all_users, many=True)
-        return JsonResponse({"all_users_data": all_users_data.data, "current_user_id": request.user.id}, safe=False)
+        return JsonResponse({"all_users_data": all_users_data.data, "all_following_users_data": all_following_users_data, "current_user_id": request.user.id}, safe=False)
 
 def update_profile_view(request):
     try:

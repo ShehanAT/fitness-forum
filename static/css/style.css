@@ -7174,13 +7174,13 @@ html.ie.gecko body.modal-open {
 /*
 	Followers List
 */
-.tt-followers-list > .tt-item:nth-child(odd) {
+.tt-followers-list > .tt-item:nth-child(odd), .tt-not-following-list > .tt-item:nth-child(odd), .tt-following-list > .tt-item:nth-child(odd) {
   background-color: #f2f4f6; }
 
-.tt-followers-list > .tt-item:nth-child(even) {
+.tt-followers-list > .tt-item:nth-child(even), .tt-not-following-list > .tt-item:nth-child(even), .tt-following-list > .tt-item:nth-child(even){
   background-color: #ffffff; }
 
-.tt-followers-list .tt-list-header {
+.tt-followers-list .tt-list-header, .tt-not-following-list .tt-list-header, .tt-following-list .tt-list-header{
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -7204,21 +7204,22 @@ html.ie.gecko body.modal-open {
   font-weight: 500;
   font-size: 14px;
   letter-spacing: 0.01em; }
-  .tt-followers-list .tt-list-header > [class^="tt-col"] {
+  .tt-followers-list .tt-list-header > [class^="tt-col"], .tt-not-following-list .tt-list-header > [class^="tt-col"], .tt-following-list .tt-list-header > [class^="tt-col"]{
     padding: 20px 15px 22px; }
-  .tt-followers-list .tt-list-header.tt-border-bottom {
+  .tt-followers-list .tt-list-header.tt-border-bottom, .tt-not-following-list .tt-list-header.tt-border-bottom, .tt-following-list .tt-list-header.tt-border-bottom{
     border-bottom: 2px solid #e2e7ea;
     margin-bottom: 30px; }
-  .tt-followers-list .tt-list-header .tt-col-name {
-    width: 22.666%; }
-  .tt-followers-list .tt-list-header .tt-col-value-large {
+  .tt-followers-list .tt-list-header .tt-col-name, .tt-not-following-list .tt-list-header .tt-col-name, .tt-following-list .tt-list-header .tt-col-name{
+    width: 22.666%; 
+  }
+  .tt-followers-list .tt-list-header .tt-col-value-large, .tt-not-following-list .tt-list-header .tt-col-value-large, .tt-following-list .tt-list-header .tt-col-value-large{
     width: 16.666%; }
-  .tt-followers-list .tt-list-header .tt-col-value {
+  .tt-followers-list .tt-list-header .tt-col-value, .tt-not-following-list .tt-list-header .tt-col-value, .tt-following-list .tt-list-header .tt-col-value{
     width: 10%;
     max-width: 95px;
     width: 95px; }
 
-.tt-followers-list .tt-item {
+.tt-followers-list .tt-item, .tt-not-following-list .tt-item, .tt-following-list .tt-item{
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -7239,27 +7240,27 @@ html.ie.gecko body.modal-open {
   min-height: 101px;
   padding: 20px 15px; }
   @media (max-width: 767px) {
-    .tt-followers-list .tt-item {
+    .tt-followers-list .tt-item, .tt-not-following-list .tt-item, .tt-following-list .tt-item{
       padding-left: 10px;
       padding-right: 10px; } }
   @media (min-width: 1025px) {
-    .tt-followers-list .tt-item > [class^="tt-col"] {
+    .tt-followers-list .tt-item > [class^="tt-col"], .tt-not-following-list .tt-item > [class^="tt-col"], .tt-following-list .tt-item > [class^="tt-col"]{
       padding-left: 15px;
       padding-right: 15px; } }
   @media (max-width: 1024px) {
-    .tt-followers-list .tt-item > [class^="tt-col"] {
+    .tt-followers-list .tt-item > [class^="tt-col"], .tt-not-following-list .tt-item > [class^="tt-col"], .tt-following-list .tt-item > [class^="tt-col"]{
       padding-left: 10px;
       padding-right: 10px; } }
-  .tt-followers-list .tt-item .tt-col-avatar .tt-icon {
+  .tt-followers-list .tt-item .tt-col-avatar .tt-icon, .tt-not-following-list .tt-item .tt-col-avatar .tt-icon, .tt-following-list .tt-item .tt-col-avatar .tt-icon{
     width: 40px;
     height: 40px; }
   @media (min-width: 1025px) {
-    .tt-followers-list .tt-item .tt-col-description {
+    .tt-followers-list .tt-item .tt-col-description, .tt-not-following-list .tt-item .tt-col-description, .tt-following-list .tt-item .tt-col-description{
       padding-left: 30px; } }
   @media (max-width: 1024px) {
-    .tt-followers-list .tt-item .tt-col-description {
+    .tt-followers-list .tt-item .tt-col-description, .tt-not-following-list .tt-item .tt-col-description, .tt-following-list .tt-item .tt-col-description{
       padding-left: 15px; } }
-  .tt-followers-list .tt-item .tt-col-description .tt-title {
+  .tt-followers-list .tt-item .tt-col-description .tt-title, .tt-not-following-list .tt-item .tt-col-description .tt-title, .tt-following-list .tt-item .tt-col-description .tt-title{
     color: #303344;
     font-size: 16px;
     line-height: 20px;
@@ -7267,11 +7268,11 @@ html.ie.gecko body.modal-open {
     margin: 0;
     padding: 0 0 0px 0;
     letter-spacing: 0.01em; }
-    .tt-followers-list .tt-item .tt-col-description .tt-title a {
+    .tt-followers-list .tt-item .tt-col-description .tt-title a, .tt-not-following-list .tt-item .tt-col-description .tt-title a, .tt-following-list .tt-item .tt-col-description .tt-title a{
       color: #303344;
       display: inline-block;
       position: relative; }
-      .tt-followers-list .tt-item .tt-col-description .tt-title a:before {
+      .tt-followers-list .tt-item .tt-col-description .tt-title a:before, .tt-not-following-list .tt-item .tt-col-description .tt-title a:before, .tt-following-list .tt-item .tt-col-description .tt-title a:before{
         content: '';
         display: block;
         position: absolute;
@@ -7284,20 +7285,20 @@ html.ie.gecko body.modal-open {
         background-color: #303344;
         -webkit-transition: width .2s linear;
         transition: width .2s linear; }
-      .tt-followers-list .tt-item .tt-col-description .tt-title a:hover:before {
+      .tt-followers-list .tt-item .tt-col-description .tt-title a:hover:before, .tt-not-following-list .tt-item .tt-col-description .tt-title a:hover:before, .tt-following-list .tt-item .tt-col-description .tt-title a:hover:before{
         width: 100%; }
-  .tt-followers-list .tt-item .tt-col-description ul {
+  .tt-followers-list .tt-item .tt-col-description ul, .tt-not-following-list .tt-item .tt-col-description ul, .tt-following-list .tt-item .tt-col-description ul{
     list-style: none;
     margin: 0;
     padding: 0; }
-    .tt-followers-list .tt-item .tt-col-description ul li a {
+    .tt-followers-list .tt-item .tt-col-description ul li a, .tt-not-following-list .tt-item .tt-col-description ul li a, .tt-following-list .tt-item .tt-col-description ul li a{
       color: #666f74;
       font-size: 14px;
       -webkit-transition: color .2s linear;
       transition: color .2s linear; }
-      .tt-followers-list .tt-item .tt-col-description ul li a:hover {
+      .tt-followers-list .tt-item .tt-col-description ul li a:hover, .tt-not-following-list .tt-item .tt-col-description ul li a:hover, .tt-following-list .tt-item .tt-col-description ul li a:hover{
         color: #2172cd; }
-  .tt-followers-list .tt-item .tt-col-merged {
+  .tt-followers-list .tt-item .tt-col-merged, .tt-not-following-list .tt-item .tt-col-merged, .tt-following-list .tt-item .tt-col-merged{
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -7315,23 +7316,24 @@ html.ie.gecko body.modal-open {
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
-    width: 22.666%; }
-  .tt-followers-list .tt-item .tt-col-value-large {
+    /* width: 22.666%;  */
+  }
+  .tt-followers-list .tt-item .tt-col-value-large, .tt-not-following-list .tt-item .tt-col-value-large, .tt-following-list .tt-item .tt-col-value-large{
     width: 16.666%; }
-  .tt-followers-list .tt-item .tt-col-value {
+  .tt-followers-list .tt-item .tt-col-value, .tt-not-following-list .tt-item .tt-col-value, .tt-following-list .tt-item .tt-col-value{
     width: 10%;
     max-width: 95px;
     width: 95px; }
-  .tt-followers-list .tt-item .tt-color-select {
+  .tt-followers-list .tt-item .tt-color-select, .tt-not-following-list .tt-item .tt-color-select, .tt-following-list .tt-item .tt-color-select{
     color: #182730;
     font-weight: 500; }
 
 @media (min-width: 992px) {
-  .tt-followers-list .show-mobile {
+  .tt-followers-list .show-mobile, .tt-not-following-list .show-mobile, .tt-following-list .show-mobile{
     display: none; } }
 
 @media (max-width: 991px) {
-  .tt-followers-list .hide-mobile {
+  .tt-followers-list .hide-mobile, .tt-not-following-list .hide-mobile, .tt-following-list .hide-mobile{
     display: none; } }
 
 .tt-row-btn {
