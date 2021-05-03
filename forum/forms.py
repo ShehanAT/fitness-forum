@@ -49,13 +49,20 @@ class UpdateProfileForm(forms.ModelForm):
     email = forms.EmailField()
     first_name = forms.CharField()
     last_name = forms.CharField()
+    profile_pic = forms.ImageField(label='Profile Picture Upload')
+    # , required=False
+    location = forms.CharField() 
+    about = forms.Textarea()
     class Meta:
         model = ForumUser 
         fields = [
             'username',
             'email',
             'first_name',
-            'last_name'
+            'last_name',
+            'profile_pic',
+            'location',
+            'about'
         ]
 
 class ProfilePicForm(forms.Form):

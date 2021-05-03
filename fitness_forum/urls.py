@@ -20,7 +20,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import path, include, re_path
 from django.views.generic import TemplateView 
 from django.contrib.staticfiles import views 
-
+from django.views.static import serve
     
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,7 +29,10 @@ urlpatterns = [
 document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL,
 document_root=settings.MEDIA_ROOT)
 
-# # if settings.DEBUG:
-# #     urlpatterns += [
-# #         re_path(r'^static/(?P<path>.*)$', views.serve)
+# if settings.DEBUG:
+#     urlpatterns += [
+#         re_path(r'^media/(?P<path>.*)$', serve,{'document_root': settings.MEDIA_ROOT, 'show_indexes': True}),
+#         re_path(r'/static/', include('django.contrib.staticfiles.urls')),
 #     ]
+
+# urlpatterns += staticfiles_urlpatterns()

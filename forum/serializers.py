@@ -10,6 +10,7 @@ class TimestampField(serializers.Field):
 
 class ForumUserSerializer(serializers.ModelSerializer):
     last_login = TimestampField()
+    profile_pic = serializers.ImageField(max_length=None, use_url=True, allow_null=True, required=False)
     class Meta:
         model = ForumUser 
         fields = "__all__"

@@ -184,13 +184,28 @@ def show_profile_followers_view(request):
     return JsonResponse({"all_followers_data": all_followers_data.data}, safe=False)
 
 def update_profile_view(request):
-    try:
-        forum_user = ForumUser.objects.get(id=request.user.id)
-        user = User.objects.get(id=request.user.id)
-        forum_user.profile_pic_path = str(forum_user.profile_pic)
-    except ObjectDoesNotExist as e:
-        logger.error(e)
-    return render(request, "update_profile.html", {"user": forum_user})
+    forum_user = ForumUser.objects.get(id=request.user.id)
+    if request.method == "POST":
+        update_profile_form = UpdateProfileForm(request.POST, request.FILES, instance=forum_user)
+        update_profile_form.fields['profile_pic'].required = False
+        update_profile_form.fields['location'].required = False 
+        update_profile_form.fields['about'].required = False 
+        if update_profile_form.is_valid():
+            if request.FILES["profile_pic"]:
+                # update_profile_form.cleaned_data.get('profile_pic').url = "/static" + update_profile_form.cleaned_data.get('profile_pic').url
+                # forum_user.profile_pic = update_profile_form.cleaned_data.get('profile_pic')
+                forum_user.profile_pic = request.FILES["profile_pic"]
+                forum_user.save()
+            update_profile_form.save() 
+            # forum_user.save()
+            return redirect("/profile/update_profile")
+        else: 
+            return render(request, "update_profile.html", {"user": forum_user, "update_profile_form": update_profile_form})
+    else: 
+        update_profile_form = UpdateProfileForm()
+        if forum_user.profile_pic:
+            forum_user.profile_pic_path = str(forum_user.profile_pic)
+        return render(request, "update_profile.html", {"user": forum_user, "update_profile_form": update_profile_form})
 
 def change_password_view(request):
     return render(request, "change_password.html", {})

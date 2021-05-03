@@ -1,13 +1,14 @@
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.contrib.auth import views as auth_views  
 from forum import views 
+from fitness_forum import settings
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns 
 
 urlpatterns = [
     path('', views.index_view),
     path('categories', views.index_view),
     path('signup', views.signup_view),
     path('login', views.login_view),
-    # url(r'^login/$', auth_views.login, {'template_name': 'static/page-login.html'} , name='login'),
     path('logout', views.logout_view),
     path('profile', views.profile_view),
     path('profile/show_profile', views.show_profile_view),

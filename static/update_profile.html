@@ -216,46 +216,69 @@
             <div class="tab-content">
                 <div class="tab-pane tt-indent-none  show active" id="tt-tab-01" role="tabpanel">
                     <div class="tt-topic-list">
-                        <form class="form-default">
+                        <form class="form-default" action="/profile/update_profile" method="POST" enctype='multipart/form-data'>
+                            {% csrf_token %}
+                            {% if update_profile_form.errors %}
+                                <div class="alert alert-danger">
+                                    {% for field in update_profile_form %} 
+                                        {% for error in field.errors %}
+                                            <strong>{{ field.label }} : {{ error|escape }}</strong><br>
+                                        {% endfor %}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
                                 <div class="tt-form-upload">
                                     <div class="row no-gutter">
                                         <div class="col-auto">
                                             <div class="tt-avatar">
-                                                <svg>
-                                                <use xlink:href="#icon-ava-d"></use>
-                                                </svg>
+                                                {% if user.profile_pic %}
+                                                    <img src="{{ user.profile_pic.url }}">
+                                                    <!-- <img src="/static/images/profilePic.png" /> -->
+                                                {% else %} 
+                                                    <svg>
+                                                        <use xlink:href="#icon-ava-d"></use>
+                                                    </svg>
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-auto form-group">
+                                                <label for="uploadProfilePic">Upload new profile pic: </label><br/>
+                                                <input type="file" class="btn btn-primary form-control" id="uploadProfilePic" name="profile_pic"/>
+                                                <!-- <a href="#" class="btn btn-primary">Upload Picture</a> -->
                                             </div>
                                         </div>
-                                        <div class="col-auto ml-auto">
-                                            <a href="#" class="btn btn-primary">Upload Picture</a>
-                                        </div>
+                                        <!-- ml-auto -->
+                                       
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="settingsUserName">Username</label>
-                                <input type="text" name="name" class="form-control" id="settingsUserName" placeholder="azyrusmax">
+                                <input type="text" name="username" class="form-control" id="settingsUserName" value="{{ user.username }}">
                                 </div>
                                 <div class="form-group">
                                     <label for="settingsUserEmail">Email</label>
-                                <input type="text" name="name" class="form-control" id="settingsUserEmail" placeholder="Sample@sample.com">
+                                <input type="text" name="email" class="form-control" id="settingsUserEmail" value="{{ user.email }}">
                                 </div>
-                                <div class="form-group">
+                                <!-- <div class="form-group">
                                     <label for="settingsUserPassword">Password</label>
                                 <input type="password" name="name" class="form-control" id="settingsUserPassword" placeholder="************">
+                                </div> -->
+                                <div class="form-group">
+                                    <label for="firstName">First Name</label>
+                                <input type="text" name="first_name" class="form-control" id="settingsFirstName" value="{{ user.first_name }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastName">Last Name</label>
+                                <input type="text" name="last_name" class="form-control" id="settingsLastName" value="{{ user.last_name }}">
                                 </div>
                                 <div class="form-group">
                                     <label for="settingsUserLocation">Location</label>
-                                <input type="text" name="name" class="form-control" id="settingsUserLocation" placeholder="Slovakia">
-                                </div>
-                                <div class="form-group">
-                                    <label for="settingsUserWebsite">Website</label>
-                                <input type="text" name="name" class="form-control" id="settingsUserWebsite" placeholder="Sample.com">
+                                <input type="text" name="location" class="form-control" id="settingsUserLocation" value="{{ user.location }}"/>
                                 </div>
                                 <div class="form-group">
                                     <label for="settingsUserAbout">About</label>
-                                    <textarea name="" placeholder="Few words about you" class="form-control" id="settingsUserAbout"></textarea>
+                                    <textarea name="about" class="form-control" id="settingsUserAbout">{{ user.about }}</textarea>
                                 </div>
-                                <div class="form-group">
+                                <!-- <div class="form-group">
                                     <label for="settingsUserAbout">Notify me via Email</label>
                                     <div class="checkbox-group">
                                         <input type="checkbox" id="settingsCheckBox01" name="checkbox">
@@ -281,460 +304,11 @@
                                             <span class="tt-text">When someone mentions me</span>
                                         </label>
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="form-group">
-                                    <a href="#" class="btn btn-secondary">Save</a>
+                                    <input type="submit" class="btn btn-secondary" value="Update" />
                                 </div>
                             </form>
-                        <!-- <div class="tt-list-header">
-                            <div class="tt-col-topic">Topic</div>
-                            <div class="tt-col-value-large hide-mobile">Category</div>
-                            <div class="tt-col-value-large hide-mobile">Status</div>
-                            <div class="tt-col-value-large hide-mobile">Activity</div>
-                        </div>
-                        <div class="tt-item">
-                            <div class="tt-col-avatar">
-                                <svg class="tt-icon">
-                                  <use xlink:href="#icon-ava-n"></use>
-                                </svg>
-                            </div>
-                            <div class="tt-col-description">
-                                <h6 class="tt-title"><a href="#">
-                                   Does Envato act against the authors of Envato markets?
-                                </a></h6>
-                                <div class="tt-col-message">
-                                    <a href="#">Dylan replied:</a> It’s time to channel your inner Magnum P.I., Ron Swanson or Hercule Poroit! It’s the time that all guys (or gals) love and all our partners hate It’s Movember!
-                                </div>
-                                <div class="row align-items-center no-gutters hide-desktope">
-                                    <div class="col-9">
-                                        <ul class="tt-list-badge">
-                                            <li class="show-mobile"><a href="#"><span class="tt-color05 tt-badge">music</span></a></li>
-                                        </ul>
-                                        <a href="#" class="tt-btn-icon show-mobile">
-                                            <i class="tt-icon"><svg><use xlink:href="#icon-reply"></use></svg></i>
-                                        </a>
-                                    </div>
-                                    <div class="col-3 ml-auto show-mobile">
-                                       <div class="tt-value">5 Jan,19</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tt-col-category tt-col-value-large hide-mobile"><span class="tt-color05 tt-badge">music</span></div>
-                            <div class="tt-col-value-large hide-mobile">
-                                <a href="#" class="tt-btn-icon">
-                                     <i class="tt-icon"><svg><use xlink:href="#icon-reply"></use></svg></i>
-                                </a>
-                            </div>
-                            <div class="tt-col-value-large hide-mobile">5 Jan,19</div>
-                        </div>
-                        <div class="tt-item">
-                            <div class="tt-col-avatar">
-                               <svg class="tt-icon">
-                                  <use xlink:href="#icon-ava-h"></use>
-                                </svg>
-                            </div>
-                            <div class="tt-col-description">
-                                <h6 class="tt-title"><a href="#">
-                                    <svg class="tt-icon">
-                                      <use xlink:href="#icon-locked"></use>
-                                    </svg>
-                                    We Want to Hear From You! What Would You Like?
-                                </a></h6>
-                                <div class="row align-items-center no-gutters hide-desktope">
-                                    <div class="col-9">
-                                        <ul class="tt-list-badge">
-                                            <li class="show-mobile"><a href="#"><span class="tt-color06 tt-badge">movies</span></a></li>
-                                        </ul>
-                                        <a href="#" class="tt-btn-icon show-mobile">
-                                            <i class="tt-icon"><svg><use xlink:href="#icon-like"></use></svg></i>
-                                        </a>
-                                    </div>
-                                    <div class="col-3 ml-auto show-mobile">
-                                       <div class="tt-value">5 Jan,19</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tt-col-category tt-col-value-large hide-mobile"><span class="tt-color06 tt-badge">movies</span></div>
-                            <div class="tt-col-value-large hide-mobile">
-                                <a href="#" class="tt-btn-icon">
-                                     <i class="tt-icon"><svg><use xlink:href="#icon-like"></use></svg></i>
-                                </a>
-                            </div>
-                            <div class="tt-col-value-large hide-mobile">5 Jan,19</div>
-                        </div>
-                       <div class="tt-item">
-                            <div class="tt-col-avatar">
-                               <svg class="tt-icon">
-                                  <use xlink:href="#icon-ava-j"></use>
-                                </svg>
-                            </div>
-                            <div class="tt-col-description">
-                                <h6 class="tt-title"><a href="#">
-                                    Seeking partner backend developer
-                                </a></h6>
-                                <div class="row align-items-center no-gutters">
-                                    <div class="col-9">
-                                        <ul class="tt-list-badge">
-                                            <li class="show-mobile"><a href="#"><span class="tt-color13 tt-badge">nature</span></a></li>
-                                            <li><a href="#"><span class="tt-badge">themeforest</span></a></li>
-                                            <li><a href="#"><span class="tt-badge">elements</span></a></li>
-                                        </ul>
-                                        <a href="#" class="tt-btn-icon show-mobile">
-                                             <i class="tt-icon"><svg><use xlink:href="#icon-share"></use></svg></i>
-                                        </a>
-                                    </div>
-                                    <div class="col-3 ml-auto show-mobile">
-                                       <div class="tt-value">4 Jan,19</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tt-col-category tt-col-value-large hide-mobile"><span class="tt-color13 tt-badge">nature</span></div>
-                            <div class="tt-col-category tt-col-value-large hide-mobile">
-                                <a href="#" class="tt-btn-icon">
-                                     <i class="tt-icon"><svg><use xlink:href="#icon-share"></use></svg></i>
-                                </a>
-                            </div>
-                            <div class="tt-col-value-large hide-mobile">4 Jan,19</div>
-                        </div>
-                        <div class="tt-item">
-                            <div class="tt-col-avatar">
-                               <svg class="tt-icon">
-                                  <use xlink:href="#icon-ava-t"></use>
-                                </svg>
-                            </div>
-                            <div class="tt-col-description">
-                                <h6 class="tt-title"><a href="#">
-                                    Cannot customize my intro
-                                </a></h6>
-                                <div class="tt-col-message">
-                                    <a href="#">Dylan replied:</a> I am noticed it will take little more time to review new authors submissions. All the Best
-                                </div>
-                                <div class="row align-items-center no-gutters hide-desktope">
-                                    <div class="col-9">
-                                        <ul class="tt-list-badge">
-                                            <li class="show-mobile"><a href="#"><span class="tt-color04 tt-badge">pets</span></a></li>
-                                        </ul>
-                                        <a href="#" class="tt-btn-icon show-mobile">
-                                            <i class="tt-icon"><svg><use xlink:href="#icon-reply"></use></svg></i>
-                                        </a>
-                                    </div>
-                                    <div class="col-3 ml-auto show-mobile">
-                                       <div class="tt-value">4 Jan,19</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tt-col-category tt-col-value-large hide-mobile"><span class="tt-color04 tt-badge">pets</span></div>
-                            <div class="tt-col-value-large hide-mobile">
-                                <a href="#" class="tt-btn-icon">
-                                    <i class="tt-icon"><svg><use xlink:href="#icon-reply"></use></svg></i>
-                                </a>
-                            </div>
-                            <div class="tt-col-value-large hide-mobile">4 Jan,19</div>
-                        </div>
-                        <div class="tt-item">
-                            <div class="tt-col-avatar">
-                               <svg class="tt-icon">
-                                  <use xlink:href="#icon-ava-d"></use>
-                                </svg>
-                            </div>
-                            <div class="tt-col-description">
-                                <h6 class="tt-title"><a href="#">
-                                    Web Hosting Packages for ThemeForest WordPress
-                                </a></h6>
-                                <div class="row align-items-center no-gutters">
-                                    <div class="col-9">
-                                        <ul class="tt-list-badge">
-                                            <li class="show-mobile"><a href="#"><span class="tt-color03 tt-badge">exchange</span></a></li>
-                                            <li><a href="#"><span class="tt-badge">themeforest</span></a></li>
-                                            <li><a href="#"><span class="tt-badge">elements</span></a></li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-3 ml-auto show-mobile">
-                                       <div class="tt-value">4 Jan,19</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tt-col-category tt-col-value-large"><span class="tt-color03 tt-badge">exchange</span></div>
-                            <div class="tt-col-value-large hide-mobile"></div>
-                            <div class="tt-col-value-large hide-mobile">4 Jan,19</div>
-                        </div>
-                        <div class="tt-item">
-                            <div class="tt-col-avatar">
-                               <svg class="tt-icon">
-                                  <use xlink:href="#icon-ava-k"></use>
-                                </svg>
-                            </div>
-                            <div class="tt-col-description">
-                                <h6 class="tt-title"><a href="#">
-                                    <svg class="tt-icon">
-                                      <use xlink:href="#icon-verified"></use>
-                                    </svg>
-                                    Microsoft Word and Power Point
-                                </a></h6>
-                                <div class="row align-items-center no-gutters hide-desktope">
-                                    <div class="col-9">
-                                        <ul class="tt-list-badge">
-                                            <li class="show-mobile"><a href="#"><span class="tt-color08 tt-badge">youtube</span></a></li>
-                                        </ul>
-                                        <a href="#" class="tt-btn-icon show-mobile">
-                                             <i class="tt-icon"><svg><use xlink:href="#icon-favorite"></use></svg></i>
-                                        </a>
-                                    </div>
-                                    <div class="col-3 ml-auto show-mobile">
-                                       <div class="tt-value">3 Jan,19</div>
-                                    </div>
-                                </div>
-                            </div>
-                           <div class="tt-col-category tt-col-value-large"><span class="tt-color08 tt-badge">youtube</span></div>
-                            <div class="tt-col-value-large hide-mobile">
-                                <a href="#" class="tt-btn-icon">
-                                     <i class="tt-icon"><svg><use xlink:href="#icon-favorite"></use></svg></i>
-                                </a>
-                            </div>
-                            <div class="tt-col-value-large hide-mobile">3 Jan,19</div>
-                        </div>
-                        <div class="tt-item">
-                            <div class="tt-col-avatar">
-                               <svg class="tt-icon">
-                                  <use xlink:href="#icon-ava-v"></use>
-                                </svg>
-                            </div>
-                            <div class="tt-col-description">
-                                <h6 class="tt-title"><a href="#">
-                                    First website template got rejected.
-                                </a></h6>
-                                <div class="row align-items-center no-gutters hide-desktope">
-                                    <div class="col-9">
-                                        <ul class="tt-list-badge">
-                                            <li class="show-mobile"><span class="tt-color09 tt-badge">social</span></li>
-                                        </ul>
-                                        <a href="#" class="tt-btn-icon show-mobile">
-                                             <i class="tt-icon"><svg><use xlink:href="#icon-like"></use></svg></i>
-                                        </a>
-                                    </div>
-                                    <div class="col-3 ml-auto show-mobile">
-                                       <div class="tt-value">3 Jan,19</div>
-                                    </div>
-                                </div>
-                            </div>
-                           <div class="tt-col-category tt-col-value-large"><span class="tt-color09 tt-badge">social</span></div>
-                           <div class="tt-col-value-large hide-mobile">
-                                <a href="#" class="tt-btn-icon">
-                                     <i class="tt-icon"><svg><use xlink:href="#icon-like"></use></svg></i>
-                                </a>
-                            </div>
-                            <div class="tt-col-value-large hide-mobile">3 Jan,19</div>
-                        </div>
-                        <div class="tt-item">
-                            <div class="tt-col-avatar">
-                               <svg class="tt-icon">
-                                  <use xlink:href="#icon-ava-k"></use>
-                                </svg>
-                            </div>
-                            <div class="tt-col-description">
-                                <h6 class="tt-title"><a href="#">
-                                    <svg class="tt-icon">
-                                      <use xlink:href="#icon-pinned"></use>
-                                    </svg>
-                                    Proform or looking for contacting billing department
-                                </a></h6>
-                                <div class="row align-items-center no-gutters">
-                                    <div class="col-9">
-                                        <ul class="tt-list-badge">
-                                            <li class="show-mobile"><a href="#"><span class="tt-color10 tt-badge">science</span></a></li>
-                                            <li><a href="#"><span class="tt-badge">contests</span></a></li>
-                                            <li><a href="#"><span class="tt-badge">authors</span></a></li>
-                                        </ul>
-                                        <a href="#" class="tt-btn-icon show-mobile">
-                                             <i class="tt-icon"><svg><use xlink:href="#icon-like"></use></svg></i>
-                                        </a>
-                                    </div>
-                                    <div class="col-3 ml-auto show-mobile">
-                                       <div class="tt-value">2 Jan,19</div>
-                                    </div>
-                                </div>
-                            </div>
-                           <div class="tt-col-category tt-col-value-large"><span class="tt-color10 tt-badge">science</span></div>
-                            <div class="tt-col-value-large hide-mobile">
-                                <a href="#" class="tt-btn-icon">
-                                     <i class="tt-icon"><svg><use xlink:href="#icon-like"></use></svg></i>
-                                </a>
-                            </div>
-                            <div class="tt-col-value-large hide-mobile">2 Jan,19</div>
-                        </div>
-                        <div class="tt-item">
-                            <div class="tt-col-avatar">
-                               <svg class="tt-icon">
-                                  <use xlink:href="#icon-ava-n"></use>
-                                </svg>
-                            </div>
-                            <div class="tt-col-description">
-                                <h6 class="tt-title"><a href="#">
-                                    Does Envato act against the authors of Envato markets?
-                                </a></h6>
-                                <div class="tt-col-message">
-                                    <a href="#">Dylan replied:</a> It’s time to channel your inner Magnum P.I., Ron Swanson or Hercule Poroit! It’s the time that all guys (or gals) love and all our partners hate It’s Movember!
-                                </div>
-                                <div class="row align-items-center no-gutters hide-desktope">
-                                    <div class="col-9">
-                                        <ul class="tt-list-badge">
-                                            <li class="show-mobile"><a href="#"><span class="tt-color05 tt-badge">music</span></a></li>
-                                        </ul>
-                                        <a href="#" class="tt-btn-icon show-mobile">
-                                            <i class="tt-icon"><svg><use xlink:href="#icon-reply"></use></svg></i>
-                                        </a>
-                                    </div>
-                                    <div class="col-3 ml-auto show-mobile">
-                                       <div class="tt-value">5 Jan,19</div>
-                                    </div>
-                                </div>
-                            </div>
-                           <div class="tt-col-category tt-col-value-large"><span class="tt-color05 tt-badge">music</span></div>
-                           <div class="tt-col-value-large hide-mobile">
-                                <a href="#" class="tt-btn-icon">
-                                    <i class="tt-icon"><svg><use xlink:href="#icon-reply"></use></svg></i>
-                                </a>
-                            </div>
-                            <div class="tt-col-value-large hide-mobile">5 Jan,19</div>
-                        </div>
-                        <div class="tt-item">
-                            <div class="tt-col-avatar">
-                               <svg class="tt-icon">
-                                  <use xlink:href="#icon-ava-h"></use>
-                                </svg>
-                            </div>
-                            <div class="tt-col-description">
-                                <h6 class="tt-title"><a href="#">
-                                    <svg class="tt-icon">
-                                      <use xlink:href="#icon-locked"></use>
-                                    </svg>
-                                    We Want to Hear From You! What Would You Like?
-                                </a></h6>
-                                 <div class="row align-items-center no-gutters hide-desktope">
-                                    <div class="col-9">
-                                        <ul class="tt-list-badge">
-                                            <li class="show-mobile"><a href="#"><span class="tt-color06 tt-badge">movies</span></a></li>
-                                        </ul>
-                                        <a href="#" class="tt-btn-icon show-mobile">
-                                            <i class="tt-icon"><svg><use xlink:href="#icon-reply"></use></svg></i>
-                                        </a>
-                                    </div>
-                                    <div class="col-3 ml-auto show-mobile">
-                                       <div class="tt-value">5 Jan,19</div>
-                                    </div>
-                                </div>
-                            </div>
-                           <div class="tt-col-category tt-col-value-large"><span class="tt-color06 tt-badge">movies</span></div>
-                            <div class="tt-col-value-large hide-mobile">
-                                <a href="#" class="tt-btn-icon">
-                                    <i class="tt-icon"><svg><use xlink:href="#icon-reply"></use></svg></i>
-                                </a>
-                            </div>
-                            <div class="tt-col-value-large hide-mobile">5 Jan,19</div>
-                        </div>
-                        <div class="tt-item">
-                            <div class="tt-col-avatar">
-                               <svg class="tt-icon">
-                                  <use xlink:href="#icon-ava-j"></use>
-                                </svg>
-                            </div>
-                            <div class="tt-col-description">
-                                <h6 class="tt-title"><a href="#">
-                                    Seeking partner backend developer
-                                </a></h6>
-                                 <div class="row align-items-center no-gutters">
-                                    <div class="col-9">
-                                        <ul class="tt-list-badge">
-                                            <li class="show-mobile"><a href="#"><span class="tt-color13 tt-badge">nature</span></a></li>
-                                            <li><a href="#"><span class="tt-badge">themeforest</span></a></li>
-                                            <li><a href="#"><span class="tt-badge">elements</span></a></li>
-                                        </ul>
-                                        <a href="#" class="tt-btn-icon show-mobile">
-                                            <i class="tt-icon"><svg><use xlink:href="#icon-share"></use></svg></i>
-                                        </a>
-                                    </div>
-                                    <div class="col-3 ml-auto show-mobile">
-                                       <div class="tt-value">4 Jan,19</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tt-col-category tt-col-value-large"><span class="tt-color13 tt-badge">nature</span></div>
-                            <div class="tt-col-value-large hide-mobile">
-                                <a href="#" class="tt-btn-icon">
-                                    <i class="tt-icon"><svg><use xlink:href="#icon-share"></use></svg></i>
-                                </a>
-                            </div>
-                            <div class="tt-col-value-large hide-mobile">4 Jan,19</div>
-                        </div>
-                        <div class="tt-item">
-                            <div class="tt-col-avatar">
-                               <svg class="tt-icon">
-                                  <use xlink:href="#icon-ava-t"></use>
-                                </svg>
-                            </div>
-                            <div class="tt-col-description">
-                                <h6 class="tt-title"><a href="#">
-                                    Cannot customize my intro
-                                </a></h6>
-                                <div class="tt-col-message">
-                                    <a href="#">Dylan replied:</a> I am noticed it will take little more time to review new authors submissions. All the Best
-                                </div>
-                                 <div class="row align-items-center no-gutters hide-desktope">
-                                    <div class="col-9">
-                                        <ul class="tt-list-badge">
-                                            <li class="show-mobile"><a href="#"><span class="tt-color04 tt-badge">pets</span></a></li>
-                                        </ul>
-                                        <a href="#" class="tt-btn-icon show-mobile">
-                                            <i class="tt-icon"><svg><use xlink:href="#icon-reply"></use></svg></i>
-                                        </a>
-                                    </div>
-                                    <div class="col-3 ml-auto show-mobile">
-                                       <div class="tt-value">4 Jan,19</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tt-col-category tt-col-value-large"><span class="tt-color04 tt-badge">pets</span></div>
-                            <div class="tt-col-value-large hide-mobile">
-                                <a href="#" class="tt-btn-icon">
-                                    <i class="tt-icon"><svg><use xlink:href="#icon-reply"></use></svg></i>
-                                </a>
-                            </div>
-                            <div class="tt-col-value-large hide-mobile">4 Jan,19</div>
-                        </div>
-                        <div class="tt-item">
-                            <div class="tt-col-avatar">
-                               <svg class="tt-icon">
-                                  <use xlink:href="#icon-ava-d"></use>
-                                </svg>
-                            </div>
-                            <div class="tt-col-description">
-                                <h6 class="tt-title"><a href="#">
-                                    Web Hosting Packages for ThemeForest WordPress
-                                </a></h6>
-                                 <div class="row align-items-center no-gutters">
-                                    <div class="col-9">
-                                        <ul class="tt-list-badge">
-                                            <li class="show-mobile"><a href="#"><span class="tt-color03 tt-badge">exchange</span></a></li>
-                                            <li><a href="#"><span class="tt-badge">themeforest</span></a></li>
-                                            <li><a href="#"><span class="tt-badge">elements</span></a></li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-3 ml-auto show-mobile">
-                                       <div class="tt-value">4 Jan,19</div>
-                                    </div>
-                                </div>
-                            </div>
-                           <div class="tt-col-category tt-col-value-large"><span class="tt-color03 tt-badge">exchange</span></div>
-                           <div class="tt-col-value-large hide-mobile"></div>
-                           <div class="tt-col-value-large hide-mobile">4 Jan,19</div>
-                        </div>
-                        <div class="tt-row-btn">
-                            <button type="button" class="btn-icon js-topiclist-showmore">
-                                <svg class="tt-icon">
-                                  <use xlink:href="#icon-load_lore_icon"></use>
-                                </svg>
-                            </button>
-                        </div> -->
                     </div>
                 </div>
                 <div class="tab-pane tt-indent-none" id="tt-tab-02" role="tabpanel">
@@ -2833,7 +2407,6 @@
 <script src="/static/js/jquery.js"></script>
 <script type="application/javascript">
 $(document).ready(function(){
-    console.log("jquery ready!");
 });
 </script>
 <svg width="0" height="0" class="hidden">
