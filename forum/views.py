@@ -191,7 +191,8 @@ def update_profile_view(request):
         update_profile_form.fields['location'].required = False 
         update_profile_form.fields['about'].required = False 
         if update_profile_form.is_valid():
-            if request.FILES["profile_pic"]:
+            # if request.FILES["profile_pic"]:
+            if request.FILES:
                 # update_profile_form.cleaned_data.get('profile_pic').url = "/static" + update_profile_form.cleaned_data.get('profile_pic').url
                 # forum_user.profile_pic = update_profile_form.cleaned_data.get('profile_pic')
                 forum_user.profile_pic = request.FILES["profile_pic"]
