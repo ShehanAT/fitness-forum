@@ -154,7 +154,7 @@
                             <i class="tt-icon"><svg><use xlink:href="#icon-notification"></use></svg></i>
                         </a>
                         <div class="tt-avatar-icon tt-size-md">
-                            <img class="tt-icon" id="user-profile-pic" src="{{ forum_user.profile_pic_path }}"/>
+                            <img class="tt-icon" id="user-profile-pic" src="{{ forum_user.profile_pic.url }}"/>
                         </div>
                         <div class="custom-select-01">
                             <div class="dropdown">
@@ -188,7 +188,7 @@
                         <div class="tt-item-header">
                             <div class="tt-item-info info-top">
                                 <div class="tt-avatar-icon">
-                                    <img src="{{ post.posted_by_id.forumuser.profile_pic }}" class="tt-icon"/>
+                                    <img src="{{ post.posted_by_id.forumuser.profile_pic.url }}" class="tt-icon"/>
                                     <!-- <i class="tt-icon"><svg><use xlink:href="#icon-ava-d"></use></svg></i> -->
                                 </div>
                                 <div class="tt-avatar-title">
