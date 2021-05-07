@@ -19,7 +19,7 @@ urlpatterns = [
     path('profile/update_profile', views.update_profile_view),
     path('profile/change_password', views.change_password_view),
     path('add_category', views.add_category_view),
-    path('category/<int:category_id>/', views.category_detail_view),
+    path('category/<int:category_id>', views.category_detail_view),
     path('category/<int:category_id>/add_thread', views.add_thread_view),
     path('category/<int:category_id>/thread/<int:thread_id>', views.thread_detail_view),
     path('category/<int:category_id>/thread/<int:thread_id>/add_post', views.add_post_view),

@@ -1185,9 +1185,6 @@ $(document).ready(function(){
                         return 
                     }
                     if(element.profile_pic){
-                        // profile_pic = element.profile_pic.slice(1)
-                        // profile_pic = profile_pic.substring(profile_pic.indexOf("/"))
-                        // element.profile_pic = profile_pic 
                         $("#tt-tab-04 .tt-not-following-list").append(`
                         <div class="tt-item">
                             <div class="tt-col-merged">
@@ -1243,13 +1240,9 @@ $(document).ready(function(){
                             <div class="tt-col-value"></div>
                         </div>
                 `)
-                // <div class="tt-col-value-large hide-mobile">Threads</div>
-                // <div class="tt-col-value-large hide-mobile">Replies</div>
+
                 following.forEach(element => {
                     if(element.profile_pic){
-                        // profile_pic = element.profile_pic.slice(1)
-                        // profile_pic = profile_pic.substring(profile_pic.indexOf("/"))
-                        // element.profile_pic = profile_pic 
                         $("#tt-tab-04 .tt-following-list").append(`
                         <div class="tt-item">
                             <div class="tt-col-merged">
@@ -1330,9 +1323,6 @@ $(document).ready(function(){
                 `)
                 followers.forEach(element => {
                     if(element.profile_pic){
-                        profile_pic = element.profile_pic.slice(1)
-                        profile_pic = profile_pic.substring(profile_pic.indexOf("/"))
-                        element.profile_pic = profile_pic 
                         $("#tt-tab-05 .tt-followers-list").append(`
                         <div class="tt-item">
                             <div class="tt-col-merged">
