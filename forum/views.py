@@ -199,14 +199,10 @@ def update_profile_view(request):
         update_profile_form.fields['location'].required = False 
         update_profile_form.fields['about'].required = False 
         if update_profile_form.is_valid():
-            # if request.FILES["profile_pic"]:
             if request.FILES:
-                # update_profile_form.cleaned_data.get('profile_pic').url = "/static" + update_profile_form.cleaned_data.get('profile_pic').url
-                # forum_user.profile_pic = update_profile_form.cleaned_data.get('profile_pic')
                 forum_user.profile_pic = request.FILES["profile_pic"]
                 forum_user.save()
             update_profile_form.save() 
-            # forum_user.save()
             return redirect("/profile/update_profile")
         else: 
             return render(request, "update_profile.html", {"user": forum_user, "update_profile_form": update_profile_form})
@@ -379,7 +375,13 @@ def thread_detail_view(request, category_id, thread_id):
         except ObjectDoesNotExist: 
             post.signature = None 
     add_post_form = AddPostForm()
-    return render(request, "page-single-thread.html", {"posts":  posts, "category": category, "thread": thread, "forum_user": forum_user, "add_post_form": add_post_form})
+
+    post_paginator = Paginator(posts, 4)
+    post_page_number = request.GET.get("page")
+    # post_paginator_page_number = post_paginator.get_page(post_page_number)
+    post_paginator_obj = post_paginator.get_page(post_page_number)
+
+    return render(request, "page-single-thread.html", {"posts":  posts, "post_paginator_obj": post_paginator_obj, "category": category, "thread": thread, "forum_user": forum_user, "add_post_form": add_post_form})
 
 def add_post_view(request, category_id, thread_id):
     category_name = Category.objects.filter(category_id=category_id).values()[0]["name"]

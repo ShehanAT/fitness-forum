@@ -182,7 +182,7 @@
     <div class="container">
         <div class="tt-title"><strong>{{ thread.subject }}</strong></div>
         <div class="tt-single-topic-list">
-            {% for post in posts %}
+            {% for post in post_paginator_obj %}
                 <div class="tt-item">
                     <div class="tt-single-topic">
                         <div class="tt-item-header">
@@ -309,6 +309,21 @@
                     </div>
                 </div>
             {% endfor %}
+            <div class="pagination">
+                <span class="step-links">
+                    {% if post_paginator_obj.has_previous %} 
+                        <a href="?page=1">&laquo; first</a>
+                        <a href="?page={{ post_paginator_obj.previous_page_number}}">previous</a>
+                    {% endif %}
+                    <span class="current">
+                        Page {{ post_paginator_obj.number }} of {{ post_paginator_obj.paginator.num_pages}}.
+                    </span>
+                    {% if post_paginator_obj.has_next %} 
+                        <a href="?page={{ post_paginator_obj.next_page_number }}">next</a>
+                        <a href="?page={{ post_paginator_obj.paginator.num_pages }}">last &raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
         </div>
         <div class="tt-wrapper-inner">
             <h4 class="tt-title-separator"><span>You’ve reached the end of replies</span></h4>
