@@ -342,29 +342,6 @@
                     </div>
                    
                 </div>
-                <!-- <div class="tab-pane tt-indent-none" id="tt-tab-02" role="tabpanel">
-                    <div class="tt-topic-list">
-                        <div class="tt-list-header">
-                            <div class="tt-col-topic">Topic</div>
-                            <div class="tt-col-category">Category</div>
-                            <div class="tt-col-value hide-mobile">Likes</div>
-                            <div class="tt-col-value hide-mobile">Replies</div>
-                            <div class="tt-col-value hide-mobile">Views</div>
-                            <div class="tt-col-value">Activity</div>
-                        </div>
-                    
-                        <div class="tt-row-btn">
-                            <button type="button" class="btn-icon js-topiclist-showmore">
-                                <svg class="tt-icon">
-                                  <use xlink:href="#icon-load_lore_icon"></use>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="tab-pane tt-indent-none" id="tt-tab-03" role="tabpanel">
-                  
-                </div> -->
                 <div class="tab-pane tt-indent-none" id="tt-tab-04" role="tabpanel">
                     <div class="tt-following-list">
                         
@@ -1135,82 +1112,9 @@ $(document).ready(function(){
     $(".settings-btn").on('click', function(e){
     });
     $("#activity-btn-tab").on("click", function(e){
-        // $("#reply-btn-tab").removeClass("active");
         $("#following-btn-tab").removeClass("active");
         $("#followers-btn-tab").removeClass("active");
     });
-
-    /*
-    $("#reply-btn-tab").on("click", function(e){
-        $("#activity-btn-tab").removeClass("active");
-        $("#following-btn-tab").removeClass("active");
-        $("#followers-btn-tab").removeClass("active");
-
-
-        const csrf = document.getElementsByName('csrfmiddlewaretoken')
-        var url = "/profile/show_profile/replies"
-        var fd = new FormData()
-        fd.append('csrfmiddlewaretoken', csrf[0].value)
-        $.ajax({
-        type: 'POST',
-        url: url, 
-        enctype: 'multipart/form-data',
-        data: fd,
-        success: function(response){
-            $("#tt-tab-03 .tt-topic-list").empty()
-            $("#tt-tab-03 .tt-topic-list").append(`
-                <div class="tt-list-header">
-                    <div class="tt-col-topic">Topic</div>
-                    <div class="tt-col-category">Category</div>
-                    <div class="tt-col-value">Posted on</div>
-                </div>
-            `)
-            console.log(response.data);
-            var postObjects = response.response.data
-            
-            postObjects.forEach(element => {
-                $("#tt-tab-03 .tt-topic-list").append(`
-                <div class="tt-item">
-                                <div class="tt-col-avatar">
-                                <svg class="tt-icon">
-                                    <use xlink:href="#icon-ava-d"></use>
-                                    </svg>
-                                </div>
-                                <div class="tt-col-description">
-                                    <h6 class="tt-title"><a href="#">
-                                        Thread: ${element.thread_id.subject}
-                                    </a></h6>
-                                    <div class="row align-items-center no-gutters hide-desktope">
-                                        <div class="col-9">
-                                            <ul class="tt-list-badge">
-                                                <li class="show-mobile"><a href="#"><span class="tt-color06 tt-badge">movies</span></a></li>
-                                            </ul>
-                                        </div>
-                                        <div class="col-3 ml-auto show-mobile">
-                                            <div class="tt-value">5 Jan,19</div>
-                                        </div>
-                                    </div>
-                                    <div class="tt-content">
-                                        Post: ${element.message}
-                                    </div>
-                                </div>
-                                <div class="tt-col-category"><a href="#">${element.thread_id.category_id.name}</a></div>
-                                <div class="tt-col-value-large hide-mobile">${element.created_on}</div>
-                            </div>`)
-            });
-            //    <span class="tt-color06 tt-badge"></span>
-        },
-        error: function(error){
-            console.log(error)
-        },
-        cache: false,
-        contentType: false,
-        processData: false
-    });
-
-    });
-    */
-
 
     $("#following-btn-tab").on("click", function(e){
         $("#activity-btn-tab").removeClass("active");
@@ -1404,7 +1308,6 @@ $(document).ready(function(){
                                              
                         </div>
                         `)
-                        //   <div class="tt-col-value"><span class="tt-color19 tt-badge unfollow-btn" data-user-id="${element.id}">Unfollow</span></div>     
                     }else{
                         $("#tt-tab-05 .tt-followers-list").append(`
                         <div class="tt-item">
@@ -1425,7 +1328,6 @@ $(document).ready(function(){
                             
                         </div>
                         `)
-                        // <div class="tt-col-value"><span class="tt-color19 tt-badge unfollow-btn" data-user-id="${element.id}">Unfollow</span></div>
                     }
                 });
             },

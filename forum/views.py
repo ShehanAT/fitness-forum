@@ -150,25 +150,6 @@ def show_profile_view(request):
 
     return render(request, "show_profile.html", {"user": forum_user, "all_activity": all_activity, "activity_page_obj": activity_page_obj, "reply_posts_obj": reply_posts_obj})
 
-# def show_profile_replies_view(request):
-#     user = User.objects.get(id=request.user.id)
-#     reply_posts = Post.objects.filter(posted_by_id=user.id, first_reply_to_id__isnull=False)
-#     response_data = PostSerializer(reply_posts, many=True)
-#     paginator = Paginator(response_data.data, 10)
-#     page_number = request.GET.get("replies_page")
-#     replies_page_obj = paginator.get_page(page_number)
-#     return JsonResponse(replies_page_obj, safe=False)
-    # return JsonResponse(response_data.data, safe=False)
-
-class ShowProfileRepliesView(ViewPaginatorMixin, ListView):
-    def post(self, request):
-        limit = 10
-        page = request.GET.get("replies_page")
-        user = User.objects.get(id=request.user.id)
-        reply_posts = Post.objects.filter(posted_by_id=user.id, first_reply_to_id__isnull=False)
-        response_data = PostSerializer(reply_posts, many=True)
-        return JsonResponse({"response": self.paginate(response_data.data, page, limit)})
-
 def show_profile_following_view(request):
     user = ForumUser.objects.get(id=request.user.id)
     if request.method == "POST":
