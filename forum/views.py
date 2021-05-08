@@ -460,6 +460,11 @@ def trending_view(request):
     data["day_7_active_users"] = len(ForumUser.objects.filter(is_active=True, member_since__gte=(utils_timezone.now().date() - timedelta(days=7))))
     data["day_7_likes"] = len(Like.objects.filter(created_on__gte=(utils_timezone.now().date() - timedelta(days=7))))
 
+    # most_viewed_threads_top_5 = 0
+    # most_replied_threads_top_5 = 0
+    # new_posts_top_5 = 0 
+
+
     return render(request, "page-trending.html", { "user": forum_user, "data": data })
 
 def about_view(request):
