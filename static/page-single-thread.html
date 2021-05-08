@@ -51,7 +51,9 @@
                     <nav>
                         <ul>
                             <li><a href="/categories"><span>Categories</span></a></li>
-                            <li><a href="/trending"><span>Trending</span></a></li>
+                            {% if request.session.logged_in %}
+                                <li><a href="/trending"><span>Trending</span></a></li>
+                            {% endif %}
                             <li><a href="/about"><span>About</span></a></li>
                             <li>
                                 <a href="/profile/show_profile"><span>Profile</span></a>

@@ -46,12 +46,11 @@ def login_view(request):
         user = authenticate(username=username, password=password)
         if user is not None:
             login(request, user)
-            request.session['username'] = username
-            request.session['logged_in'] = True
+            request.session["username"] = username
+            request.session["logged_in"] = True
             categories = Category.objects.all().values()
             return redirect("/")
         else:
-            # return render(request, "login_view.html", {"errors": "Incorrect username/password combo"})
             errors = []
             if username == "":
                 errors.append("Username: This field is required")
@@ -60,8 +59,7 @@ def login_view(request):
             errors.append("Invalid Username/Password combination")
             return render(request, "page-login.html", {"errors": errors})
     else:
-        request.session['logged_in'] = False 
-        # return render(request, "login_view.html", {})
+        request.session["logged_in"] = False 
         return render(request, "page-login.html", {})
 
 def logout_view(request):
@@ -232,7 +230,7 @@ def index_view(request):
     categories = Category.objects.all().values()
     forum_user = None 
     try: 
-        if request.session['logged_in']:
+        if request.user.is_authenticated:
             forum_user = ForumUser.objects.get(id=request.user.id)
             forum_user.profile_pic_path = str(forum_user.profile_pic)
         for c in categories: 
@@ -253,7 +251,7 @@ def index_view(request):
 
 def add_category_view(request):
     forum_user = None 
-    if request.session['logged_in']:
+    if request.user.is_authenticated:
         forum_user = ForumUser.objects.get(id=request.user.id)
         forum_user.profile_pic_path = str(forum_user.profile_pic)
     if request.method == "POST":
@@ -280,7 +278,7 @@ def category_detail_view(request, category_id):
     threads = Thread.objects.filter(category_id=category_id).values()
     forum_user = None 
     tags = category.tags.all()  
-    if request.session['logged_in']:
+    if request.user.is_authenticated:
         forum_user = ForumUser.objects.get(id=request.user.id)
         forum_user.profile_pic_path = str(forum_user.profile_pic)
     try:
@@ -306,7 +304,6 @@ def add_thread_view(request, category_id):
     category = Category.objects.get(category_id=category_id)
     if request.method == "POST":
         add_thread_form = AddThreadForm(request.POST)
-        # add_thread_tags_form = AddThreadTagForm(request.POST)
         if add_thread_form.is_valid():
             thread_subject = add_thread_form.cleaned_data['subject']
             thread_message = add_thread_form.cleaned_data['message']
@@ -332,7 +329,6 @@ def add_thread_view(request, category_id):
         return redirect(redirect_url)
     else:
         add_thread_form = AddThreadForm()
-        # add_thread_tags_form = AddThreadTagForm()
         return render(request, "page-create-thread.html", {"category": category, "add_thread_form": add_thread_form })
 
 def thread_detail_view(request, category_id, thread_id):
@@ -344,7 +340,7 @@ def thread_detail_view(request, category_id, thread_id):
     thread_name = thread.subject
     thread.views = thread.views + 1
     thread.save()
-    if request.session['logged_in']:
+    if request.user.is_authenticated:
         forum_user = ForumUser.objects.get(id=request.user.id)
         forum_user.profile_pic_path = str(forum_user.profile_pic)
     post_votes = []
@@ -440,7 +436,11 @@ def edit_post_view(request, category_id, thread_id, post_id):
         return render(request, "page-single-thread-edit.html", {"edit_post_form": edit_form, "category": category, "thread": thread, "post": post})
 
 def trending_view(request):
-    return render(request, "page-tabs.html", {})
+    if request.user.is_authenticated:
+        forum_user = ForumUser.objects.get(id=request.user.id)
+        return render(request, "page-trending.html", { "user": forum_user })
+    
+    return render(request, "page-trending.html", {})
 
 def about_view(request):
     return render(request, "page-tabs_guidelines.html", {})
