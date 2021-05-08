@@ -54,12 +54,14 @@
                             <li><a href="/trending"><span>Trending</span></a></li>
                             <li><a href="/about"><span>About</span></a></li>
                             <li>
-                                <a href="/profile/show_profile"><span>Profile</span></a>
-								<ul>
-									<li><a href="/profile/show_profile">Show Profile</a></li>
-									<li><a href="/profile/update_profile">Update Info</a></li>
-									<li><a href="/profile/change_password">Change password</a></li>
-								</ul>
+                                {% request.session.logged_in %}
+                                    <a href="/profile/show_profile"><span>Profile</span></a>
+                                    <ul>
+                                        <li><a href="/profile/show_profile">Show Profile</a></li>
+                                        <li><a href="/profile/update_profile">Update Info</a></li>
+                                        <li><a href="/profile/change_password">Change password</a></li>
+                                    </ul>
+                                {% endif %}
 							</li>
                         </ul>
                     </nav>

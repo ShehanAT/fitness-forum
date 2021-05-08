@@ -50,15 +50,19 @@
                     <nav>
                         <ul>
                             <li><a href="/categories"><span>Categories</span></a></li>
-                            <li><a href="/trending"><span>Trending</span></a></li>
+                            {% if request.session.logged_in %}
+                                <li><a href="/trending"><span>Trending</span></a></li>
+                            {% endif %}
                             <li><a href="/about"><span>About</span></a></li>
                             <li>
-                                <a href="/profile/show_profile"><span>Profile</span></a>
-								<ul>
-									<li><a href="/profile/show_profile">Show Profile</a></li>
-									<li><a href="/profile/update_profile">Update Info</a></li>
-									<li><a href="/profile/change_password">Change password</a></li>
-								</ul>
+                                {% if request.session.logged_in %}
+                                    <a href="/profile/show_profile"><span>Profile</span></a>
+                                    <ul>
+                                        <li><a href="/profile/show_profile">Show Profile</a></li>
+                                        <li><a href="/profile/update_profile">Update Info</a></li>
+                                        <li><a href="/profile/change_password">Change password</a></li>
+                                    </ul>
+                                {% endif %}
 							</li>
                         </ul>
                     </nav>
@@ -148,19 +152,30 @@
             </div>
             <div class="col-auto ml-auto">
                  <div class="tt-user-info d-flex justify-content-center">
-                    <a href="#" class="tt-btn-icon">
-                         <i class="tt-icon"><svg><use xlink:href="#icon-notification"></use></svg></i>
-                    </a>
-                    <div class="tt-avatar-icon tt-size-md">
-                        <i class="tt-icon"><svg><use xlink:href="#icon-ava-a"></use></svg></i>
-                    </div>
-                    <div class="custom-select-01">
-                        <select>
-                            <option value="Default Sorting">azyrusmax</option>
-                            <option value="value 01">value 01</option>
-                            <option value="value 02">value 02</option>
-                        </select>
-                    </div>
+                    {% if request.session.logged_in %}
+                        <a href="#" class="tt-btn-icon">
+                            <i class="tt-icon"><svg><use xlink:href="#icon-notification"></use></svg></i>
+                        </a>
+                        <div class="tt-avatar-icon tt-size-md">
+                            <img class="tt-icon" id="user-profile-pic" src="{{ user.profile_pic.url }}"/>
+                        </div>
+                        <div class="custom-select-01">
+                            <div class="dropdown">
+                                <button class="dropbtn">{{ request.session.username }}</button>
+                                <div class="dropdown-content">
+                                    <a href="/profile">My Profile</a>
+                                    <a href="/logout">Log out</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="col-auto ml-auto">
+                            <div class="tt-account-btn">
+                                <a href="/login" class="btn btn-primary">Log in</a>
+                                <a href="/signup" class="btn btn-secondary">Sign up</a>
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

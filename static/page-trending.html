@@ -53,12 +53,14 @@
                             <li><a href="/trending"><span>Trending</span></a></li>
                             <li><a href="/about"><span>About</span></a></li>
                             <li>
-                                <a href="/profile/show_profile"><span>Profile</span></a>
-								<ul>
-									<li><a href="/profile/show_profile">Show Profile</a></li>
-									<li><a href="/profile/update_profile">Update Info</a></li>
-									<li><a href="/profile/change_password">Change password</a></li>
-								</ul>
+                                {% if request.session.logged_in %}
+                                    <a href="/profile/show_profile"><span>Profile</span></a>
+                                    <ul>
+                                        <li><a href="/profile/show_profile">Show Profile</a></li>
+                                        <li><a href="/profile/update_profile">Update Info</a></li>
+                                        <li><a href="/profile/change_password">Change password</a></li>
+                                    </ul>
+                                {% endif %}
 							</li>
                         </ul>
                     </nav>
@@ -443,40 +445,46 @@
                                     <tr>
                                         <th>Topic</th>
                                         <th>All Time</th>
-                                        <th>Last 7</th>
                                         <th>Last 30</th>
+                                        <th>Last 7</th>
                                     </tr>
                                 </thead>
                                 <tbody class="table-zebra">
                                     <tr>
-                                        <td>Topics</td>
-                                        <td>51.8k</td>
-                                        <td>263</td>
-                                        <td>1.2k</td>
+                                        <td>Category</td>
+                                        <td>{{ data.all_time_categories }}</td>
+                                        <td>{{ data.month_1_categories}}</td>
+                                        <td>{{ data.day_7_categories }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Thread</td>
+                                        <td>{{ data.all_time_threads }}</td>
+                                        <td>{{ data.month_1_threads }}</td>
+                                        <td>{{ data.day_7_threads }}</td>
                                     </tr>
                                     <tr>
                                         <td>Posts</td>
-                                        <td>624k</td>
-                                        <td>3.9k</td>
-                                        <td>15.4k</td>
+                                        <td>{{ data.all_time_posts }}</td>
+                                        <td>{{ data.month_1_posts }}</td>
+                                        <td>{{ data.day_7_posts }}</td>
                                     </tr>
                                     <tr>
                                         <td>Users</td>
-                                        <td>123k</td>
-                                        <td>698</td>
-                                        <td>3.3k</td>
+                                        <td>{{ data.all_time_users }}</td>
+                                        <td>{{ data.month_1_users }}</td>
+                                        <td>{{ data.day_7_users }}</td>
                                     </tr>
                                     <tr>
                                         <td>Active Users</td>
-                                        <td>--</td>
-                                        <td>2.8k</td>
-                                        <td>7.2k</td>
+                                        <td>{{ data.all_time_active_users }}</td>
+                                        <td>{{ data.month_1_active_users }}</td>
+                                        <td>{{ data.day_7_active_users }}</td>
                                     </tr>
                                     <tr>
                                         <td>Likes</td>
-                                        <td>224k</td>
-                                        <td>2.5k</td>
-                                        <td>9.2k</td>
+                                        <td>{{ data.all_time_likes }}</td>
+                                        <td>{{ data.month_1_likes }}</td>
+                                        <td>{{ data.day_7_likes }}</td>
                                     </tr>
                                 </tbody>
                             </table>

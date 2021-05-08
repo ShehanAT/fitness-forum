@@ -8,7 +8,7 @@ from django.core.management import call_command
 
 from django_seed import Seed 
 import random
-from forum.models import Category, Thread, Post, PostVote, PostVote, ForumUser, Tag
+from forum.models import Category, Thread, Post, PostVote, PostVote, ForumUser, Tag, Like 
 from django_seed import Seed 
 from django.contrib.auth.models import User 
 seeder = Seed.seeder()
@@ -17,6 +17,7 @@ category_num = 10
 thread_num = 50
 post_num = 100
 post_vote_num = 100
+like_num = 50
 VoteValueChoice = PostVote.VoteValueChoice
 # seeder.add_entity(Category, category_num)
 # seeder.execute()
@@ -61,9 +62,9 @@ VoteValueChoice = PostVote.VoteValueChoice
 #     post_vote.post_id = Post.objects.get(post_id=i+1)
 #     post_vote.save()
 
-user_vote_1st_quater = int(post_vote_num/4)
-user_vote_2nd_quater = int(user_vote_1st_quater*2)
-user_vote_3rd_quater = int(user_vote_1st_quater*3)
+# user_vote_1st_quater = int(post_vote_num/4)
+# user_vote_2nd_quater = int(user_vote_1st_quater*2)
+# user_vote_3rd_quater = int(user_vote_1st_quater*3)
 
 # for i in range(user_vote_1st_quater):
 #     post_vote = PostVote.objects.get(vote_id=i+1)
@@ -87,4 +88,9 @@ user_vote_3rd_quater = int(user_vote_1st_quater*3)
 
 
 # seeder.add_entity(Tag, 30)
+# seeder.execute()
+
+# seeder.add_entity(Like, like_num, {
+#     'category_id': Category.objects.get(category_id=1),
+# })
 # seeder.execute()

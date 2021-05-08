@@ -1,18 +1,19 @@
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render 
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
+from django.utils import timezone as utils_timezone
 from django.contrib.auth.models import User 
 from django.contrib.auth import authenticate, login, logout 
 from django.contrib.sessions.backends.db import SessionStore 
 from django.shortcuts import redirect
 from .forms import AddCategoryForm, AddThreadForm, SignUpForm, AddPostForm, ProfilePicForm, UpdateProfileForm, ChangePasswordForm, PostSignatureForm
-from .models import Category, Thread, Post, ForumUser, PostVote, PostSignature, Tag, UserFollowing
+from .models import Category, Thread, Post, ForumUser, PostVote, PostSignature, Tag, UserFollowing, Like
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.exceptions import ObjectDoesNotExist
 import logging 
 import humanize
 from itertools import chain
-from django.db.models import Q 
+from django.db.models import Q, Sum
 from django.core import serializers
 from .serializers import PostSerializer, ForumUserSerializer
 from django.core.paginator import Paginator
@@ -436,14 +437,36 @@ def edit_post_view(request, category_id, thread_id, post_id):
         return render(request, "page-single-thread-edit.html", {"edit_post_form": edit_form, "category": category, "thread": thread, "post": post})
 
 def trending_view(request):
-    if request.user.is_authenticated:
-        forum_user = ForumUser.objects.get(id=request.user.id)
-        return render(request, "page-trending.html", { "user": forum_user })
-    
-    return render(request, "page-trending.html", {})
+    forum_user = ForumUser.objects.get(id=request.user.id)
+    data = {}
+    data["all_time_categories"] = len(Category.objects.all())
+    data["all_time_posts"] = len(Post.objects.all())
+    data["all_time_threads"] = len(Thread.objects.all())
+    data["all_time_users"] = len(ForumUser.objects.all())
+    data["all_time_active_users"] = len(ForumUser.objects.filter(is_active=True))
+    data["all_time_likes"] =len(Like.objects.all())
+
+    data["month_1_categories"] = len(Category.objects.filter(created_on__gte=(utils_timezone.now().date() - timedelta(days=30))))
+    data["month_1_threads"] = len(Thread.objects.filter(created_on__gte=(utils_timezone.now().date() - timedelta(days=30))))
+    data["month_1_posts"] = len(Post.objects.filter(created_on__gte=(utils_timezone.now().date() - timedelta(days=30))))
+    data["month_1_users"] = len(ForumUser.objects.filter(member_since__gte=(utils_timezone.now().date() - timedelta(days=30))))
+    data["month_1_active_users"] = len(ForumUser.objects.filter(is_active=True, member_since__gte=(utils_timezone.now().date() - timedelta(days=30))))
+    data["month_1_likes"] = len(Like.objects.filter(created_on__gte=(utils_timezone.now().date() - timedelta(days=30))))
+
+    data["day_7_categories"] = len(Category.objects.filter(created_on__gte=(utils_timezone.now().date() - timedelta(days=7))))
+    data["day_7_threads"] = len(Thread.objects.filter(created_on__gte=(utils_timezone.now().date() - timedelta(days=7))))
+    data["day_7_posts"] = len(Post.objects.filter(created_on__gte=(utils_timezone.now().date() - timedelta(days=7))))
+    data["day_7_users"] = len(ForumUser.objects.filter(member_since__gte=(utils_timezone.now().date() - timedelta(days=7))))
+    data["day_7_active_users"] = len(ForumUser.objects.filter(is_active=True, member_since__gte=(utils_timezone.now().date() - timedelta(days=7))))
+    data["day_7_likes"] = len(Like.objects.filter(created_on__gte=(utils_timezone.now().date() - timedelta(days=7))))
+
+    return render(request, "page-trending.html", { "user": forum_user, "data": data })
 
 def about_view(request):
-    return render(request, "page-tabs_guidelines.html", {})
+    if request.user.is_authenticated:
+        forum_user = ForumUser.objects.get(id=request.user.id)
+        return render(request, "page-about.html", {"forum_user": forum_user})
+    return render(request, "page-about.html", {})
 
 def vote(request):
     if request.method == "POST":

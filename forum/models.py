@@ -40,10 +40,15 @@ class Category(models.Model):
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=500)
     tags = models.ManyToManyField(Tag)
-    likes = models.IntegerField(default=0)
+    created_on = models.DateField(default=datetime.now())
 
     def __str__(self):
         return self.name 
+
+class Like(models.Model):
+    like_id = models.AutoField(primary_key=True)
+    category_id = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
+    created_on = models.DateField(default=datetime.now())
 
 class Thread(models.Model):
     thread_id = models.AutoField(primary_key=True)
