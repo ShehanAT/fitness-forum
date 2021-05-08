@@ -3,7 +3,7 @@ from django.contrib.auth import views as auth_views
 from forum import views 
 from fitness_forum import settings
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns 
-
+from forum.views import ShowProfileRepliesView
 urlpatterns = [
     path('', views.index_view),
     path('categories', views.index_view),
@@ -12,7 +12,8 @@ urlpatterns = [
     path('logout', views.logout_view),
     path('profile', views.profile_view),
     path('profile/show_profile', views.show_profile_view),
-    path('profile/show_profile/replies', views.show_profile_replies_view),
+    # path('profile/show_profile/replies', views.show_profile_replies_view),
+    path('profile/show_profile/replies', ShowProfileRepliesView.as_view()),
     path('profile/show_profile/following', views.show_profile_following_view),
     path('profile/show_profile/unfollow', views.show_profile_unfollow_view),
     path('profile/show_profile/followers', views.show_profile_followers_view),

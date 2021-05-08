@@ -209,12 +209,6 @@
                     <li class="nav-item show">
                         <a class="nav-link active" data-toggle="tab" href="#tt-tab-01" role="tab" id="activity-btn-tab"><span>Activity</span></a>
                     </li>
-                    <li class="nav-item">
-                        <form>
-                            {% csrf_token %}
-                            <a class="nav-link" data-toggle="tab" href="#tt-tab-03" role="tab" id="reply-btn-tab"><span>Replies</span></a>
-                        </form>
-                    </li>
                     <li class="nav-item tt-hide-xs">
                         <a class="nav-link" data-toggle="tab" href="#tt-tab-04" role="tab" id="following-btn-tab"><span>Following</span></a>
                     </li>
@@ -232,7 +226,7 @@
                             <div class="tt-col-value-large hide-mobile"></div>
                             <div class="tt-col-value-large hide-mobile">Performed</div>
                         </div>
-                        {% for post in all_activity %}
+                        {% for post in activity_page_obj %}
                             <div class="tt-item">
                                 <div class="tt-col-avatar">
                                     <svg class="tt-icon">
@@ -279,7 +273,74 @@
                                 <div class="tt-col-value-large hide-mobile">{{ post.created_on }}</div>
                             </div>
                         {% endfor %}
+                        <div class="pagination">
+                            <span class="step-links">
+                                {% if activity_page_obj.has_previous %} 
+                                    <a href="?page=1">&laquo; first</a>
+                                    <a href="?page={{ activity_page_obj.previous_page_number}}">previous</a>
+                                {% endif %}
+                                <span class="current">
+                                    Page {{ activity_page_obj.number }} of {{ activity_page_obj.paginator.num_pages}}.
+                                </span>
+                                {% if activity_page_obj.has_next %} 
+                                    <a href="?page={{ activity_page_obj.next_page_number }}">next</a>
+                                    <a href="?page={{ activity_page_obj.paginator.num_pages }}">last &raquo;</a>
+                                {% endif %}
+                            </span>
+                        </div>
                     </div>
+                    <div class="tt-topic-list">
+                        <div class="tt-list-header">
+                            <div class="tt-col-topic">Topic</div>
+                            <div class="tt-col-category">Category</div>
+                            <div class="tt-col-value">Posted on</div>
+                        </div>
+                        {% for post in reply_posts_obj %}
+                            <div class="tt-item">
+                                <div class="tt-col-avatar">
+                                    <svg class="tt-icon">
+                                        <use xlink:href="#icon-ava-d"></use>
+                                    </svg>
+                                </div>
+                                <div class="tt-col-description">
+                                    <h6 class="tt-title"><a href="#">
+                                        Thread: {{ post.thread_id.subject }}
+                                    </a></h6>
+                                    <div class="row align-items-center no-gutters hide-desktope">
+                                        <div class="col-9">
+                                            <ul class="tt-list-badge">
+                                                <li class="show-mobile"><a href="#"><span class="tt-color06 tt-badge">movies</span></a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-3 ml-auto show-mobile">
+                                            <div class="tt-value">5 Jan,19</div>
+                                        </div>
+                                    </div>
+                                    <div class="tt-content">
+                                        Post: {{ post.message }}
+                                    </div>
+                                </div>
+                                <div class="tt-col-category"><a href="#">{{ post.thread_id.category_id.name }}</a></div>
+                                <div class="tt-col-value-large hide-mobile">{{ post.created_on }}</div>
+                            </div>
+                        {% endfor %}
+                        <div class="pagination">
+                            <span class="step-links">
+                                {% if reply_posts_obj.has_previous %} 
+                                    <a href="?replies_page=1">&laquo; first</a>
+                                    <a href="?replies_page={{ reply_posts_obj.previous_page_number}}">previous</a>
+                                {% endif %}
+                                <span class="current">
+                                    Page {{ reply_posts_obj.number }} of {{ reply_posts_obj.paginator.num_pages}}.
+                                </span>
+                                {% if reply_posts_obj.has_next %} 
+                                    <a href="?replies_page={{ reply_posts_obj.next_page_number }}">next</a>
+                                    <a href="?replies_page={{ reply_posts_obj.paginator.num_pages }}">last &raquo;</a>
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+                   
                 </div>
                 <!-- <div class="tab-pane tt-indent-none" id="tt-tab-02" role="tabpanel">
                     <div class="tt-topic-list">
@@ -300,12 +361,10 @@
                             </button>
                         </div>
                     </div>
-                </div> -->
-                <div class="tab-pane tt-indent-none" id="tt-tab-03" role="tabpanel">
-                     <div class="tt-topic-list">
-                     
-                    </div>
                 </div>
+                <div class="tab-pane tt-indent-none" id="tt-tab-03" role="tabpanel">
+                  
+                </div> -->
                 <div class="tab-pane tt-indent-none" id="tt-tab-04" role="tabpanel">
                     <div class="tt-following-list">
                         
@@ -1076,11 +1135,12 @@ $(document).ready(function(){
     $(".settings-btn").on('click', function(e){
     });
     $("#activity-btn-tab").on("click", function(e){
-        $("#reply-btn-tab").removeClass("active");
+        // $("#reply-btn-tab").removeClass("active");
         $("#following-btn-tab").removeClass("active");
         $("#followers-btn-tab").removeClass("active");
     });
 
+    /*
     $("#reply-btn-tab").on("click", function(e){
         $("#activity-btn-tab").removeClass("active");
         $("#following-btn-tab").removeClass("active");
@@ -1105,8 +1165,9 @@ $(document).ready(function(){
                     <div class="tt-col-value">Posted on</div>
                 </div>
             `)
-            var postObjects = response
-        
+            console.log(response.data);
+            var postObjects = response.response.data
+            
             postObjects.forEach(element => {
                 $("#tt-tab-03 .tt-topic-list").append(`
                 <div class="tt-item">
@@ -1148,6 +1209,7 @@ $(document).ready(function(){
     });
 
     });
+    */
 
 
     $("#following-btn-tab").on("click", function(e){

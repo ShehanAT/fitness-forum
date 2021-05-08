@@ -15,6 +15,9 @@ from itertools import chain
 from django.db.models import Q 
 from django.core import serializers
 from .serializers import PostSerializer, ForumUserSerializer
+from django.core.paginator import Paginator
+from .class_views import ViewPaginatorMixin
+from django.views.generic import ListView 
 
 logger = logging.getLogger(__name__)
 def signup_view(request):
@@ -133,14 +136,38 @@ def show_profile_view(request):
             logger.error("thread: " + str(thread.thread_id))
             logger.error(e)
     all_activity = all_activity.order_by('-created_on')
-    profile_pic_form = ProfilePicForm(request.POST, request.FILES)
-    return render(request, "show_profile.html", {"user": forum_user, "all_activity": all_activity})
+    all_activity_paginator = Paginator(all_activity, 10)
 
-def show_profile_replies_view(request):
-    user = User.objects.get(id=request.user.id)
+    all_activity_page_number = request.GET.get("page")
+    activity_page_obj = all_activity_paginator.get_page(all_activity_page_number)
+    profile_pic_form = ProfilePicForm(request.POST, request.FILES)
+
     reply_posts = Post.objects.filter(posted_by_id=user.id, first_reply_to_id__isnull=False)
-    response_data = PostSerializer(reply_posts, many=True)
-    return JsonResponse(response_data.data, safe=False)
+    reply_posts_data = PostSerializer(reply_posts, many=True)
+    reply_posts_paginator = Paginator(reply_posts_data.data, 10)
+    reply_posts_page_number = request.GET.get("replies_page")
+    reply_posts_obj = reply_posts_paginator.get_page(reply_posts_page_number)
+
+    return render(request, "show_profile.html", {"user": forum_user, "all_activity": all_activity, "activity_page_obj": activity_page_obj, "reply_posts_obj": reply_posts_obj})
+
+# def show_profile_replies_view(request):
+#     user = User.objects.get(id=request.user.id)
+#     reply_posts = Post.objects.filter(posted_by_id=user.id, first_reply_to_id__isnull=False)
+#     response_data = PostSerializer(reply_posts, many=True)
+#     paginator = Paginator(response_data.data, 10)
+#     page_number = request.GET.get("replies_page")
+#     replies_page_obj = paginator.get_page(page_number)
+#     return JsonResponse(replies_page_obj, safe=False)
+    # return JsonResponse(response_data.data, safe=False)
+
+class ShowProfileRepliesView(ViewPaginatorMixin, ListView):
+    def post(self, request):
+        limit = 10
+        page = request.GET.get("replies_page")
+        user = User.objects.get(id=request.user.id)
+        reply_posts = Post.objects.filter(posted_by_id=user.id, first_reply_to_id__isnull=False)
+        response_data = PostSerializer(reply_posts, many=True)
+        return JsonResponse({"response": self.paginate(response_data.data, page, limit)})
 
 def show_profile_following_view(request):
     user = ForumUser.objects.get(id=request.user.id)
