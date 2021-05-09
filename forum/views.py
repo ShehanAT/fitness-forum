@@ -19,7 +19,11 @@ from .serializers import PostSerializer, ForumUserSerializer
 from django.core.paginator import Paginator
 from .class_views import ViewPaginatorMixin
 from django.views.generic import ListView 
+from django.core.mail import send_mail
+from django.conf import settings
+import environ
 
+env = environ.Env()
 logger = logging.getLogger(__name__)
 def signup_view(request):
     if request.method == 'POST':
@@ -474,6 +478,11 @@ def about_view(request):
         if request.method == "POST":
             if contact_us_form.is_valid():
                 # send message through SMTP server 
+                name = contact_us_form.cleaned_data["name"]
+                from_email = contact_us_form.cleaned_data["email"]
+                subject = contact_us_form.cleaned_data["subject"]
+                message = contact_us_form.cleaned_data["message"]
+                send_mail(subject, message, from_email, [env('RECIPIENT_EMAIL')])
                 return render(request, "page-about.html", {"forum_user": forum_user, "contact_us_form": contact_us_form, "contact_us_form_status": "Thanks for contacting us! We will get back to you shortly..." })   
         return render(request, "page-about.html", {"forum_user": forum_user, "contact_us_form": contact_us_form })
     return render(request, "page-about.html", { "contact_us_form": contact_us_form })

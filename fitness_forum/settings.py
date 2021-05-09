@@ -12,7 +12,10 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 import posixpath
+import environ
 
+env = environ.Env()
+environ.Env.read_env()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -143,3 +146,10 @@ CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"
 CKEDITOR_UPLOAD_PATH = "/images/"
 
 IMAGE_ROOT_PATH = "/static/images/"
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = env('YOUR_GMAIL_ADDRESS')
+EMAIL_HOST_PASSWORD = env('YOUR_GMAIL_PASSWORD')
