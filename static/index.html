@@ -56,7 +56,7 @@
                             {% endif %}
                             <li><a href="/about"><span>About</span></a></li>
                             <li>
-                                {% request.session.logged_in %}
+                                {% if request.session.logged_in %}
                                     <a href="/profile/show_profile"><span>Profile</span></a>
                                     <ul>
                                         <li><a href="/profile/show_profile">Show Profile</a></li>
