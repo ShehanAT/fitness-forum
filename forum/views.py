@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout 
 from django.contrib.sessions.backends.db import SessionStore 
 from django.shortcuts import redirect
-from .forms import AddCategoryForm, AddThreadForm, SignUpForm, AddPostForm, ProfilePicForm, UpdateProfileForm, ChangePasswordForm, PostSignatureForm
+from .forms import AddCategoryForm, AddThreadForm, SignUpForm, AddPostForm, ProfilePicForm, UpdateProfileForm, ChangePasswordForm, PostSignatureForm, ContactUsForm
 from .models import Category, Thread, Post, ForumUser, PostVote, PostSignature, Tag, UserFollowing, Like
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.exceptions import ObjectDoesNotExist
@@ -468,13 +468,22 @@ def trending_view(request):
     return render(request, "page-trending.html", { "user": forum_user, "data": data })
 
 def about_view(request):
+    contact_us_form = ContactUsForm(request.POST or None)
     if request.user.is_authenticated:
         forum_user = ForumUser.objects.get(id=request.user.id)
-        return render(request, "page-about.html", {"forum_user": forum_user})
-    return render(request, "page-about.html", {})
+        if request.method == "POST":
+            if contact_us_form.is_valid():
+                # send message through SMTP server 
+                return render(request, "page-about.html", {"forum_user": forum_user, "contact_us_form": contact_us_form, "contact_us_form_status": "Thanks for contacting us! We will get back to you shortly..." })   
+        return render(request, "page-about.html", {"forum_user": forum_user, "contact_us_form": contact_us_form })
+    return render(request, "page-about.html", { "contact_us_form": contact_us_form })
 
 def contact_us_view(request):
-    return render(request, "messages-compose.html", {})
+    contact_us_form = ContactUsForm(request.POST)
+    if request.method == "POST":
+        if contact_us_form.is_valid():
+            # send message through SMTP server
+            return JsonResponse({"status": "success"})
 
 def vote(request):
     if request.method == "POST":

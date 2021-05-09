@@ -32,6 +32,13 @@ class AddThreadForm(forms.Form):
 class AddPostForm(forms.Form):
     message = forms.CharField(widget=CKEditorWidget())
 
+class ContactUsForm(forms.Form):
+    email = forms.EmailField()
+    name = forms.CharField(max_length=200)
+    subject = forms.CharField(max_length=500)
+    message = forms.CharField(widget=CKEditorWidget())
+
+
 class MultiEmailField(forms.Field):
     def to_python(self, value):
         if not value:

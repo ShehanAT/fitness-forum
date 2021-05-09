@@ -7923,3 +7923,8 @@ img.tt-icon {
 .follow-btn:hover { 
   cursor: pointer;
 }
+
+/* page-about.html */
+.green-text {
+  color: green !important;
+}
