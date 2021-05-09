@@ -13,7 +13,7 @@ from django.core.exceptions import ObjectDoesNotExist
 import logging 
 import humanize
 from itertools import chain
-from django.db.models import Q, Sum
+from django.db.models import Q, Sum, Count
 from django.core import serializers
 from .serializers import PostSerializer, ForumUserSerializer
 from django.core.paginator import Paginator
@@ -460,9 +460,9 @@ def trending_view(request):
     data["day_7_active_users"] = len(ForumUser.objects.filter(is_active=True, member_since__gte=(utils_timezone.now().date() - timedelta(days=7))))
     data["day_7_likes"] = len(Like.objects.filter(created_on__gte=(utils_timezone.now().date() - timedelta(days=7))))
 
-    # most_viewed_threads_top_5 = 0
-    # most_replied_threads_top_5 = 0
-    # new_posts_top_5 = 0 
+    data["most_viewed_threads_top_5"] = Thread.objects.annotate(Count('views')).order_by('views__count')[:5]
+    data["most_replied_threads_top_5"] = Thread.objects.annotate(Count('replies')).order_by('replies__count')[:5]
+    data["new_posts_top_5"] = Post.objects.all().order_by('created_on')[:5]
 
 
     return render(request, "page-trending.html", { "user": forum_user, "data": data })

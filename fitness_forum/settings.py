@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'fitness_forum',
     'django_seed',
     'jquery',
-    'fontawesome-free',
+    # 'fontawesome-free',
     'ckeditor'
 ]
 

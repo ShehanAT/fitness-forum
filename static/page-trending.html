@@ -195,101 +195,202 @@
             <div class="tab-content">
                 <div class="tab-pane show fade active" id="tt-tab-01" role="tabpanel">
                     <div class="tt-layout-tab">
-                        <!--
+                       
                         <div class="tt-wrapper-inner">
                             <h2 class="tt-title">
                                 About Forum 19
                             </h2>
                             Forum 19 is a community of creatives who come together to share ideas and help each other succeed.
-                            <h3 class="tt-title">
-                                Admins
-                            </h3>
+                            
                             <div class="tt-list-avatar">
                                 <div class="row">
-                                    <div class="col-6 col-md-4 col-lg-3">
+                                    <h3 class="tt-title">
+                                        Top 5 Most Viewed Threads Of All Time
+                                    </h3>
+                                    <div class="col-12 col-md-12 col-lg-12">
                                         <a href="#" class="tt-avatar">
                                             <div class="tt-col-icon">
-                                                <svg class="tt-icon">
-                                                  <use xlink:href="#icon-ava-n"></use>
-                                                </svg>
+                                                <img src="{{ data.most_viewed_threads_top_5.0.started_by_id.profile_pic.url }}" class="tt-icon" />
                                             </div>
                                             <div class="tt-col-description">
-                                                <h6 class="tt-title">Nitish</h6>
-                                                <div class="tt-value">@nitish92</div>
+                                                <h6 class="tt-title">#1. {{ data.most_viewed_threads_top_5.0.subject }}</h6>
+                                                <div class="tt-value">By: {{ data.most_viewed_threads_top_5.0.started_by_id.username }}</div>
                                             </div>
                                         </a>
                                     </div>
-                                    <div class="col-6 col-md-4 col-lg-3">
-                                         <a href="#" class="tt-avatar">
+                                    <div class="col-12 col-md-12 col-lg-12">
+                                        <a href="#" class="tt-avatar">
                                             <div class="tt-col-icon">
-                                                <svg class="tt-icon">
-                                                  <use xlink:href="#icon-ava-t"></use>
-                                                </svg>
+                                                <img src="{{ data.most_viewed_threads_top_5.1.started_by_id.profile_pic.url }}" class="tt-icon" />
                                             </div>
                                             <div class="tt-col-description">
-                                                <h6 class="tt-title">Taylor</h6>
-                                                <div class="tt-value">@tails23</div>
+                                                <h6 class="tt-title">#2. {{ data.most_viewed_threads_top_5.1.subject }}</h6>
+                                                <div class="tt-value">By: {{ data.most_viewed_threads_top_5.1.started_by_id.username }}</div>
                                             </div>
                                         </a>
                                     </div>
-                                    <div class="col-6 col-md-4 col-lg-3">
-                                         <a href="#" class="tt-avatar">
+                                    <div class="col-12 col-md-12 col-lg-12">
+                                        <a href="#" class="tt-avatar">
                                             <div class="tt-col-icon">
-                                                <svg class="tt-icon">
-                                                  <use xlink:href="#icon-ava-k"></use>
-                                                </svg>
+                                                <img src="{{ data.most_viewed_threads_top_5.2.started_by_id.profile_pic.url }}" class="tt-icon" />
                                             </div>
                                             <div class="tt-col-description">
-                                                <h6 class="tt-title">Kevin</h6>
-                                                <div class="tt-value">@kevin27</div>
+                                                <h6 class="tt-title">#3. {{ data.most_viewed_threads_top_5.2.subject }}</h6>
+                                                <div class="tt-value">By: {{ data.most_viewed_threads_top_5.2.started_by_id.username }}</div>
                                             </div>
                                         </a>
                                     </div>
-                                    <div class="col-6 col-md-4 col-lg-3">
-                                         <a href="#" class="tt-avatar">
+                                    <div class="col-12 col-md-12 col-lg-12">
+                                        <a href="#" class="tt-avatar">
                                             <div class="tt-col-icon">
-                                                <svg class="tt-icon">
-                                                  <use xlink:href="#icon-ava-g"></use>
-                                                </svg>
+                                                <img src="{{ data.most_viewed_threads_top_5.3.started_by_id.profile_pic.url }}" class="tt-icon" />
                                             </div>
                                             <div class="tt-col-description">
-                                                <h6 class="tt-title">Green</h6>
-                                                <div class="tt-value">@green63</div>
+                                                <h6 class="tt-title">#4. {{ data.most_viewed_threads_top_5.3.subject }}</h6>
+                                                <div class="tt-value">By: {{ data.most_viewed_threads_top_5.3.started_by_id.username }}</div>
                                             </div>
                                         </a>
                                     </div>
-                                    <div class="col-6 col-md-4 col-lg-3">
-                                         <a href="#" class="tt-avatar">
+                                    <div class="col-12 col-md-12 col-lg-12">
+                                        <a href="#" class="tt-avatar">
                                             <div class="tt-col-icon">
-                                                <svg class="tt-icon">
-                                                  <use xlink:href="#icon-ava-d"></use>
-                                                </svg>
+                                                <img src="{{ data.most_viewed_threads_top_5.4.started_by_id.profile_pic.url }}" class="tt-icon" />
                                             </div>
                                             <div class="tt-col-description">
-                                                <h6 class="tt-title">Dylan</h6>
-                                                <div class="tt-value">@dylan89</div>
+                                                <h6 class="tt-title">#5. {{ data.most_viewed_threads_top_5.4.subject }}</h6>
+                                                <div class="tt-value">By: {{ data.most_viewed_threads_top_5.4.started_by_id.username }}</div>
                                             </div>
                                         </a>
                                     </div>
-                                    <div class="col-6 col-md-4 col-lg-3">
-                                         <a href="#" class="tt-avatar">
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <h3 class="tt-title">
+                                        Top 5 Most Replies Threads Of All Time
+                                    </h3>
+                                    <div class="col-12 col-md-12 col-lg-12">
+                                        <a href="#" class="tt-avatar">
                                             <div class="tt-col-icon">
-                                                <svg class="tt-icon">
-                                                  <use xlink:href="#icon-ava-p"></use>
-                                                </svg>
+                                                <img src="{{ data.most_replied_threads_top_5.0.started_by_id.profile_pic.url }}" class="tt-icon" />
                                             </div>
                                             <div class="tt-col-description">
-                                                <h6 class="tt-title">Peterson</h6>
-                                                <div class="tt-value">@dylan89</div>
+                                                <h6 class="tt-title">#1. {{ data.most_replied_threads_top_5.0.subject }}</h6>
+                                                <div class="tt-value">By: {{ data.most_replied_threads_top_5.0.started_by_id.username }}</div>
                                             </div>
                                         </a>
                                     </div>
+                                    <div class="col-12 col-md-12 col-lg-12">
+                                        <a href="#" class="tt-avatar">
+                                            <div class="tt-col-icon">
+                                                <img src="{{ data.most_replied_threads_top_5.1.started_by_id.profile_pic.url }}" class="tt-icon" />
+                                            </div>
+                                            <div class="tt-col-description">
+                                                <h6 class="tt-title">#2. {{ data.most_replied_threads_top_5.1.subject }}</h6>
+                                                <div class="tt-value">By: {{ data.most_replied_threads_top_5.1.started_by_id.username }}</div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="col-12 col-md-12 col-lg-12">
+                                        <a href="#" class="tt-avatar">
+                                            <div class="tt-col-icon">
+                                                <img src="{{ data.most_replied_threads_top_5.2.started_by_id.profile_pic.url }}" class="tt-icon" />
+                                            </div>
+                                            <div class="tt-col-description">
+                                                <h6 class="tt-title">#3. {{ data.most_replied_threads_top_5.2.subject }}</h6>
+                                                <div class="tt-value">By: {{ data.most_replied_threads_top_5.2.started_by_id.username }}</div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="col-12 col-md-12 col-lg-12">
+                                        <a href="#" class="tt-avatar">
+                                            <div class="tt-col-icon">
+                                                <img src="{{ data.most_replied_threads_top_5.3.started_by_id.profile_pic.url }}" class="tt-icon" />
+                                            </div>
+                                            <div class="tt-col-description">
+                                                <h6 class="tt-title">#4. {{ data.most_replied_threads_top_5.3.subject }}</h6>
+                                                <div class="tt-value">By: {{ data.most_replied_threads_top_5.3.started_by_id.username }}</div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="col-12 col-md-12 col-lg-12">
+                                        <a href="#" class="tt-avatar">
+                                            <div class="tt-col-icon">
+                                                <img src="{{ data.most_replied_threads_top_5.4.started_by_id.profile_pic.url }}" class="tt-icon" />
+                                            </div>
+                                            <div class="tt-col-description">
+                                                <h6 class="tt-title">#5. {{ data.most_replied_threads_top_5.4.subject }}</h6>
+                                                <div class="tt-value">By: {{ data.most_replied_threads_top_5.4.started_by_id.username }}</div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <h3 class="tt-title">
+                                        5 latest posts 
+                                    </h3>
+                                    <div class="col-12 col-md-12 col-lg-12">
+                                        <a href="#" class="tt-avatar">
+                                            <div class="tt-col-icon">
+                                                <img src="{{ data.new_posts_top_5.0.posted_by_id.profile_pic.url }}" class="tt-icon" />
+                                            </div>
+                                            <div class="tt-col-description">
+                                                <h6 class="tt-title">#1. {{ data.new_posts_top_5.0.message }}</h6>
+                                                <div class="tt-value">By: {{ data.new_posts_top_5.0.posted_by_id.username }}</div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="col-12 col-md-12 col-lg-12">
+                                        <a href="#" class="tt-avatar">
+                                            <div class="tt-col-icon">
+                                                <img src="{{ data.new_posts_top_5.1.posted_by_id.profile_pic.url }}" class="tt-icon" />
+                                            </div>
+                                            <div class="tt-col-description">
+                                                <h6 class="tt-title">#2. {{ data.new_posts_top_5.1.message }}</h6>
+                                                <div class="tt-value">By: {{ data.new_posts_top_5.1.posted_by_id.username }}</div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="col-12 col-md-12 col-lg-12">
+                                        <a href="#" class="tt-avatar">
+                                            <div class="tt-col-icon">
+                                                <img src="{{ data.new_posts_top_5.2.posted_by_id.profile_pic.url }}" class="tt-icon" />
+                                            </div>
+                                            <div class="tt-col-description">
+                                                <h6 class="tt-title">#3. {{ data.new_posts_top_5.2.message }}</h6>
+                                                <div class="tt-value">By: {{ data.new_posts_top_5.2.posted_by_id.username }}</div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="col-12 col-md-12 col-lg-12">
+                                        <a href="#" class="tt-avatar">
+                                            <div class="tt-col-icon">
+                                                <img src="{{ data.new_posts_top_5.3.posted_by_id.profile_pic.url }}" class="tt-icon" />
+                                            </div>
+                                            <div class="tt-col-description">
+                                                <h6 class="tt-title">#4. {{ data.new_posts_top_5.3.message }}</h6>
+                                                <div class="tt-value">By: {{ data.new_posts_top_5.3.posted_by_id.username }}</div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="col-12 col-md-12 col-lg-12">
+                                        <a href="#" class="tt-avatar">
+                                            <div class="tt-col-icon">
+                                                <img src="{{ data.new_posts_top_5.4.posted_by_id.profile_pic.url }}" class="tt-icon" />
+                                            </div>
+                                            <div class="tt-col-description">
+                                                <h6 class="tt-title">#5. {{ data.new_posts_top_5.4.message }}</h6>
+                                                <div class="tt-value">By: {{ data.new_posts_top_5.4.posted_by_id.username }}</div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
                                 </div>
                             </div>
                             <h4 class="tt-title">
                                 Moderators
                             </h4>
-                            <div class="tt-list-avatar">
+                            <!-- <div class="tt-list-avatar">
                                 <div class="row">
                                     <div class="col-6 col-md-4 col-lg-3">
                                         <a href="#" class="tt-avatar">
@@ -435,9 +536,9 @@
                                         </a>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
-                        -->
+                  
                         <div class="table-responsive-sm tt-indent-top">
                             <table class="table-01">
                                 <caption>Site Statistics</caption>
