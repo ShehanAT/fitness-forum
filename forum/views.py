@@ -473,6 +473,9 @@ def about_view(request):
         return render(request, "page-about.html", {"forum_user": forum_user})
     return render(request, "page-about.html", {})
 
+def contact_us_view(request):
+    return render(request, "messages-compose.html", {})
+
 def vote(request):
     if request.method == "POST":
         user = ForumUser.objects.get(id=request.user.id)

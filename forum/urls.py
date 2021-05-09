@@ -29,4 +29,5 @@ urlpatterns = [
     path('trending', views.trending_view),
     path('about', views.about_view),
     path('ckeditor/', include('ckeditor_uploader.urls')),
+    path('contact_us', views.contact_us_view)
 ]
