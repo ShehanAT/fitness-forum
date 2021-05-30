@@ -303,6 +303,9 @@ def category_detail_view(request, category_id):
             thread["latest_activity"] = timedelta
     except AttributeError as e:
         logger.error("ERROR: " + str(e))
+    except ValueError as e:
+        logger.error("ERROR: " + str(e))
+        return render(request, "error404.html", {})
     return render(request, "page-categories-single.html", {"category": category, "threads": threads, "forum_user": forum_user, "tags": tags})
 
 def add_thread_view(request, category_id):
