@@ -1,5 +1,6 @@
 import pytest 
-import factory.fuzzy 
+import factory
+from pytest_factoryboy import register
 from rest_framework.test import APIClient, APIRequestFactory 
 from django.contrib.auth import get_user_model 
 from forum.models import ForumUser

@@ -26,8 +26,10 @@ source dev_env/bin/activate # for Linux and Mac users
 ```
 export YOUR_GMAIL_ADDRESS=<enter_your_gmail_address>
 export YOUR_GMAIL_PASSWORD=<enter_your_gmail_password>
+export DJANGO_SETTINGS_MODULE=fitness_forum.settings
 ```
 4. install all dependencies by running: ```pip install -r requirements.txt```
+5. run ```python manage.py``` 
 5. run ```python manage.py runserver```
 
 # Screenshots: 

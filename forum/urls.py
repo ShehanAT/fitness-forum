@@ -3,6 +3,9 @@ from django.contrib.auth import views as auth_views
 from forum import views 
 from fitness_forum import settings
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns 
+
+app_name = 'forum'
+
 urlpatterns = [
     path('', views.index_view),
     path('categories', views.index_view),
