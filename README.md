@@ -14,7 +14,14 @@ This program was developed on Windows but can also run on Unix like operating sy
 
 # Development Usage: 
 1. Clone repo
-2. open project folder in IDE of your choise 
+2. open project folder in IDE of your choice 
+3. Create and activate a virtual environment by running the following commands: 
+```
+pip install virtualenv
+virtualenv dev_env 
+.\dev_env\Scripts\activate # for Windows users 
+source dev_env/bin/activate # for Linux and Mac users 
+```
 3. install all dependencies by running: ```pip install -r requirements.txt```
 4. run ```python manage.py runserver```
 
