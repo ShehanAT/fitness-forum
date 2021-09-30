@@ -30,7 +30,11 @@ SECRET_KEY = ')07tp@kg1g_hsbbstrmsuw-j7+4+hi*7&r!4s!oq5gk*h)32m2'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+<<<<<<< HEAD
+ALLOWED_HOSTS = ['68.183.113.169', 'localhost']
+=======
 ALLOWED_HOSTS = []
+>>>>>>> 5f92ef43cc9f9b74817891c2a9cc74442fdeb6b3
 
 
 # Application definition
@@ -88,8 +92,12 @@ WSGI_APPLICATION = 'fitness_forum.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'fitness_forum',
+	    'USER': 'forum_user',
+	    'PASSWORD': 'shehan123',
+	    'HOST': 'localhost',
+	    'PORT': '',
     }
 }
 
