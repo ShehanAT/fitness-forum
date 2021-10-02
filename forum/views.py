@@ -62,7 +62,8 @@ def login_view(request):
             if password == "":
                 errors.append("Password: This field is required")
             errors.append("Invalid Username/Password combination")
-            return render(request, "page-login.html", {"errors": errors})
+            # json_response = JsonResponse(MF_Version().get_MF_Version()) "json": json_response.loads()
+            return render(request, "page-login.html", {"errors": errors })
     else:
         request.session["logged_in"] = False 
         return render(request, "page-login.html", {})
