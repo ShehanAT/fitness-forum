@@ -52,12 +52,25 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    # 'django.contrib.sessions.middleware.SessionMiddleware',
+    # 'django.middleware.common.CommonMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.contrib.auth.middleware.AuthenticationMiddleware',
+    # 'django.contrib.messages.middleware.MessageMiddleware',
+    # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.gzip.GZipMiddleware',
+    # 'cms.middleware.language.LanguageCookieMiddleware',
+    # 'cms.middleware.user.CurrentUserMiddleware',
+    # 'cms.middleware.page.CurrentPageMiddleware',
+    # 'cms.middleware.utils.ApphookReloadMiddleware',
+    # 'cms.middleware.toolbar.ToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'fitness_forum.urls'
@@ -129,6 +142,8 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+CSRF_COOKIE_SECURE = False 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
