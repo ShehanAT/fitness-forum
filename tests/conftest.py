@@ -4,6 +4,8 @@ from pytest_factoryboy import register
 from rest_framework.test import APIClient, APIRequestFactory 
 from django.contrib.auth import get_user_model 
 from forum.models import ForumUser
+from django.contrib.auth.hashers import make_password
+from django import VERSION as DJANGO_VERSION
 
 @pytest.fixture
 def session():
@@ -22,6 +24,25 @@ def api_client():
 def api_rf():
     api_rf = APIRequestFactory()
     return api_rf 
+
+@pytest.fixture
+def registered_user():
+    user = ForumUserFactory(
+        username="admin",
+        email='admin@example.com', 
+        password=make_password('secret'), 
+        is_superuser=False,
+        first_name="admin",
+        last_name="admin",
+        is_active=True,
+        date_joined="2017-03-18 08:21:36.175627+07",
+        last_login="2017-03-20 08:21:36.175627+07"
+        )
+    registered_user = ForumUserFactory(user=user)
+    # assert registered_user.is_registered is True
+    # assert isinstance(registered_user.user, get_user_model())
+    assert isinstance(registered_user, ForumUser)
+    return registered_user
 
 
 @register
@@ -52,8 +73,8 @@ class ForumUserFactory(factory.django.DjangoModelFactory):
         forum_user = super(ForumUserFactory, cls).create(**kwargs)
         assert isinstance(forum_user, ForumUser)
         assert forum_user.is_authenticated is True 
-        assert forum_user.is_registered is True 
+        # assert forum_user.is_registered is True 
         return forum_user 
 
-    user = factory.SubFactory(UserFactory)
+    # user = factory.SubFactory(UserFactory)
 
