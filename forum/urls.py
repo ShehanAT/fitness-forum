@@ -3,11 +3,14 @@ from django.contrib.auth import views as auth_views
 from forum import views 
 from fitness_forum import settings
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns 
+
+app_name = 'forum'
+
 urlpatterns = [
     path('', views.index_view),
     path('categories', views.index_view),
-    path('signup', views.signup_view),
-    path('login', views.login_view),
+    path('signup', views.signup_view, name="signup"),
+    path('login', views.login_view, name="login"),
     path('logout', views.logout_view),
     path('profile', views.profile_view),
     path('profile/show_profile', views.show_profile_view),

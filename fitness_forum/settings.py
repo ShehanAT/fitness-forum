@@ -30,11 +30,7 @@ SECRET_KEY = ')07tp@kg1g_hsbbstrmsuw-j7+4+hi*7&r!4s!oq5gk*h)32m2'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-<<<<<<< HEAD
-ALLOWED_HOSTS = ['68.183.113.169', 'localhost']
-=======
-ALLOWED_HOSTS = []
->>>>>>> 5f92ef43cc9f9b74817891c2a9cc74442fdeb6b3
+ALLOWED_HOSTS = ['68.183.113.169', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -56,12 +52,25 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    # 'django.contrib.sessions.middleware.SessionMiddleware',
+    # 'django.middleware.common.CommonMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.contrib.auth.middleware.AuthenticationMiddleware',
+    # 'django.contrib.messages.middleware.MessageMiddleware',
+    # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.gzip.GZipMiddleware',
+    # 'cms.middleware.language.LanguageCookieMiddleware',
+    # 'cms.middleware.user.CurrentUserMiddleware',
+    # 'cms.middleware.page.CurrentPageMiddleware',
+    # 'cms.middleware.utils.ApphookReloadMiddleware',
+    # 'cms.middleware.toolbar.ToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'fitness_forum.urls'
@@ -95,7 +104,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'fitness_forum',
 	    'USER': 'forum_user',
-	    'PASSWORD': 'shehan123',
+	    'PASSWORD': 'root',
 	    'HOST': 'localhost',
 	    'PORT': '',
     }
@@ -133,6 +142,8 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+CSRF_COOKIE_SECURE = False 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/

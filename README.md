@@ -22,8 +22,15 @@ virtualenv dev_env
 .\dev_env\Scripts\activate # for Windows users 
 source dev_env/bin/activate # for Linux and Mac users 
 ```
-3. install all dependencies by running: ```pip install -r requirements.txt```
-4. run ```python manage.py runserver```
+3. set the following environment variables:
+```
+export YOUR_GMAIL_ADDRESS=<enter_your_gmail_address>
+export YOUR_GMAIL_PASSWORD=<enter_your_gmail_password>
+export DJANGO_SETTINGS_MODULE=fitness_forum.settings
+```
+4. install all dependencies by running: ```pip install -r requirements.txt```
+5. run ```python manage.py``` 
+5. run ```python manage.py runserver```
 
 # Screenshots: 
 Main page:
