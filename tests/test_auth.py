@@ -61,25 +61,35 @@ class TestAuthentication(TestCase):
 
     @pytest.mark.django_db
     def test_login_success(self):
-        # TO-DO, status: Need to have registered_user populated with assigned values in registered_user() fixture
-    
+        register_url = reverse("forum:signup")
+        register_data = {
+            "username": "admin",
+            "email": "admin@gmail.com",
+            "password1": "Archimedes123",
+            "password2": "Archimedes123"
+        }
+        register_response = self.client.post(register_url, register_data)
+        print(register_response.context)
+        print(register_response.content)
+
         login_url = reverse("forum:login")
   
         request = requests.session()
 
         login_data = dict(
-            username="adminasdf",
-            password="secret",
+            username="admin",
+            password="Archimedes123",
     
         )
     
         response = self.client.post(login_url, data=login_data)
 
 
-        print(response.context['errors'], end="\n")
+        print(response.context, end="\n")
+        print(response.content, end="\n")
 
-        assert response.status_code == 200
-        assert ForumUser.objects.count() == 0
+        assert response.status_code == 302
+        assert ForumUser.objects.count() > 0
     
 
 
