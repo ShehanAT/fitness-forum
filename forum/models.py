@@ -24,6 +24,9 @@ class ForumUser(User):
     location = models.CharField(max_length=100, default='')
     about = models.TextField(max_length=2000, default='')
 
+    def __str__(self):
+        return "user id: " + str(self.id) + ", username: " + str(self.username) + ", email: " + str(self.email)
+
 class UserFollowing(models.Model):
     user_id = models.ForeignKey(ForumUser, related_name="following", on_delete=models.CASCADE)
     following_user_id = models.ForeignKey(ForumUser, related_name="followers", on_delete=models.CASCADE)
