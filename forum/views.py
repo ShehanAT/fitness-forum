@@ -81,7 +81,8 @@ def profile_view(request):
         logger.error(e)
         request.session["status_msg"] = "Password reset successfully! Please login using your new password..."
         return redirect("/login")
-    profile_pic_form = ProfilePicForm(request.POST, request.FILES)
+    if request.FILES:
+        profile_pic_form = ProfilePicForm(request.POST, request.FILES)
     post_signature_form = PostSignatureForm(request.POST)
     if request.method == "POST":
         if "update_profile" in request.POST:
@@ -254,6 +255,11 @@ def index_view(request):
     except KeyError as e:
         logger.error(e)
         return render(request, "error404.html", {})
+    except ObjectDoesNotExist as e:
+        logger.error(e)
+        return render(request, "error404.html", {})
+        
+
 
 def add_category_view(request):
     forum_user = None 

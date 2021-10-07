@@ -2,6 +2,7 @@ from django.contrib.sessions.backends.base import SessionBase
 import pytest
 from django.urls import reverse 
 from django.test.client import RequestFactory
+from forum.forms import ProfilePicForm
 from forum.views import login_view, signup_view, show_profile_view
 from django.conf import settings
 from django.contrib.sessions.middleware import SessionMiddleware
@@ -30,23 +31,37 @@ class TestAuthentication(TestCase):
         assert response.status_code == 302
         assert response.url == "/"
 
-    @pytest.mark.django_db
-    def test_profile_page_appears_after_login(self):
+    # @pytest.mark.django_db
+    # def test_profile_page_appears_after_login(self):
+    #     ConfTest.test_register_success(self)
+    #     forum_user = ForumUser.objects.get(username="admin")
+        
+    #     profile_url = reverse("forum:profile")
+
+    #     profile_data = dict(
+    #         user=forum_user,
+    #         # profile_pic=
+    #     )
+    #     profile_pic_form = ProfilePicForm()
+    #     profile_pic_form.profile_pic = 
+    #     self.client.force_login(forum_user)    
+    #     response = self.client.get(profile_url, data=profile_data)
+
+    @pytest.mark.django_db 
+    def test_add_category_page_appears_after_login(self):
         ConfTest.test_register_success(self)
         forum_user = ForumUser.objects.get(username="admin")
-        
-        profile_url = reverse("forum:profile")
 
-        profile_data = dict(
-            user=forum_user,
-            # profile_pic=
+        add_category_url = reverse("forum:add_category")
+
+        add_category_data = dict(
+            user=forum_user 
         )
 
-        self.client.force_login(forum_user)    
-        response = self.client.get(profile_url, data=profile_data)
-        # , data=show_profile_data
-        # print("ForumUser count: " + str(ForumUser.objects.all()[0]))
-        # print(response);
-        # assert response.status_code == 200
-        # assert response.url == "/"
+        self.client.force_login(forum_user)
+        response = self.client.get(add_category_url, data=add_category_data)
+        print(response)
+        assert response.status_code == 200
+
+
 
