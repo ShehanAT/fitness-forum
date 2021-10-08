@@ -121,7 +121,6 @@ def profile_view(request):
             return render(request, "profile_view.html", {"user": forum_user, "update_profile_form": UpdateProfileForm(instance=forum_user), "change_password_form": ChangePasswordForm(user=user), "post_signature_form": post_signature_form})
 
 def show_profile_view(request):
-    # try:
     forum_user = ForumUser.objects.get(id=request.user.id)
     user = User.objects.get(id=request.user.id)
     forum_user.profile_pic_path = str(forum_user.profile_pic)
@@ -150,8 +149,7 @@ def show_profile_view(request):
 
     all_activity_page_number = request.GET.get("page")
     activity_page_obj = all_activity_paginator.get_page(all_activity_page_number)
-    if request.FILES:
-        profile_pic_form = ProfilePicForm(request.POST, request.FILES)
+    profile_pic_form = ProfilePicForm(request.POST, request.FILES)
 
     reply_posts = Post.objects.filter(posted_by_id=user.id, first_reply_to_id__isnull=False)
     reply_posts_data = PostSerializer(reply_posts, many=True)

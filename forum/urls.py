@@ -29,7 +29,7 @@ urlpatterns = [
     path('test', views.test_view),
     path('test-login', views.test_login),
     path('post_vote', views.vote),
-    path('trending', views.trending_view),
+    path('trending', views.trending_view, name="trending"),
     path('about', views.about_view),
     path('ckeditor/', include('ckeditor_uploader.urls')),
     path('contact_us', views.contact_us_view)

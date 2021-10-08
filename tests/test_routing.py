@@ -30,35 +30,23 @@ class TestAuthentication(TestCase):
         assert response.status_code == 302
         assert response.url == "/"
 
-    # @pytest.mark.django_db
-    # def test_profile_page_appears_after_login(self):
-    #     ConfTest.test_register_success(self)
-    #     forum_user = ForumUser.objects.get(username="admin")
-        
-    #     profile_url = reverse("forum:profile")
-
-    #     profile_data = dict(
-    #         user=forum_user,
-    #         # profile_pic=
-    #     )
-    #     profile_pic_form = ProfilePicForm()
-    #     # profile_pic_form.profile_pic = 
-    #     self.client.force_login(forum_user)    
-    #     response = self.client.get(profile_url, data=profile_data)
-
     @pytest.mark.django_db
-    def test_show_profile_page_appears_after_login(self):
+    def test_GET_show_profile_page_appears_after_login(self):
         ConfTest.test_register_success(self)
         forum_user = ForumUser.objects.get(username="admin")
         
         show_profile_url = reverse("forum:show_profile")
 
-        show_profile_data = dict(
-            user=forum_user,
-        )
+        # show_profile_data = dict(
+        #     user=forum_user,
+        # )
         # profile_pic_form = ProfilePicForm()
         self.client.force_login(forum_user)    
-        response = self.client.get(show_profile_url, data=show_profile_data)
+        response = self.client.get(show_profile_url)
+        print(response.context)
+        # print(response.content)
+        assert response.status_code == 200
+        assert response.context['all_activity'] != None 
 
     @pytest.mark.django_db 
     def test_add_category_page_appears_after_login(self):
