@@ -74,6 +74,7 @@ def logout_view(request):
     return redirect("/test")
 
 def profile_view(request):
+    include_profile_pic = False 
     try:
         forum_user = ForumUser.objects.get(id=request.user.id)
         user = User.objects.get(id=request.user.id)
@@ -83,6 +84,7 @@ def profile_view(request):
         return redirect("/login")
     if request.FILES:
         profile_pic_form = ProfilePicForm(request.POST, request.FILES)
+        include_profile_pic = True 
     post_signature_form = PostSignatureForm(request.POST)
     if request.method == "POST":
         if "update_profile" in request.POST:
@@ -113,7 +115,10 @@ def profile_view(request):
             return render(request, "profile_view.html", {"user": forum_user, "profile_pic_form": profile_pic_form, "update_profile_form": UpdateProfileForm(instance=forum_user), "change_password_form": ChangePasswordForm(user=user), "post_signature_form": post_signature_form})
 
     else:
-        return render(request, "profile_view.html", {"user": forum_user, "profile_pic_form": profile_pic_form, "update_profile_form": UpdateProfileForm(instance=forum_user), "change_password_form": ChangePasswordForm(user=user), "post_signature_form": post_signature_form})
+        if include_profile_pic == True:
+            return render(request, "profile_view.html", {"user": forum_user, "profile_pic_form": profile_pic_form, "update_profile_form": UpdateProfileForm(instance=forum_user), "change_password_form": ChangePasswordForm(user=user), "post_signature_form": post_signature_form})
+        else:
+            return render(request, "profile_view.html", {"user": forum_user, "update_profile_form": UpdateProfileForm(instance=forum_user), "change_password_form": ChangePasswordForm(user=user), "post_signature_form": post_signature_form})
 
 def show_profile_view(request):
     # try:
@@ -145,7 +150,8 @@ def show_profile_view(request):
 
     all_activity_page_number = request.GET.get("page")
     activity_page_obj = all_activity_paginator.get_page(all_activity_page_number)
-    profile_pic_form = ProfilePicForm(request.POST, request.FILES)
+    if request.FILES:
+        profile_pic_form = ProfilePicForm(request.POST, request.FILES)
 
     reply_posts = Post.objects.filter(posted_by_id=user.id, first_reply_to_id__isnull=False)
     reply_posts_data = PostSerializer(reply_posts, many=True)
