@@ -16,6 +16,7 @@ class ConfTest(TestCase):
     def test_register_success(self):
         register_url = reverse("forum:signup")
         register_data = {
+            "id": 1,
             "username": "admin",
             "email": "admin@gmail.com",
             "password1": "Archimedes123",

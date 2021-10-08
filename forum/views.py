@@ -74,6 +74,7 @@ def logout_view(request):
     return redirect("/test")
 
 def profile_view(request):
+    include_profile_pic = False 
     try:
         forum_user = ForumUser.objects.get(id=request.user.id)
         user = User.objects.get(id=request.user.id)
@@ -81,7 +82,9 @@ def profile_view(request):
         logger.error(e)
         request.session["status_msg"] = "Password reset successfully! Please login using your new password..."
         return redirect("/login")
-    profile_pic_form = ProfilePicForm(request.POST, request.FILES)
+    if request.FILES:
+        profile_pic_form = ProfilePicForm(request.POST, request.FILES)
+        include_profile_pic = True 
     post_signature_form = PostSignatureForm(request.POST)
     if request.method == "POST":
         if "update_profile" in request.POST:
@@ -112,10 +115,12 @@ def profile_view(request):
             return render(request, "profile_view.html", {"user": forum_user, "profile_pic_form": profile_pic_form, "update_profile_form": UpdateProfileForm(instance=forum_user), "change_password_form": ChangePasswordForm(user=user), "post_signature_form": post_signature_form})
 
     else:
-        return render(request, "profile_view.html", {"user": forum_user, "profile_pic_form": profile_pic_form, "update_profile_form": UpdateProfileForm(instance=forum_user), "change_password_form": ChangePasswordForm(user=user), "post_signature_form": post_signature_form})
+        if include_profile_pic == True:
+            return render(request, "profile_view.html", {"user": forum_user, "profile_pic_form": profile_pic_form, "update_profile_form": UpdateProfileForm(instance=forum_user), "change_password_form": ChangePasswordForm(user=user), "post_signature_form": post_signature_form})
+        else:
+            return render(request, "profile_view.html", {"user": forum_user, "update_profile_form": UpdateProfileForm(instance=forum_user), "change_password_form": ChangePasswordForm(user=user), "post_signature_form": post_signature_form})
 
 def show_profile_view(request):
-    # try:
     forum_user = ForumUser.objects.get(id=request.user.id)
     user = User.objects.get(id=request.user.id)
     forum_user.profile_pic_path = str(forum_user.profile_pic)
@@ -254,6 +259,11 @@ def index_view(request):
     except KeyError as e:
         logger.error(e)
         return render(request, "error404.html", {})
+    except ObjectDoesNotExist as e:
+        logger.error(e)
+        return render(request, "error404.html", {})
+        
+
 
 def add_category_view(request):
     forum_user = None 

@@ -71,7 +71,7 @@ class UpdateProfileForm(forms.ModelForm):
             'location',
             'about'
         ]
-
+ 
 class ProfilePicForm(forms.Form):
     profile_pic = forms.ImageField(label='Profile Picture Upload')
     

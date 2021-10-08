@@ -6,6 +6,7 @@
     <meta name="keywords" content="HTML5 Template">
     <meta name="description" content="Forum - Responsive HTML5 Template">
     <meta name="author" content="Forum">
+    {% load static %}
     <link rel="shortcut icon" href="favicon/favicon.ico">
     <meta name="format-detection" content="telephone=no">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -154,7 +155,11 @@
                         <i class="tt-icon"><svg><use xlink:href="#icon-notification"></use></svg></i>
                     </a>
                     <div class="tt-avatar-icon tt-size-md">
-                        <img class="tt-icon" id="user-profile-pic" src="{{ user.profile_pic.url }}"/>
+                        {% if user.profile_pic.url != None %}
+                            <img class="tt-icon" id="user-profile-pic" src="{{ user.profile_pic.url }}"/>
+                        {% else %}
+                            <img class="tt-icon" id="user-profile-pic" src="{% static 'images/avatar5.png' %}"/>
+                        {% endif %}
                     </div>
                     <div class="custom-select-01">
                         <div class="dropdown">
