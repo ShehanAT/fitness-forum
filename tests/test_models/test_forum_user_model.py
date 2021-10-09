@@ -13,9 +13,10 @@ from forum.models import ForumUser
 
 
 
-class TestAuthentication(TestCase):
+class TestForumUserModel(TestCase):
 
     @pytest.mark.django_db
     def test_forum_user_(self):
         forum_user = ForumUser();
+        assert forum_user is True 
         
