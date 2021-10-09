@@ -11,7 +11,7 @@ import requests
 from django.middleware import csrf
 from django.test import TestCase
 from forum.models import ForumUser
-from .conftest import ConfTest
+from tests.conftest import ConfTest
 
 
 class TestIndexPage(TestCase):
