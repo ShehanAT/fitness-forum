@@ -14,7 +14,7 @@ urlpatterns = [
     path('logout', views.logout_view),
     path('profile', views.profile_view, name="profile"),
     path('profile/show_profile', views.show_profile_view, name="show_profile"),
-    path('profile/show_profile/following', views.show_profile_following_view),
+    path('profile/show_profile/following', views.show_profile_following_view, name="show_profile_following"),
     path('profile/show_profile/unfollow', views.show_profile_unfollow_view),
     path('profile/show_profile/followers', views.show_profile_followers_view),
     path('profile/update_profile', views.update_profile_view),
