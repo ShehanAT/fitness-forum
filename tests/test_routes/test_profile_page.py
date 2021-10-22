@@ -32,3 +32,9 @@ class TestProfilePage(TestCase):
         # print(response.content)
         assert response.status_code == 200
         assert response.context['all_activity'] != None 
+
+
+    @pytest.mark.django_db 
+    def test_GET_show_profile_following_page_appears_after_login(self):
+        ConfTest.test_register_success(self)
+        forum_user = ForumUser.objects.get(username="admin")
