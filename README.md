@@ -1,9 +1,8 @@
 # Fitness Forum Overview
 A fitness oriented forum created using Python and Django framework
 
-
 # Purpose:
-I built this application primarily in order to gain experience making small projects using Python and to mentor new Python developers on Python web development. 
+This application was primarily built in order to gain experience making small projects using Python and to mentor new Python developers on Python web development. 
 
 ### Dependencies:
 * Python 3.9.x
@@ -29,8 +28,8 @@ export YOUR_GMAIL_PASSWORD=<enter_your_gmail_password>
 export DJANGO_SETTINGS_MODULE=fitness_forum.settings
 ```
 4. install all dependencies by running: ```pip install -r requirements.txt```
-5. run ```python manage.py``` 
-5. run ```python manage.py runserver```
+5. run ```python manage.py migrate``` 
+6. run ```python manage.py runserver```
 
 # Screenshots: 
 Main page:
@@ -44,6 +43,9 @@ Post view page:
 
 Replies for post:
 ![Reply post image](/static/images/screenshot_4.png)
+
+### Testing:
+All unit tests for this project can be found in the ```/tests``` folder
 
 ### Contributing:
 Please feel free to contribute to this project however possible by forking this repo, making changes and initiating pull requests. Thanks!
