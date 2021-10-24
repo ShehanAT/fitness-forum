@@ -29,6 +29,7 @@ class ForumUser(User):
 
 class UserFollowing(models.Model):
     user_id = models.ForeignKey(ForumUser, related_name="following", on_delete=models.CASCADE)
+    # this is the primary key, has not-null constraint 
     following_user_id = models.ForeignKey(ForumUser, related_name="followers", on_delete=models.CASCADE)
     # Automatically set the field to now when the object is first created
     created_on = models.DateTimeField(auto_now_add=True)
